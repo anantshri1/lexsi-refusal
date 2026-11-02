@@ -1,0 +1,7 @@
+# Pinned from Colab, 2026-11-02. Python 3.13.16 (same locally).
+torch==2.11.0
+transformers==5.22.0
+huggingface_hub==1.33.0
+accelerate==1.15.0
+# Lexsi toolkits: installed from source at pinned commits (see RECCE.md)
+# safetune @ 26f59e6 | auditkit @ 71316da | curatorkit @ dd9e835 | circuitkit @ e71d5e1

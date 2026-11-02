@@ -39,4 +39,14 @@ Setup: `pip uninstall -y torchao` BEFORE import; `sys.path.insert(0, "/content/S
 - Translations/paraphrases: ours (MT + human checks), stated as such.
 
 
-## CircuitKIT — TODO
+## CircuitKIT @ e71d5e1 — USABLE for stretch goal (Tiny Aya supported)
+- src/ layout; install changed no pins. Runs via a TransformerLens port (tl_compat).
+- Tiny Aya (cohere2, all variants incl. tiny-aya-global) validated on real weights: discovery, faithfulness eval, interventions (pruning, quant resolution, steering). Labelled experimental.
+- Discovery algos validated: eap, eap-ig, eap-gp, ibcircuit, cdt (acdc too slow at 3-8B).
+- Risk: TransformerLens memory (fp32/caches) may exceed T4 → HF credits or shortlist window.
+- Docs: circuitkit.lexsi.ai/advanced/tiny-aya/
+
+## Summary
+All four toolkits support Tiny Aya; no install changed pinned versions.
+Pipeline: CuratorKIT (benchmark QC/provenance) -> SafeTune (directions, ablation, steering) -> AuditKIT (guards + lm-eval capability) [+ CircuitKIT stretch].
+Our own code: multilingual judge orchestration, geometry analysis, per-language/per-layer direction handling, translations.
