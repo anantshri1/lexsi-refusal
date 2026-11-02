@@ -30,5 +30,13 @@ Setup: `pip uninstall -y torchao` BEFORE import; `sys.path.insert(0, "/content/S
 - To verify: Llama Guard 3 language list (expect en/it/de/hi, not ml); WildGuard multilingual reliability -> human audit.
 
 
-## CuratorKIT — TODO
+## CuratorKIT @ dd9e835 — USABLE, narrow role (benchmark QC + provenance)
+- Flat layout: sys.path.insert(0, "/content/CuratorKIT"); install changed no pins.
+- NO translation/paraphrase task; 8 tasks generate training data. English-centric (pii_language="en").
+- LLM backends: LiteLLM (API, incl. Cohere) or local Ollama/vLLM.
+- Use for: JSONL/HF ingest, exact + embedding dedup, diversity gate, provenance (manifest.json, rejected.jsonl, dataset_card.md, checksums.txt).
+- TRAPS: (1) disable toxicity filter — harmful prompts ARE the data; verify rejected.jsonl. (2) Dedup WITHIN language only — cross-lingual pairs are near-duplicates by design.
+- Translations/paraphrases: ours (MT + human checks), stated as such.
+
+
 ## CircuitKIT — TODO
