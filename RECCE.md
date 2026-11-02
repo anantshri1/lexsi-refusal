@@ -18,6 +18,17 @@ Setup: `pip uninstall -y torchao` BEFORE import; `sys.path.insert(0, "/content/S
 - To verify on real run: dict values normalised?; dict filled when pick_layer set?; exact string for additive mode.
 - Feedback for Lexsi: English-only substring judge mis-scores non-English refusals as bypass; "i'm just" false positives.
 
-## AuditKIT — TODO
+## AuditKIT @ 71316da — USABLE (evaluation + judges)
+- src/ layout -> sys.path.insert(0, "/content/AuditKIT/src"); install changed no pins.
+- Cohere/Aya tested (tests/test_cohere_aya.py); unknown archs fail loudly.
+- Custom judges: LLMJudge(choices={...}), JudgeMetric base class. Data via HF load_dataset layout.
+- Guards (metrics/guard.py): llama_guard (default hf:meta-llama/Llama-Guard-3-8B), wildguard (hf:allenai/wildguard), ShieldGemma, Granite Guardian.
+  Llama Guard = safe/unsafe (compliance); WildGuard also gives response_refusal (needed for over-refusal).
+- Capability: ak.run_lmeval(task, model=...) via lm-eval-harness (Belebele — to verify).
+- AVOID KeywordDetector for multilingual (substring).
+- Compute: 8B guard ~16 GB fp16 -> 4-bit and/or separate judging session.
+- To verify: Llama Guard 3 language list (expect en/it/de/hi, not ml); WildGuard multilingual reliability -> human audit.
+
+
 ## CuratorKIT — TODO
 ## CircuitKIT — TODO
