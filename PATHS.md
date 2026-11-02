@@ -6,7 +6,10 @@ Never hard-code a path string anywhere else.
 ## Environments
 - Local (Mac M2, 8 GB): code only. Repo: anantshri1/lexsi-refusal
 - Colab: all model runs. Clone repo; artefacts -> /content/drive/MyDrive/lexsi-refusal (Drive mount path to verify on first Colab run)
-- HF Hub: public artefact store + submission. Repo ids: TBD (see below)
+- HF Hub (both private until submission):
+  - anantshri1/lexsi-refusal-bench (dataset): frozen benchmark ONLY
+  - anantshri1/lexsi-refusal-artefacts (dataset): generations, judgements, directions, logs
+- Model: CohereLabs/tiny-aya-global (fallback CohereLabs/aya-expanse-8b)
 
 ## Roots
 | Name | Local | Colab | In git? |
