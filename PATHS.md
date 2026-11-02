@@ -38,3 +38,8 @@ Never hard-code a path string anywhere else.
 1. A frozen file is never edited; changes = new version (v2), old kept.
 2. Every compute-heavy result is saved before it's used.
 3. Any number quoted in the write-up must appear in canonical_numbers.txt.
+
+## Model facts (Tiny Aya Global, measured 2026-11-02 on Colab T4)
+- model_type: cohere2 | layers: 36 | hidden_size: 2048 | fp16 on GPU: 6.7 GB
+- Direction tensor per language: [36, 2048] (one r_{l,k} per layer)
+- transformers 5.x: apply_chat_template needs return_dict=True; pass **enc to generate
