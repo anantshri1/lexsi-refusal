@@ -1,4 +1,4 @@
-# PATHS — read this first in every new chat
+# PATHS, RECCE — read this first in every new chat
 
 Code defines paths ONLY in `src/paths.py`. Notebooks/scripts: `from paths import *`.
 Never hard-code a path string anywhere else.
