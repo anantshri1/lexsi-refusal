@@ -1,0 +1,13 @@
+# large artefacts live on the HF Hub, not git
+data/raw/*
+data/interim/*
+outputs/**
+!**/.gitkeep
+*.pt
+*.safetensors
+# environment
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+.env
