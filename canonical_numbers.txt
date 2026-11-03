@@ -1,7 +1,21 @@
 # Phase 1 — curation
 curation_kappa_keepdrop_vague      0.27    # n=30, seed 0, Anant vs Claude
-curation_kappa_keepdrop_written    0.585   # n=30, fresh (v3), written criteria
+curation_kappa_keepdrop_written    0.585   # n=30, fresh set (v3), written criteria
 curation_kappa_5way_written        0.652
+multijail_total                    315
+h_core_available_dedup             149     # after near-dup removal
 n_pairs_selected                   133     # 100 H_core + 33 H_bait
+
 # Phase 1 — MT
-chrf_nllb33_en_it_vs_multijail     66.7    # n=133 harmful, corpus chrF, pre-sentence-split
+chrf_nllb33_en_it_vs_multijail     66.7    # n=133 harmful, corpus chrF, pre-sentence-split; ref localises names
+bt_short_it_nllb_v1_v2             19 -> 2   # BT <70% length, before/after sentence-split (n=266)
+bt_short_de_nllb_v1_v2             27 -> 4
+ml_chillu_atomic_vs_virama_nllb    433 / 509 # proper vs broken encoding, totals over 266 rows
+ml_chillu_atomic_vs_virama_google  823 / 182
+checker_flags_harmful              18      # it 4, de 3, hi 1, ml 10 (n=532 harmful BTs)
+checker_softened_after_preedit     0 / 18
+
+# Phase 1 — frozen benchmark
+benchmark_v1_rows                  1770    # 133x2x6 orig (en,it,de,hi,ml,hi-Latn) + 29x2x3 para (en,hi,ml)
+benchmark_v1_paraphrase_pairs      29      # #169 dropped (weakened paraphrase)
+benchmark_v1_sha256                9d727751d3cbbad74ad8e179e4e2b505f83681623febe9e2d424959b21a3871d

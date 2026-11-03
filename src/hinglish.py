@@ -18,7 +18,7 @@ def to_latn(t):
     iast = sanscript.transliterate(t, sanscript.DEVANAGARI, sanscript.IAST)
     iast = iast.replace("ṃ", "n").replace("m̐", "n").replace("|", ".")              # nasal marks -> n; danda -> .
     iast = iast.replace("ch", "\x00").replace("c", "ch").replace("\x00", "chh")   # c->ch, ch->chh (order matters)
-    return unidecode(iast)
+    return unidecode(iast).replace("~", "n").replace("N", "n")
 
 g["hi_latn"] = g["hi_final"].apply(to_latn)
 out = g[["mj_id", "polarity", "hi_final", "hi_latn"]]
