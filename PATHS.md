@@ -11,6 +11,15 @@ Never hard-code a path string anywhere else.
   - anantshri1/lexsi-refusal-artefacts (dataset): generations, judgements, directions, logs
 - Model: CohereLabs/tiny-aya-global (fallback CohereLabs/aya-expanse-8b)
 
+### Sync rule (Mac <-> Drive) — added 2026-11-03 after a FileNotFoundError
+- Drive (/content/drive/MyDrive/lexsi-refusal) is the SOURCE OF TRUTH for DATA_RAW / DATA_INTERIM / outputs.
+- Mac data/interim is a MIRROR for Claude to read/write. Anything Claude writes there
+  must be uploaded to Drive before Colab uses it; anything Colab writes must be
+  downloaded to Mac before Claude can check it.
+- Files made on Mac (Claude or Sheets) so far: checker_flags_v1.csv, gsheets_input.csv,
+  gsheets_fix_input.csv, mt_gsheets.csv, mt_gsheets_fix.csv, benign_twins_claude.csv,
+  multijail_labelling_sheet_claude(_v2).csv
+
 ## Roots
 | Name | Local | Colab | In git? |
 |---|---|---|---|
