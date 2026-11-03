@@ -43,3 +43,35 @@ Never hard-code a path string anywhere else.
 - model_type: cohere2 | layers: 36 | hidden_size: 2048 | fp16 on GPU: 6.7 GB
 - Direction tensor per language: [36, 2048] (one r_{l,k} per layer)
 - transformers 5.x: apply_chat_template needs return_dict=True; pass **enc to generate
+
+## Benchmark schema (v1, frozen 2026-11-03)
+File: DATA_FROZEN/benchmark_v1.jsonl — long format, one row = one prompt × lang × variant. Never edited; changes -> v2.
+Join key for EVERY downstream output (generations, judgements, activations, comprehension): `uid`.
+
+| field | type | values / example |
+|---|---|---|
+| uid | str | `{pair_id}-{h|b}-{lang}-{orig|para}` e.g. `mj009-h-hi-orig` |
+| pair_id | str | `mj` + MultiJail id zero-padded to 3, e.g. `mj009` |
+| mj_id | int/null | MultiJail id; null for benign |
+| polarity | str | harmful / benign |
+| tier | str | H_core / H_bait (benign inherits its pair's tier) |
+| primary_tag | str | first MultiJail tag — coverage only, never per-category reporting |
+| lang | str | en / it / de / hi / ml / hinglish |
+| variant | str | original / paraphrase |
+| text | str | prompt |
+| origin | str | multijail_en / mt:<engine> / authored / paraphrase:<who> |
+| validation | str | source / native / back_translation / spot_check |
+| bt_text | str/null | English back-translation (null for en) |
+| notes | str | |
+
+Counts: 133 pairs (100 H_core + 33 H_bait) × 2 polarities × 5 langs = 1330
+        + hinglish: 30 pairs × 2 = 60 (variant=original)
+        + paraphrase: same 30 pairs × 2 × {en, hi, ml} = 180
+        = 1570 rows
+Variant subset: 30 pairs, seed 0, stratified ~23 H_core + 7 H_bait.
+
+Interim files (DATA_INTERIM, not frozen):
+- multijail_labelling_sheet_reviewed.csv — curation labels (H_core/H_bait/B/A/X)
+- multijail_selection_log.csv — all 315 rows + selected flag (drop log)
+- multijail_selected_v1.csv — 133 selected + it_multijail (MT reference, NOT a benchmark row)
+NOT in the frozen file: comprehension results (outputs/, keyed by uid).
