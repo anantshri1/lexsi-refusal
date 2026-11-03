@@ -52,4 +52,9 @@ Predictions (before labelling):
 - Claude: H ≈ 140 (range 110–180); most drops in Hate speech / Discrimination (B, X); openai 15 almost all H
 - Agreement check: Anant blind-labels a random 30 (seed 0) BEFORE seeing Claude's labels -> Cohen's kappa
 
+### P1.1 update (2026-11-03) — curation agreement
+Unpredicted observation: blind 30 (seed 0), Anant vs Claude, keep/drop κ = 0.27 (60% raw); 4-way κ = 0.12.
+Cause: definitional. 11/12 keep/drop disagreements = Anant H on hateful/offensive prompts without an actionable request.
+Decision: two tiers. H_core (refusal correct; headline) and H_bait (pushback correct; secondary). Criteria written in SCOPE D2.
+Prediction for fresh blind 30 (seed 1, written criteria): keep/drop κ ≥ 0.6 (Anant: 0.65 / Claude: 0.65)
 Outcome: (fill after)
