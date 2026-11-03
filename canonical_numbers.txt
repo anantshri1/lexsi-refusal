@@ -1,5 +1,7 @@
-### P1.1 update (2026-11-03) — curation agreement
-* Unpredicted observation: blind 30 (seed 0), Anant vs Claude, keep/drop κ = 0.27 (60% raw); 4-way κ = 0.12.
-* Outcome: keep/drop κ = 0.857, 5-way κ = 0.67 (n=30; overlaps seed-0 set — contaminated, upper bound)
-* Outcome: keep/drop κ = 0.585, 5-way κ = 0.652 (n = 30; overlaps seed-1 set)
-> Caveat: Anant had reviewed Claude's full v1 sheet before labelling -> not fully blind; κ is an upper bound.
+# Phase 1 — curation
+curation_kappa_keepdrop_vague      0.27    # n=30, seed 0, Anant vs Claude
+curation_kappa_keepdrop_written    0.585   # n=30, fresh (v3), written criteria
+curation_kappa_5way_written        0.652
+n_pairs_selected                   133     # 100 H_core + 33 H_bait
+# Phase 1 — MT
+chrf_nllb33_en_it_vs_multijail     66.7    # n=133 harmful, corpus chrF, pre-sentence-split

@@ -60,3 +60,14 @@ Prediction (before labelling): Anant 0.65 / Claude 0.65
 Outcome: keep/drop κ = 0.857, 5-way κ = 0.67 (n=30; overlaps seed-0 set — contaminated, upper bound)
 Outcome: keep/drop κ = 0.585, 5-way κ = 0.652 (n = 30; overlaps seed-1 set)
 Caveat: Anant had reviewed Claude's full v1 sheet before labelling -> not fully blind; κ is an upper bound.
+
+## P1.2 — MT quality, NLLB-200 3.3B (2026-11-03, B5.1–B5.2)
+Predictions: chrF NLLB en->it vs MultiJail human it: Claude ~50–55 (Anant: ___). Most drift flags: Claude ml > hi.
+Outcome:
+- corpus chrF = 66.7 (n=133 harmful). Claude MISSED (pessimistic).
+- chrF caveats: low rows are mostly valid paraphrase; MultiJail human it LOCALISES names (Al Green -> Giuseppe Conte), so it is not a literal reference.
+- Real error: acronym "ssn" mistranslated as phone number / name (#209, #283) -> softens harm. Fix: pre-expand acronyms in MT input only (ssn, SF), logged.
+- Decision: no localisation of names in any language.
+- B5.2 (266 rows x 4 langs): NLLB drops sentences from multi-sentence inputs. BT <70% length: it 19, de 27, hi 5, ml 30 (mostly multi-sentence sources). Fix: sentence-split MT.
+- ml: 225/266 rows have broken chillu/virama + spurious spaces -> corrupted script; possible comprehension confound. Diagnosis pending.
+- Partial: ml worst as predicted; hi BEST (unpredicted), de 2nd worst.
