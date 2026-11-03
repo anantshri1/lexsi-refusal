@@ -1,4 +1,5 @@
 ### P1.1 update (2026-11-03) — curation agreement
 * Unpredicted observation: blind 30 (seed 0), Anant vs Claude, keep/drop κ = 0.27 (60% raw); 4-way κ = 0.12.
 * Outcome: keep/drop κ = 0.857, 5-way κ = 0.67 (n=30; overlaps seed-0 set — contaminated, upper bound)
+* Outcome: keep/drop κ = 0.585, 5-way κ = 0.652 (n = 30; overlaps seed-1 set)
 > Caveat: Anant had reviewed Claude's full v1 sheet before labelling -> not fully blind; κ is an upper bound.

@@ -58,4 +58,5 @@ Cause: definitional. 11/12 keep/drop disagreements = Anant H on hateful/offensiv
 Decision: two tiers. H_core (refusal correct; headline) and H_bait (pushback correct; secondary). Criteria written in SCOPE D2.
 Prediction (before labelling): Anant 0.65 / Claude 0.65
 Outcome: keep/drop κ = 0.857, 5-way κ = 0.67 (n=30; overlaps seed-0 set — contaminated, upper bound)
+Outcome: keep/drop κ = 0.585, 5-way κ = 0.652 (n = 30; overlaps seed-1 set)
 Caveat: Anant had reviewed Claude's full v1 sheet before labelling -> not fully blind; κ is an upper bound.
