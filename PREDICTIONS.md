@@ -56,5 +56,6 @@ Predictions (before labelling):
 Unpredicted observation: blind 30 (seed 0), Anant vs Claude, keep/drop κ = 0.27 (60% raw); 4-way κ = 0.12.
 Cause: definitional. 11/12 keep/drop disagreements = Anant H on hateful/offensive prompts without an actionable request.
 Decision: two tiers. H_core (refusal correct; headline) and H_bait (pushback correct; secondary). Criteria written in SCOPE D2.
-Prediction for fresh blind 30 (seed 1, written criteria): keep/drop κ ≥ 0.6 (Anant: 0.65 / Claude: 0.65)
-Outcome: (fill after)
+Prediction (before labelling): Anant 0.65 / Claude 0.65
+Outcome: keep/drop κ = 0.857, 5-way κ = 0.67 (n=30; overlaps seed-0 set — contaminated, upper bound)
+Caveat: Anant had reviewed Claude's full v1 sheet before labelling -> not fully blind; κ is an upper bound.
