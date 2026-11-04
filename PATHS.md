@@ -38,6 +38,7 @@ Never hard-code a path string anywhere else.
 | DIRECTIONS | ARTEFACT_ROOT/outputs/directions | no | refusal directions r_{l,k} |
 | FIGURES | REPO_ROOT/figures | YES | plots |
 | CANONICAL | REPO_ROOT/canonical_numbers.txt | YES | ground-truth numbers |
+| COMPREHENSION | ARTEFACT_ROOT/outputs/comprehension | no | restatements + judge scores, keyed by uid |
 
 ## File naming (to fill as we go)
 - Generations: TBD in Phase 2

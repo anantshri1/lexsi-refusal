@@ -71,3 +71,5 @@ Outcome:
 - B5.2 (266 rows x 4 langs): NLLB drops sentences from multi-sentence inputs. BT <70% length: it 19, de 27, hi 5, ml 30 (mostly multi-sentence sources). Fix: sentence-split MT.
 - ml: 225/266 rows have broken chillu/virama + spurious spaces -> corrupted script; possible comprehension confound. Diagnosis pending.
 - Partial: ml worst as predicted; hi BEST (unpredicted), de 2nd worst.
+
+- comprehension: en < 2%, it/de < 5%, hi 5–10%, ml 10–20%, hi-Latn 15–30% (Claude)

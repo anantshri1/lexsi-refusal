@@ -26,6 +26,7 @@ JUDGEMENTS    = ARTEFACT_ROOT / "outputs" / "judgements"
 ACTIVATIONS   = ARTEFACT_ROOT / "outputs" / "activations"
 DIRECTIONS    = ARTEFACT_ROOT / "outputs" / "directions"
 FIGURES       = REPO_ROOT / "figures"
+COMPREHENSION = ARTEFACT_ROOT / "outputs" / "comprehension"
 
 # --- ground-truth files ---
 CANONICAL     = REPO_ROOT / "canonical_numbers.txt"
