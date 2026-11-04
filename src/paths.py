@@ -32,7 +32,7 @@ COMPREHENSION = ARTEFACT_ROOT / "outputs" / "comprehension"
 CANONICAL     = REPO_ROOT / "canonical_numbers.txt"
 
 # Create artefact dirs (needed on Colab/Drive, where the .gitkeep skeleton doesn't exist)
-for _p in [DATA_RAW, DATA_INTERIM, GENERATIONS, JUDGEMENTS, ACTIVATIONS, DIRECTIONS, FIGURES]:
+for _p in [DATA_RAW, DATA_INTERIM, GENERATIONS, JUDGEMENTS, ACTIVATIONS, DIRECTIONS, COMPREHENSION, FIGURES]:
     _p.mkdir(parents=True, exist_ok=True)
 
 # --- Hugging Face Hub ids (sync layer + submission) ---
