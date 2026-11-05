@@ -23,3 +23,9 @@ benchmark_v1_sha256                9d727751d3cbbad74ad8e179e4e2b505f83681623febe
 judge_qwen7b_kappa_w_vs_anant      0.872   # n=40, quadratic-weighted
 judge_qwen7b_binary_agree_ge4      0.95    # kappa 0.898
 comprehension_benign_understood    en 99% | it 91% | de 93% | hi 90% | ml 38% | hi-Latn 12%   # n=133 each, judge score>=4
+
+judge2_combined_agree_vs_anant     17/18   # rule(jaccard>=0.5)+Qwen7B; 2 ambiguous excluded
+judge2_rule_vs_judge_rows          149 / 456
+pairs_kept_orig                    en 132 | it 131 | de 129 | hi 124 | ml 43 | hi-Latn 11   # of 133
+pairs_kept_para                    en 29 | hi 28 | ml 8   # of 29
+comprehension_understood_benign    en 100% | it 99% | de 98% | hi 96% | ml 61% | hi-Latn 26%

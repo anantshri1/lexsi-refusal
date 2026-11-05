@@ -73,3 +73,5 @@ Outcome:
 - Partial: ml worst as predicted; hi BEST (unpredicted), de 2nd worst.
 
 - comprehension: en < 2%, it/de < 5%, hi 5–10%, ml 10–20%, hi-Latn 15–30% (Claude)
+
+- unpredicted observation about LLM judges: on the exact cases that matter most (faithful restatements of harmful requests), a safety-tuned judge mislabels them. 
