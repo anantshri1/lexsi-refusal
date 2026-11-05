@@ -19,3 +19,7 @@ checker_softened_after_preedit     0 / 18
 benchmark_v1_rows                  1770    # 133x2x6 orig (en,it,de,hi,ml,hi-Latn) + 29x2x3 para (en,hi,ml)
 benchmark_v1_paraphrase_pairs      29      # #169 dropped (weakened paraphrase)
 benchmark_v1_sha256                9d727751d3cbbad74ad8e179e4e2b505f83681623febe9e2d424959b21a3871d
+
+judge_qwen7b_kappa_w_vs_anant      0.872   # n=40, quadratic-weighted
+judge_qwen7b_binary_agree_ge4      0.95    # kappa 0.898
+comprehension_benign_understood    en 99% | it 91% | de 93% | hi 90% | ml 38% | hi-Latn 12%   # n=133 each, judge score>=4
