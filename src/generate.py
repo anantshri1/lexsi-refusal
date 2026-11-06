@@ -1,5 +1,5 @@
 """Phase 2 B1 — greedy generation for one (model, condition) over benchmark rows. Resumable by uid."""
-import hashlib
+import hashlib, json, time
 import torch, pandas as pd
 from paths import DATA_FROZEN, GENERATIONS
 
@@ -39,3 +39,47 @@ def generate_batch(model, tok, texts, condition, max_new_tokens):
         out.append(dict(response=tok.decode(ids, skip_special_tokens=True).strip(),
                         ids=ids, n_new_tokens=len(ids), hit_eos=cut is not None))
     return out
+
+
+def _done_uids(path):
+    """uids already saved. Tolerates a half-written last line (crash mid-write)."""
+    done = set()
+    if path.exists():
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                try:
+                    done.add(json.loads(line)["uid"])
+                except json.JSONDecodeError:
+                    pass
+    return done
+
+
+def run(model, tok, bench, model_name, condition, max_new_tokens=512, bs=16, version=1):
+    """Generate for every row of `bench` not yet in the output file. Append per batch; safe to re-run."""
+    path = GENERATIONS / f"gen_{model_name}_{condition}_v{version}.jsonl"
+    if path.exists() and path.stat().st_size and not path.read_bytes().endswith(b"\n"):
+        with open(path, "a", encoding="utf-8") as f:
+            f.write("\n")                                   # seal a half-written line before appending
+    done = _done_uids(path)
+    todo = bench[~bench.uid.isin(done)].copy()
+    todo["n_tok"] = [len(tok(t).input_ids) for t in todo.text]
+    todo = todo.sort_values(["n_tok", "uid"])                # similar lengths together: less padding, fixed order
+    print(f"{path.name}: done {len(done)} | todo {len(todo)}")
+
+    meta = dict(model=model_name, condition=condition, max_new_tokens=max_new_tokens)
+    t0 = time.time()
+    for i in range(0, len(todo), bs):
+        chunk = todo.iloc[i:i + bs]
+        try:
+            outs = generate_batch(model, tok, chunk.text.tolist(), condition, max_new_tokens)
+        except torch.OutOfMemoryError:
+            torch.cuda.empty_cache()
+            outs = [generate_batch(model, tok, [t], condition, max_new_tokens)[0] for t in chunk.text]
+            print(f"OOM at row {i} -> row by row")
+        with open(path, "a", encoding="utf-8") as f:         # append = crash-safe
+            for uid, o in zip(chunk.uid, outs):
+                f.write(json.dumps({"uid": uid, **meta, **o}, ensure_ascii=False) + "\n")
+        if (i // bs) % 10 == 0:
+            print(f"{i + len(chunk)}/{len(todo)}  {(time.time() - t0) / 60:.1f} min")
+    print("finished:", path)
+    return path
