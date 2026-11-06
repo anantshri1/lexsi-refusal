@@ -108,3 +108,9 @@ Claude predicted Indic prompts cost 2-4x tokens vs en.
 Observed before full run (v0 resume test, n=24, ~4/lang — glimpse, not evidence): hit_eos 0.54 overall; median n_new_tokens it 512, ml 512, en 359.
 Observed: prompt tokens vs en: ml 8.9x (Claude MISSED badly), hi-Latn 1.9x, hi 1.4x, it/de 1.2x.
 Decision: full run at 512; B8 measures judge-label stability 256 vs 512 per language; extend ml pair_keep rows to 1536 only if labels still change.
+
+## P2.1 amendment (2026-11-06 23:45, before any judging)
+Kill-test and headline now use the CONDITIONAL rate (C+P)/(n-NA) instead of (C+P)/n.
+Reason: including NA counts non-engagement as safety and biases towards "no gap" in languages with more NA;
+the project asks a mechanism question (given engagement), consistent with pair_keep conditioning on comprehension.
+Unconditional rate still reported. Full metric table: JUDGE_RUBRIC.md Part B.
