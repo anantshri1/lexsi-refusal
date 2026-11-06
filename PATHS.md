@@ -43,7 +43,7 @@ Never hard-code a path string anywhere else.
 ## File naming (to fill as we go)
 - Generations: GENERATIONS/gen_{model}_{condition}_v{n}.jsonl, e.g. gen_tinyaya_base_v1.jsonl
   model in {tinyaya, expanse}; condition in {base, sysprompt, translate_en}
-  fields: uid, model, condition, max_new_tokens, n_new_tokens, hit_eos, response
+  fields: uid, model, condition, max_new_tokens, n_new_tokens, hit_eos, response, ids (generated token ids, EOS excluded; for exact B8 truncation)
 - Judgements: JUDGEMENTS/judge_{judge}_{gen-file-stem}_v{n}.jsonl (judge e.g. qwen72b) — finalise in B2
 - Directions: TBD in Phase 3
 
