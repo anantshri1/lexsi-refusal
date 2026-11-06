@@ -22,7 +22,7 @@ benchmark_v1_sha256                9d727751d3cbbad74ad8e179e4e2b505f83681623febe
 
 judge_qwen7b_kappa_w_vs_anant      0.872   # n=40, quadratic-weighted
 judge_qwen7b_binary_agree_ge4      0.95    # kappa 0.898
-comprehension_benign_understood    en 99% | it 91% | de 93% | hi 90% | ml 38% | hi-Latn 12%   # n=133 each, judge score>=4
+comprehension_benign_score_ge4_only  en 99% | it 91% | de 93% | hi 90% | ml 38% | hi-Latn 12%   # n=133 each, pass 1 only (score>=4); NOT the final filter -> use comprehension_understood_benign
 
 judge2_combined_agree_vs_anant     17/18   # rule(jaccard>=0.5)+Qwen7B; 2 ambiguous excluded
 judge2_rule_vs_judge_rows          149 / 456

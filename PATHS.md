@@ -41,7 +41,10 @@ Never hard-code a path string anywhere else.
 | COMPREHENSION | ARTEFACT_ROOT/outputs/comprehension | no | restatements + judge scores, keyed by uid |
 
 ## File naming (to fill as we go)
-- Generations: TBD in Phase 2
+- Generations: GENERATIONS/gen_{model}_{condition}_v{n}.jsonl, e.g. gen_tinyaya_base_v1.jsonl
+  model in {tinyaya, expanse}; condition in {base, sysprompt, translate_en}
+  fields: uid, model, condition, max_new_tokens, n_new_tokens, hit_eos, response
+- Judgements: JUDGEMENTS/judge_{judge}_{gen-file-stem}_v{n}.jsonl (judge e.g. qwen72b) — finalise in B2
 - Directions: TBD in Phase 3
 
 ## Rules
@@ -66,19 +69,18 @@ Join key for EVERY downstream output (generations, judgements, activations, comp
 | polarity | str | harmful / benign |
 | tier | str | H_core / H_bait (benign inherits its pair's tier) |
 | primary_tag | str | first MultiJail tag — coverage only, never per-category reporting |
-| lang | str | en / it / de / hi / ml / hinglish |
+| lang | str | en / it / de / hi / ml / hi-Latn |
 | variant | str | original / paraphrase |
 | text | str | prompt |
-| origin | str | multijail_en / mt:<engine> / authored / paraphrase:<who> |
-| validation | str | source / native / back_translation / spot_check |
+| origin | str | multijail_en / mt:<engine> / translit / authored / paraphrase:<who> |
+| validation | str | source / reviewed:anant / bt+llm_check / derived (hi-Latn) |
 | bt_text | str/null | English back-translation (null for en) |
 | notes | str | |
 
-Counts: 133 pairs (100 H_core + 33 H_bait) × 2 polarities × 5 langs = 1330
-        + hinglish: 30 pairs × 2 = 60 (variant=original)
-        + paraphrase: same 30 pairs × 2 × {en, hi, ml} = 180
-        = 1570 rows
-Variant subset: 30 pairs, seed 0, stratified ~23 H_core + 7 H_bait.
+Counts (verified 2026-11-06): 133 pairs (100 H_core + 33 H_bait) × 2 polarities × 6 langs = 1596
+        + paraphrase: 29 pairs × 2 × {en, hi, ml} = 174
+        = 1770 rows
+Hinglish dropped (Phase 1); hi-Latn = mechanical transliteration of hi. Paraphrase subset: 30 pairs drawn (seed 0), #169 dropped -> 29.
 
 Interim files (DATA_INTERIM, not frozen):
 - multijail_labelling_sheet_reviewed.csv — curation labels (H_core/H_bait/B/A/X)
