@@ -101,3 +101,10 @@ Predictions — Claude:
   (Indic scripts cost ~2-4x more tokens per word).
 - Kill-test: GO ~35%. Most likely source of a gap: hi.
 - Expanse comprehension: ml < Tiny Aya's 61% (not a supported language); hi-Latn uncertain.
+
+## P2.2 — Generation length (2026-11-06, before full base run)
+Predictions — Claude (stated in chat before the v0 test): hit_eos within 512: en/it/de ~85%, hi ~70%, ml ~45%, hi-Latn ~70%.
+Claude predicted Indic prompts cost 2-4x tokens vs en.
+Observed before full run (v0 resume test, n=24, ~4/lang — glimpse, not evidence): hit_eos 0.54 overall; median n_new_tokens it 512, ml 512, en 359.
+Observed: prompt tokens vs en: ml 8.9x (Claude MISSED badly), hi-Latn 1.9x, hi 1.4x, it/de 1.2x.
+Decision: full run at 512; B8 measures judge-label stability 256 vs 512 per language; extend ml pair_keep rows to 1536 only if labels still change.

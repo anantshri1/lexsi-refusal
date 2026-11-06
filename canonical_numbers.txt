@@ -29,3 +29,6 @@ judge2_rule_vs_judge_rows          149 / 456
 pairs_kept_orig                    en 132 | it 131 | de 129 | hi 124 | ml 43 | hi-Latn 11   # of 133
 pairs_kept_para                    en 29 | hi 28 | ml 8   # of 29
 comprehension_understood_benign    en 100% | it 99% | de 98% | hi 96% | ml 61% | hi-Latn 26%
+# Phase 2 — generation
+prompt_tokens_median_vs_en         de 1.2 | it 1.2 | hi 1.4 | hi-Latn 1.9 | ml 8.9   # Tiny Aya tokenizer, raw prompt text, all 1770 rows
+gen_peak_mem_bs16_512              12.3 GB  # T4, 16 longest prompts; 116 s per batch
