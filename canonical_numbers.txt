@@ -43,3 +43,7 @@ judge_j1_metric_benign_RPB_vs_rest kappa 0.000 | agree 0.958   # n=24; kappa deg
 judge_j1_kappa_ml_vs_nonml         0.263 (n=12) | 0.579 (n=60)
 judge_j1_kappa_by_cut              t512 0.533 | t256 0.489 | t128 0.510 | t64 0.374
 judge_j1_unparsed_t512_after_retry 6 / 1770
+# judge j2 (Part A v2) on audit_v1 = DEV set; 3/72 unparsed excluded. "adj" = after adjudication (dev only)
+judge_metric_harmful_kappa_j1_vs_j2  recorded 0.368 -> 0.404 | adj 0.474 -> 0.512   # n=48/47
+judge_metric_harmful_kappa_by_lang   en/it/de/hi: j1 0.455 (n=32) -> j2 0.514 (n=31) | ml+hi-Latn: 0.25 -> 0.25 recorded, 0.50 adj (n=16)
+judge_j2_kappa_5way_adj            0.669   # n=69

@@ -58,7 +58,7 @@ for cut in CUTS:
     by_cut[cut] = d
     rows.append(report(d, f"all@t{cut}"))
 d = by_cut[512]
-H, B = d[d.polarity == "harmful"], d[d.polarity == "benign"]
+H, B = d[(d.polarity == "harmful") & d.judge.notna()], d[(d.polarity == "benign") & d.judge.notna()]   # unparsed judge rows excluded (bugfix)
 rows += [report(H, "harmful"), report(B, "benign"),
          report(d[d.lang == "ml"], "ml (translation)"), report(d[d.lang != "ml"], "non-ml"),
          report(d[d.raw_clean == True], "judge raw_clean"), report(d[d.raw_clean == False], "judge glitched")]

@@ -131,3 +131,11 @@ Claude predicted: 5-way kappa ~0.6; METRIC harmful kappa ~0.75; ml and glitched 
 Outcome: 5-way 0.533; METRIC harmful 0.368 (agree 0.75) — MISSED badly; ml 0.26 ✔; glitched 0.25 (n=7) ✔; t64 0.37 vs t128-512 ~0.5 ✔.
 Claude's earlier claim "most hi-Latn prompts get Devanagari answers" (from judge response_lang) was WRONG: judge-free count = 26-29%.
 The judge labels romanised Hindi as "hi" -> response_lang is unreliable for hi-Latn.
+
+## P2.4 — Judge j2 on dev (audit_v1), 2026-11-07 23:30
+Stop rule (fixed before run): ADJ METRIC harmful kappa < 0.55 -> stop; no more judge spend; ml descriptive.
+Claude predicted ~0.6 with most gain on ml. Outcome: 0.512 -> STOP RULE TRIGGERED. Gain over j1 only +0.04 (0.474 -> 0.512);
+ml+hi-Latn unchanged (0.50 adj). Truncation->PARTIAL artefact fixed (judge PARTIAL 8 -> 1), but those rows moved to
+COMPLIANCE: human NON_ANSWER -> judge COMPLIANCE 1 -> 6 (off-target answers to misread prompts, mostly hi-Latn).
+Note: kappa SE at n~47 is ~0.1-0.15, so 0.51 vs 0.55 is within noise; the rule is followed anyway, not relitigated.
+Script bug found and fixed: recorded METRIC rows counted unparsed judge rows as "not failure" (j2 0.368 printed; true 0.404).
