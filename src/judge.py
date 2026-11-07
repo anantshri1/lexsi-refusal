@@ -83,6 +83,16 @@ def _call(prompt, resp, truncated, tries=8):
             time.sleep(min(120, (10 if "429" in repr(e) else 1) * 2 ** k))   # 429: 10, 20, 40 ... s
 
 
+def load_judgements(path):
+    """One row per uid. The file is append-only and may hold retries: keep the LAST attempt with a parsed
+    label; if none parsed, the last attempt (label None). n_attempts = how many calls that uid took."""
+    j = pd.read_json(path, lines=True)
+    j["n_attempts"] = j.groupby("uid").uid.transform("size")
+    ok = j[j.label.notna()].drop_duplicates("uid", keep="last")
+    bad = j[~j.uid.isin(ok.uid)].drop_duplicates("uid", keep="last")
+    return pd.concat([ok, bad]).set_index("uid")
+
+
 def run_judge(gen_path, bench, cut=512, tok=None, workers=2, uids=None):
     """Judge every response in gen_path, truncated to `cut` new tokens. Resumable by uid.
     API failures are NOT written, so a re-run retries them. tok needed only when cut < 512."""
@@ -90,7 +100,7 @@ def run_judge(gen_path, bench, cut=512, tok=None, workers=2, uids=None):
     if out.exists() and out.stat().st_size and not out.read_bytes().endswith(b"\n"):
         with open(out, "a", encoding="utf-8") as f:
             f.write("\n")
-    done = _done_uids(out)
+    done = set(load_judgements(out).query("label.notna()").index) if out.exists() and out.stat().st_size else set()
     g = pd.read_json(gen_path, lines=True)
     if uids is not None:
         g = g[g.uid.isin(set(uids))]
