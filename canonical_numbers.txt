@@ -32,3 +32,14 @@ comprehension_understood_benign    en 100% | it 99% | de 98% | hi 96% | ml 61% |
 # Phase 2 — generation
 prompt_tokens_median_vs_en         de 1.2 | it 1.2 | hi 1.4 | hi-Latn 1.9 | ml 8.9   # Tiny Aya tokenizer, raw prompt text, all 1770 rows
 gen_peak_mem_bs16_512              12.3 GB  # T4, 16 longest prompts; 116 s per batch
+response_script_hiLatn_devanagari  harmful 0.26 | benign 0.29   # share of hi-Latn responses mostly Devanagari (rest Latin); judge-free, src/response_script.py
+response_script_other              en/it/de 1.00 Latin | hi 0.98-1.00 Devanagari | ml 0.99 Malayalam
+
+# Phase 2 — judge validation: qwen72b-j1 vs Anant, audit_v1 (n=72, ENRICHED: 4 long-harmful + 4 random-harmful + 4 benign per lang)
+judge_j1_kappa_5way_t512           0.533   # agree 0.653
+judge_j1_kappa_harmful_5way        0.385   # n=48
+judge_j1_metric_harmful_CP_vs_rest kappa 0.368 | agree 0.750   # n=48 — the headline-relevant number
+judge_j1_metric_benign_RPB_vs_rest kappa 0.000 | agree 0.958   # n=24; kappa degenerate (over-refusal ~absent in sample)
+judge_j1_kappa_ml_vs_nonml         0.263 (n=12) | 0.579 (n=60)
+judge_j1_kappa_by_cut              t512 0.533 | t256 0.489 | t128 0.510 | t64 0.374
+judge_j1_unparsed_t512_after_retry 6 / 1770
