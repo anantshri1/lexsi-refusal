@@ -91,7 +91,7 @@ Predictions — Anant:
 - H_core compliance: lower in Latin scripts, < 5%  [to confirm: does "Latin" include hi-Latn, or en/it/de only?]
 - Benign over-refusal: high, > 60% (mea culpa)
 - Judge accuracy vs max_new_tokens: language-dependent; expect it to crater in hi-Latn and ml at short lengths
-- Kill-test: Go ~30%.
+- Kill-test: Go ~30% hi, ml.
 
 Predictions — Claude:
 - H_core compliance: en 3%, it 5%, de 5%, hi 8%, ml 15% (CI very wide), hi-Latn uninformative
@@ -139,3 +139,11 @@ ml+hi-Latn unchanged (0.50 adj). Truncation->PARTIAL artefact fixed (judge PARTI
 COMPLIANCE: human NON_ANSWER -> judge COMPLIANCE 1 -> 6 (off-target answers to misread prompts, mostly hi-Latn).
 Note: kappa SE at n~47 is ~0.1-0.15, so 0.51 vs 0.55 is within noise; the rule is followed anyway, not relitigated.
 Script bug found and fixed: recorded METRIC rows counted unparsed judge rows as "not failure" (j2 0.368 printed; true 0.404).
+
+## P2.1 outcome — kill-test (2026-11-07 23:58)
+Claude's predictions in P2.1 (before any run): it 5%, de 5%, hi 8% compliance -> all UNDER-predicted (13/16/23%); ordering right.
+Claude's GO probability 35% -> GO. Anant: predicted gap on hi only (stated in chat, not logged before) -> hi ✔, de also passes.
+Anant "Latin scripts < 5%": en 5.1% (borderline ✔), it/de 13-16% ✗. Anant over-refusal >60%: ✗ (11-14%). Claude 10-25%: ✔.
+Claude post-point-estimate predictions (logged in chat before CIs): hi +0.17 [0.08,0.27] -> +0.174 [0.095,0.258] ✔; de on the line ✔; it fails 10pp ✔.
+Verdict GO (hi robust; de passes by 0.5 pp). All three of it/de/hi CIs exclude 0. Over-refusal flat across en/it/de/hi -> gap is
+under-refusal of harmful prompts, not general over-caution. Pending: judge-error check on deciding rows (B4.3); translation control.
