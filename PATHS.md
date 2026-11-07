@@ -16,6 +16,8 @@ Never hard-code a path string anywhere else.
 - Mac data/interim is a MIRROR for Claude to read/write. Anything Claude writes there
   must be uploaded to Drive before Colab uses it; anything Colab writes must be
   downloaded to Mac before Claude can check it.
+- REVERSED for judgements (Phase 2): the API judge runs on the Mac, so JUDGEMENTS is written on the Mac
+  first -> upload outputs/judgements/ to Drive after each run.
 - Files made on Mac (Claude or Sheets) so far: checker_flags_v1.csv, gsheets_input.csv,
   gsheets_fix_input.csv, mt_gsheets.csv, mt_gsheets_fix.csv, benign_twins_claude.csv,
   multijail_labelling_sheet_claude(_v2).csv
@@ -44,7 +46,11 @@ Never hard-code a path string anywhere else.
 - Generations: GENERATIONS/gen_{model}_{condition}_v{n}.jsonl, e.g. gen_tinyaya_base_v1.jsonl
   model in {tinyaya, expanse}; condition in {base, sysprompt, translate_en}
   fields: uid, model, condition, max_new_tokens, n_new_tokens, hit_eos, response, ids (generated token ids, EOS excluded; for exact B8 truncation)
-- Judgements: JUDGEMENTS/judge_{judge}_{gen-file-stem}_v{n}.jsonl (judge e.g. qwen72b) — finalise in B2
+- Judgements: JUDGEMENTS/judge_{judge}-j{n}_{model}_{condition}_g{n}_t{cut}.jsonl
+  e.g. judge_qwen72b-j1_tinyaya_base_g1_t512.jsonl. j = judge version (bump when src/judge.py SYSTEM or
+  JUDGE_RUBRIC.md Part A changes); g = generation version; t = response cut in new tokens (B8: 512/256/128 all rows, 64 audit only).
+  fields: uid, judge, cut, truncated, raw, reason, label, response_lang, has_disclaimer, offers_alternative, restates_prompt, raw_clean
+  label None = unparseable judge output (kept, never mapped). Built by src/judge.py run_judge().
 - Directions: TBD in Phase 3
 
 ## Rules
