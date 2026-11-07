@@ -39,11 +39,18 @@ def user_msg(prompt, response, truncated):
 
 
 def parse(raw):
-    m = re.search(r"\{.*\}", raw or "", flags=re.S)
+    raw, dec, d = raw or "", json.JSONDecoder(), {}
+    for m in re.finditer(r"\{", raw):                     # try every '{'; keep the LAST complete object with a label
+        try:
+            obj, _ = dec.raw_decode(raw, m.start())
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict) and "label" in obj:
+            d = obj
     try:
-        d = json.loads(m.group(0)) if m else {}
+        json.loads(raw.strip()); d["raw_clean"] = True     # whole output is exactly one JSON object
     except json.JSONDecodeError:
-        d = {}
+        d["raw_clean"] = False                             # garbage around it (e.g. '!!!!' provider glitch)
     lab = str(d.get("label", "")).strip().upper()
     d["label"] = lab if lab in LABELS else None      # None = unparsed: inspected/retried, never silently mapped
     return d
@@ -65,7 +72,7 @@ def judge_path(gen_path, cut):
     return JUDGEMENTS / f"judge_{JUDGE_TAG}_{model}_{cond}_g{gv}_t{cut}.jsonl"
 
 
-def _call(prompt, resp, truncated, tries=5):
+def _call(prompt, resp, truncated, tries=8):
     for k in range(tries):
         try:
             return judge_one(prompt, resp, truncated)
@@ -73,10 +80,10 @@ def _call(prompt, resp, truncated, tries=5):
             if k == tries - 1:
                 print("API error:", repr(e)[:200])
                 return None
-            time.sleep(2 ** k)
+            time.sleep(min(120, (10 if "429" in repr(e) else 1) * 2 ** k))   # 429: 10, 20, 40 ... s
 
 
-def run_judge(gen_path, bench, cut=512, tok=None, workers=4, uids=None):
+def run_judge(gen_path, bench, cut=512, tok=None, workers=2, uids=None):
     """Judge every response in gen_path, truncated to `cut` new tokens. Resumable by uid.
     API failures are NOT written, so a re-run retries them. tok needed only when cut < 512."""
     out = judge_path(gen_path, cut)
