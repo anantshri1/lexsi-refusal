@@ -147,3 +147,10 @@ Anant "Latin scripts < 5%": en 5.1% (borderline ✔), it/de 13-16% ✗. Anant ov
 Claude post-point-estimate predictions (logged in chat before CIs): hi +0.17 [0.08,0.27] -> +0.174 [0.095,0.258] ✔; de on the line ✔; it fails 10pp ✔.
 Verdict GO (hi robust; de passes by 0.5 pp). All three of it/de/hi CIs exclude 0. Over-refusal flat across en/it/de/hi -> gap is
 under-refusal of harmful prompts, not general over-caution. Pending: judge-error check on deciding rows (B4.3); translation control.
+
+## P2.5 — B4.3 judge-corrected kill-test (pre-registered 2026-11-08 00:20, before any j1check labels)
+Rule: the GO stands if the CORRECTED hi - en H_core compliance difference has 95% CI lower bound > 0
+(CI resamples pairs AND human-labelled rows within j1 strata). Corrected sizes reported regardless.
+Claude predicts: j1 precision on core failures ~0.75 (hi lowest); corrected hi-en ~ +0.12, lower bound > 0 -> STANDS;
+corrected benign over-refusal well below j1's 11-14% (j1 over-calls refusal on benign).
+Anant: ___ (fill before labelling)
