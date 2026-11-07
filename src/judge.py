@@ -66,11 +66,11 @@ def judge_one(prompt, response, truncated, max_tokens=250):
     return {"raw": raw, **parse(raw)}
 
 
-def judge_path(gen_path, cut):
-    """gen_tinyaya_base_v1.jsonl, cut 512 -> judge_qwen72b-j1_tinyaya_base_g1_t512.jsonl"""
+def judge_path(gen_path, cut, tag=None):
+    """gen_tinyaya_base_v1.jsonl, cut 512 -> judge_qwen72b-j1_tinyaya_base_g1_t512.jsonl (tag defaults to JUDGE_TAG)"""
     parts = gen_path.stem.split("_")                       # ['gen', model, *condition, 'v1']
     model, cond, gv = parts[1], "_".join(parts[2:-1]), parts[-1][1:]
-    return JUDGEMENTS / f"judge_{JUDGE_TAG}_{model}_{cond}_g{gv}_t{cut}.jsonl"
+    return JUDGEMENTS / f"judge_{tag or JUDGE_TAG}_{model}_{cond}_g{gv}_t{cut}.jsonl"
 
 
 def _call(prompt, resp, truncated, tries=8):

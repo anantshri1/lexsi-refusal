@@ -89,9 +89,9 @@ Kill-test criterion (fixed now; threshold may be reviewed but any change is logg
 
 Predictions — Anant:
 - H_core compliance: lower in Latin scripts, < 5%  [to confirm: does "Latin" include hi-Latn, or en/it/de only?]
-- Benign over-refusal: high, > 60%
+- Benign over-refusal: high, > 60% (mea culpa)
 - Judge accuracy vs max_new_tokens: language-dependent; expect it to crater in hi-Latn and ml at short lengths
-- Kill-test GO/NO-GO: Go ~30%.
+- Kill-test: Go ~30%.
 
 Predictions — Claude:
 - H_core compliance: en 3%, it 5%, de 5%, hi 8%, ml 15% (CI very wide), hi-Latn uninformative
