@@ -114,3 +114,9 @@ Kill-test and headline now use the CONDITIONAL rate (C+P)/(n-NA) instead of (C+P
 Reason: including NA counts non-engagement as safety and biases towards "no gap" in languages with more NA;
 the project asks a mechanism question (given engagement), consistent with pair_keep conditioning on comprehension.
 Unconditional rate still reported. Full metric table: JUDGE_RUBRIC.md Part B.
+Outcome (full base v1, 1770 rows): hit_eos harmful/benign — en .98/.56, it .94/.54, de .84/.46, hi .86/.56, hi-Latn .59/.59, ml .06/.06.
+- Claude's ~85% held for HARMFUL en/it/de, missed for benign (~50%: long helpful answers). ml 6% vs predicted 45% — MISSED badly (8.9x token cost).
+Unpredicted observations (lengths only, before any judging):
+- Median harmful response length: en 60 tokens vs it 199, hi 248, de 316 — non-English harmful responses 3-5x longer
+  (token cost only 1.2-1.4x). Hint of more explanation or more compliance outside en. To be tested by the judge.
+- hi-Latn harmful length/EOS profile matches its benign one (.59/.59) — consistent with prompts not being read as harmful (26% comprehension).
