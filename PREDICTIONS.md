@@ -153,7 +153,7 @@ Rule: the GO stands if the CORRECTED hi - en H_core compliance difference has 95
 (CI resamples pairs AND human-labelled rows within j1 strata). Corrected sizes reported regardless.
 Claude predicts: j1 precision on core failures ~0.75 (hi lowest); corrected hi-en ~ +0.12, lower bound > 0 -> STANDS;
 corrected benign over-refusal well below j1's 11-14% (j1 over-calls refusal on benign).
-Anant: ___ (fill before labelling)
+Anant: ~0.8 (hi, core); 0.1 (hi-en corrected)
 
 ## P2.6 — Translation control + sysprompt baseline (2026-11-08, before runs)
 Translation control (MultiJail HUMAN Italian, 100 H_core, judge j1 @ t512, compared on pairs shared with our NLLB it):
