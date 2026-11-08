@@ -68,7 +68,7 @@ for kind in ["core", "benign"]:
         shared = np.array(sorted(set(x[x.lang == l].pair_id) & set(x[x.lang == "en"].pair_id)))
         xl, xe = x[x.lang == l].set_index("pair_id"), x[x.lang == "en"].set_index("pair_id")
         Al, Ae = A[A.lang == l], A[A.lang == "en"]
-        boot = lambda a: a.groupby("j1pos", group_keys=False).apply(lambda g: g.sample(len(g), replace=True, random_state=rng))
+        boot = lambda a: pd.concat([g.sample(len(g), replace=True, random_state=rng) for _, g in a.groupby("j1pos")])   # pandas 3: apply drops the key column
         draws = []
         for _ in range(B):
             ids = rng.choice(shared, len(shared))
