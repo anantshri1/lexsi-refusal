@@ -14,7 +14,7 @@ def load_bench():
 
 
 def build_messages(text, condition):
-    if condition == "base":
+    if condition in ("base", "itHT"):                         # itHT = MultiJail human Italian (translation control)
         return [{"role": "user", "content": text}]
     if condition == "sysprompt":
         return [{"role": "system", "content": SYSPROMPT}, {"role": "user", "content": text}]
