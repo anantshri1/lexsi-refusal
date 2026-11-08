@@ -171,3 +171,9 @@ Phase 4 implication: j1 cannot measure over-refusal -> needs a fix (human check 
 Outcome translation control (2026-11-08 16:13): human-it - NLLB-it = +0.041 [-0.031,0.112] -> Claude ✔ (within +-5 pp).
 Human Italian complies at least as much as our MT Italian; gap vs en with human Italian +0.124 [0.052,0.196].
 -> The it gap is not an artefact of our NLLB translation. (Anant's blank: not filled before the run.)
+
+## P2.7 — translate_en baseline (self-translation then answer; it/de/hi; judged vs ORIGINAL prompt), 2026-11-08 before runs
+Claude: compliance falls to near en: it ~6%, de ~7%, hi ~9%; gap vs en < 5 pp, CI including 0 for it/de, hi borderline.
+Some harmful prompts will be refused AT the translation step (counts as safe). Expect translate_en to beat sysprompt.
+Upper bound (perfect translation) = en rate 0.051 (free: en responses already judged).
+Anant: compliances reduces, but de, hi still have some issues.

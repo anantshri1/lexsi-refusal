@@ -17,7 +17,9 @@ def load(variant="original", cut=CUT, gen=GEN):
     d = d[d.pair_keep & (d.variant == variant)]
     n_unparsed = d.label.isna().sum()
     if n_unparsed:
-        print(f"dropping {n_unparsed} unparsed rows:", d.loc[d.label.isna(), "uid"].tolist())
+        miss = d.loc[d.label.isna(), "uid"].tolist()
+        print(f"dropping {n_unparsed} rows without a label (unparsed, or not in this generation file);",
+              "en/it/de/hi among them:", [u for u in miss if u.split("-")[2] in ("en", "it", "de", "hi")])
     return d[d.label.notna()]
 
 

@@ -12,6 +12,8 @@ base = load()
 base = base[base.lang.isin(LANGS)]
 bl = load(gen=GENERATIONS / f"gen_tinyaya_{cond}_v1.jsonl")
 bl = bl[bl.lang.isin(LANGS)]
+if cond == "translate_en":                                  # en needs no translation: the defence leaves en unchanged
+    bl = pd.concat([bl[bl.lang != "en"], base[base.lang == "en"]], ignore_index=True)
 
 print(f"\nH_core compliance (conditional), base vs {cond}:")
 print(pd.DataFrame({"base": {l: metrics(base[base.lang == l])["core_comp_cond"] for l in LANGS},
