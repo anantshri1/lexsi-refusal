@@ -8,11 +8,11 @@ GEN, TAG, CUT = GENERATIONS / "gen_tinyaya_base_v1.jsonl", "qwen72b-j1", 512   #
 LANGS = ["en", "it", "de", "hi", "ml", "hi-Latn"]
 
 
-def load(variant="original", cut=CUT):
+def load(variant="original", cut=CUT, gen=GEN):
     """One row per uid: benchmark fields + pair_keep + judge label. pair_keep rows only; unparsed labels dropped."""
     b = load_bench()
     keep = pd.read_csv(COMPREHENSION / "comprehension_v1.csv")[["uid", "pair_keep"]]
-    j = J.load_judgements(J.judge_path(GEN, cut, TAG))[["label"]]
+    j = J.load_judgements(J.judge_path(gen, cut, TAG))[["label"]]
     d = b.merge(keep, on="uid").merge(j, left_on="uid", right_index=True, how="left")
     d = d[d.pair_keep & (d.variant == variant)]
     n_unparsed = d.label.isna().sum()
