@@ -187,3 +187,12 @@ Anant: over-refusal rises a bit
 Outcome P2.8 (2026-11-08 23:40): corrected over-refusal under sysprompt en 5.4 | it 3.9 | de 3.1 | hi 0.8% (base 2.7/5.5/2.7/0.0).
 Claude "5-10%" ✗ (too high; only en ~5); j1 precision 0.07-0.29 ✔ (Claude 0.2-0.4 roughly). Anant "rises a bit": en ✔, others flat.
 -> sysprompt buys its compliance reduction at ~no over-refusal cost.
+
+## P3.0 — Hypothesis bets (2026-11-08 23:50, after Phase 2 behaviour, before ANY geometry)
+Anant: C (shared representation, different readout: high cosine, but target-language steering > English steering).
+Claude: A 50% / C 35% / B 15% for it/de/hi (high cosine; smaller harmful-benign projection on the shared direction in hi,
+ordered like behaviour en > it ~ de > hi). ml likely outside all three (not in Tiny Aya's listed training languages).
+Claude's recollection (UNVERIFIED): prior work found English refusal directions transfer across languages and low-resource
+jailbreaks = weaker harmful/harmless separation along the shared direction -> literature map is Phase 3 step 1 (novelty check).
+Phase 3 kill-test: if per-language projection gap does NOT track the behavioural ordering, the diff-of-means direction is
+probably not the mechanism of the gap -> Phase 4 steering along it is on shaky ground.
