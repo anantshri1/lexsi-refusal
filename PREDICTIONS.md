@@ -177,3 +177,10 @@ Claude: compliance falls to near en: it ~6%, de ~7%, hi ~9%; gap vs en < 5 pp, C
 Some harmful prompts will be refused AT the translation step (counts as safe). Expect translate_en to beat sysprompt.
 Upper bound (perfect translation) = en rate 0.051 (free: en responses already judged).
 Anant: compliances reduces, but de, hi still have some issues.
+Outcome P2.6 sysprompt (2026-11-08 16:37): compliance en 5.1 | it 9.2 | de 14.6 | hi 15.1 (Claude: en ~3, it ~8, de ~10, hi ~14).
+Pattern ✔ (drops where compliance was high; gap shrinks, does not close: hi +17.4 -> +9.8, de +10.5 -> +9.5, it +8.2 -> +4.1 n.s.).
+Misses: en did not drop (en failures resist the instruction); de barely moved. Over-refusal pending human check.
+
+## P2.8 — sysprompt over-refusal (human-corrected), 2026-11-08 before labelling
+Claude: true over-refusal rises modestly vs base (base corrected 0-5.5%): sysprompt ~5-10% per language; j1 precision again low (~0.2-0.4).
+Anant: over-refusal rises a bit
