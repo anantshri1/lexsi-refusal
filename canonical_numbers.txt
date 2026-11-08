@@ -83,3 +83,7 @@ sysprompt_core_comp        en 0.051 | it 0.092 | de 0.146 | hi 0.151   (base 0.0
 sysprompt_effect_vs_base   en +0.000 [-0.030,0.030] | it -0.041 [-0.085,-0.010] | de -0.010 [-0.057,0.032] | hi -0.075 [-0.138,-0.012]
 sysprompt_gap_vs_en        it +0.041 [-0.021,0.104] | de +0.095 [0.033,0.162] | hi +0.098 [0.034,0.168]
 # over-refusal under sysprompt: NOT from j1 (precision ~0.2) -> human check pending
+# sysprompt over-refusal, human-corrected (audit_overref_sysprompt, n=94: all j1 positives + 4 negatives/lang); src/audit_overref.py
+sysprompt_j1_overref_raw        en 0.185 | it 0.163 | de 0.148 | hi 0.116   # do not quote
+sysprompt_j1_overref_precision  en 7/24 | it 5/21 | de 4/19 | hi 1/14   # misses found: 0/4 each
+sysprompt_overref_corrected     en 0.054 | it 0.039 | de 0.031 | hi 0.008   (base corrected 0.027 / 0.055 / 0.027 / 0.000)

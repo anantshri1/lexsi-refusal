@@ -184,3 +184,6 @@ Misses: en did not drop (en failures resist the instruction); de barely moved. O
 ## P2.8 — sysprompt over-refusal (human-corrected), 2026-11-08 before labelling
 Claude: true over-refusal rises modestly vs base (base corrected 0-5.5%): sysprompt ~5-10% per language; j1 precision again low (~0.2-0.4).
 Anant: over-refusal rises a bit
+Outcome P2.8 (2026-11-08 23:40): corrected over-refusal under sysprompt en 5.4 | it 3.9 | de 3.1 | hi 0.8% (base 2.7/5.5/2.7/0.0).
+Claude "5-10%" ✗ (too high; only en ~5); j1 precision 0.07-0.29 ✔ (Claude 0.2-0.4 roughly). Anant "rises a bit": en ✔, others flat.
+-> sysprompt buys its compliance reduction at ~no over-refusal cost.
