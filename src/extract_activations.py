@@ -12,6 +12,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 MODEL_ID   = "CohereLabs/tiny-aya-global"
 BENCH_REPO = "anantshri1/lexsi-refusal-bench"
 ART_REPO   = "anantshri1/lexsi-refusal-artefacts"
+CTRL_FILE  = "control/control_neutral_v1.jsonl"   # in ART_REPO; built by src/build_control.py
 BENCH_SHA  = "9d727751d3cbbad74ad8e179e4e2b505f83681623febe9e2d424959b21a3871d"
 POS = {"last": -1, "user": -5}     # START_RESPONSE | last user-content token (gap 4 on all 1770 rows, check_positions.py)
 N_SLOTS = 37                       # 0 = embeddings; k = output of decoder layer k-1 (pre final norm)
@@ -93,17 +94,24 @@ def main():
     ap.add_argument("--shards", default="all")          # e.g. "en_orig,ml_orig"
     ap.add_argument("--limit", type=int, default=None)  # smoke test: first N rows per shard
     ap.add_argument("--budget", type=int, default=16384)
+    ap.add_argument("--control", action="store_true")   # neutral food/travel control set (PATHS.md, Phase 3 step 4)
     a = ap.parse_args()
-    tag = "v1" if a.limit is None else "smoke"
+    tag = ("v1" if a.limit is None else "smoke") + ("_ctrl" if a.control else "")
     todo = SHARDS if a.shards == "all" else [tuple(s.rsplit("_", 1)) for s in a.shards.split(",")]
 
     api, bench = HfApi(), load_bench()
+    if a.control:                                       # control rows replace the benchmark; orig only
+        p = hf_hub_download(ART_REPO, CTRL_FILE, repo_type="dataset")
+        bench, ctrl_sha = pd.read_json(p, lines=True), hashlib.sha256(open(p, "rb").read()).hexdigest()
+        todo = [(l, v) for l, v in todo if v == "orig"]
     tok = AutoTokenizer.from_pretrained(MODEL_ID); tok.padding_side = "left"
     model = AutoModelForCausalLM.from_pretrained(MODEL_ID, dtype=torch.float16, device_map="cuda").eval()
     grab = Grab(model)
     meta = dict(model=MODEL_ID, model_sha=api.model_info(MODEL_ID).sha, transformers=transformers.__version__,
                 torch=torch.__version__, bench_sha=BENCH_SHA, template="base", positions=POS,
                 slots="0=embeddings; k=decoder layer k-1 output; pre final norm", dtype="float16")
+    if a.control:
+        meta["ctrl_sha"] = ctrl_sha
     print(meta, flush=True)
 
     for lang, var in todo:
@@ -114,7 +122,8 @@ def main():
         if a.limit:
             rows = rows.head(a.limit)
         else:
-            assert len(rows) == (266 if var == "orig" else 58), (name, len(rows))   # 133 pairs x 2; para 29 x 2
+            exp = 2 * bench.pair_id.nunique() if a.control else (266 if var == "orig" else 58)
+            assert len(rows) == exp, (name, len(rows))   # benchmark: 133 pairs x 2; para 29 x 2 | control: n_pairs x 2
         t0 = time.time()
         acts, lens = extract_shard(model, tok, rows, grab, a.budget, check_hs=a.limit is not None)
         buf = io.BytesIO()

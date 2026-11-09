@@ -67,6 +67,13 @@ Never hard-code a path string anywhere else.
   is POST-norm -> never use output_hidden_states for directions; smoke 2026-11-09: slots 0-35 identical, slot 36 differs).
   Base template = generate.build_messages(text, "base"); model sha af89d219; transformers 5.22.0.
   SOURCE OF TRUTH = HF artefact repo (no Drive copy). Mac mirror = ACTIVATIONS (download with hf_hub_download).
+- Control set (Phase 3 step 4; neutral TOPIC contrast food vs travel, 64 drafted pairs; uid {ctrlNNN}-{f|t}-{lang}-orig):
+  DATA_INTERIM/control_neutral_en_claude.csv (draft, wide) -> control_neutral_en_reviewed.csv (Anant; keep blank=keep, n=drop;
+  edit_food/edit_travel override) -> [build_control.py prep] control_neutral_en_v1.csv (long) + gsheets_ctrl_input.csv
+  -> HF ART_REPO control/control_neutral_en_v1.csv -> [HF Job translate_control_job.py] control/mt_ctrl_itde_nllb_v1.csv
+  (download to DATA_INTERIM) + Sheets export DATA_INTERIM/mt_gsheets_ctrl.csv (pair_id, side, mt_input, hi, ml)
+  -> [build_control.py build] DATA_FROZEN/control_neutral_v1.jsonl (in git; also upload to ART_REPO control/)
+  -> [extract_activations.py --control] activations/act_tinyaya_base_v1_ctrl_{lang}_orig.pt (6 shards).
 - Directions: DIRECTIONS/dir_tinyaya_{contrast}_{pos}_{lang}_v1.pt, [37, 2048], contrast in {refusal, control}, pos in {last, user}
   (computed on the Mac from activations; TBD details in Phase 3 block 5)
 
