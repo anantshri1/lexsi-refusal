@@ -62,7 +62,8 @@ if __name__ == "__main__":
         pt_rn = cos(direction(CT, L1, PC, signs), direction(CT, L2, PC, signs))
         diffs = []
         for _ in range(B):                                           # both sides resampled with replacement, same n
-            jr, jc = rng.choice(PR, n, replace=True), rng.integers(0, n, n)
+            sub = rng.choice(PR, n, replace=False)                        # 64 unique refusal pairs, like control...
+            jr, jc = sub[rng.integers(0, n, n)], rng.integers(0, n, n)    # ...then the SAME resampling on both
             diffs.append(cos(direction(REF, L1, jr, sl=True), direction(REF, L2, jr, sl=True))
                          - cos(direction(CT, L1, PC[jc], sl=True), direction(CT, L2, PC[jc], sl=True)))
         lo, hi = np.percentile(diffs, [2.5, 97.5], axis=0)
@@ -87,3 +88,19 @@ if __name__ == "__main__":
             print(f"  slot {r.slot:2d} | refusal {r.refusal:.3f} | control {r.control:.3f} | random {r.random:+.3f} "
                   f"| refusal-control {r.refusal - r.control:+.3f} [{r.diff_lo:+.3f}, {r.diff_hi:+.3f}]")
     R.to_csv(FIGURES / "p3_cosine_v1.csv", index=False)
+
+    print("\nDisattenuated transfer: cross-language cosine on DISJOINT halves / sqrt(within-language reliabilities)")
+    print("(1.0 = same direction up to sampling noise; different prompts on each side -> no shared-content cosine)")
+    for L1, L2 in COMPARE:
+        need = [l for l in (L1, L2) if l not in DESCR]
+        PR = np.array(sorted(set.intersection(*[KEEP[l] for l in need])))
+        out = {}
+        for name, store, P in [("refusal", REF, PR), ("control", CT, PC)]:
+            w1, w2, cr = [], [], []
+            for _ in range(100):
+                q = rng.permutation(P)[:n]; A, Bh = q[: n // 2], q[n // 2:]
+                a1, b1 = direction(store, L1, A, sl=True), direction(store, L1, Bh, sl=True)
+                a2, b2 = direction(store, L2, A, sl=True), direction(store, L2, Bh, sl=True)
+                w1.append(cos(a1, b1)); w2.append(cos(a2, b2)); cr.append((cos(a1, b2) + cos(a2, b1)) / 2)
+            out[name] = np.mean(cr, 0) / np.sqrt(np.clip(np.mean(w1, 0) * np.mean(w2, 0), 1e-6, None))
+        print(f"{L1} vs {L2} | slots {SLOTS} | refusal {out['refusal'].round(2)} | control {out['control'].round(2)}")

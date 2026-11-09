@@ -288,3 +288,14 @@ Claude: refusal ~0.85, control ~0.75 (Zhang-like, high); refusal - control ~ +0.
 ml / hi-Latn refusal cosine well below it/de/hi (~0.4) and below their control cosine (60%).
 Interpretation rule (fixed now): refusal - control CI > 0 -> the refusal direction is shared MORE than a generic semantic
 contrast (shared safety direction beyond shared content); CI includes 0 -> cosine alone says nothing (Zhang applies to us).
+P3.3 PROVISIONAL (2026-11-09 23:23; src/cosine.py v1; figures/p3_cosine_v1.csv) — NOT for canonical numbers yet. Two defects found:
+(1) bootstrap CIs biased: point estimates fall OUTSIDE some CIs (e.g. en-hi slot 18 +0.026 vs [+0.029,+0.063]) because refusal was
+resampled from a ~95-pair pool and control from 64 -> different effective n under resampling -> fix: subsample refusal to 64 first,
+then identical with-replacement scheme on both.
+(2) reliability confound: en split-half (32 vs 32) refusal 0.965 vs control 0.868 at slot 24 (0.963 vs 0.847 at 30) -> the control
+direction is noisier, so its cross-language cosine is attenuated for free -> compare DISATTENUATED transfer (cross-language cosine
+on disjoint halves / sqrt(within-language reliabilities)) instead.
+Point estimates meanwhile: slot 24 refusal vs control en-it 0.943/0.949, en-de 0.943/0.955, en-hi 0.898/0.866; random-sign null
+0.56-0.77 (Zhang's generic cosine is real here). Depth profile: cosine rises to ~0.95 at slots 18-24, falls to ~0.45 at 36 for BOTH
+contrasts and the null -> property of the representation space (shared middle, language-specific late layers), not of safety.
+Provisional scoring: Anant "refusal ~ control" ✔ at 18-24; Claude "+0.1" ✗; Claude "ml/hi-Latn ~0.4, below control" ✗ (0.66-0.69, ~= control).
