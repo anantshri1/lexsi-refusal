@@ -58,7 +58,17 @@ Never hard-code a path string anywhere else.
   judge_qwen72b-j2_* = DEV ONLY (audit rows). Always read via judge.load_judgements(); retry unparsed rows (missingness biased).
 - Human audits (JUDGEMENTS; Anant): audit_v1_anant (72, j1 dev, adjudication in src/audit_kappa.py ADJ), audit_j1check_anant (112, B4.3),
   audit_overref_{sysprompt,translate_en}_anant. Each has _sheet (blind) and _key (strata). Never re-draw.
-- Directions: TBD in Phase 3
+- Activations (Phase 3; built by src/extract_activations.py as an HF Job, NOT Colab):
+  HF_ARTEFACT_REPO/activations/act_tinyaya_base_{tag}_{lang}_{var}.pt, tag v1 (full) | smoke (--limit, never analysed);
+  lang in {en,it,de,hi,ml,hi-Latn}, var in {orig,para} (para: en/hi/ml only) -> 9 v1 shards (6x266 + 3x58 = 1770 rows).
+  Each .pt = dict(uids [n], acts fp16 [n, 2, 37, 2048], seq_len [n], meta).
+  acts axis 1: 0 = last token (<|START_RESPONSE|>, pos -1), 1 = last user-content token (pos -5; gap 4 verified on all rows).
+  acts axis 2: slot 0 = embeddings, slot k = output of decoder layer k-1, ALL PRE final norm (own hooks; HF hidden_states[-1]
+  is POST-norm -> never use output_hidden_states for directions; smoke 2026-11-09: slots 0-35 identical, slot 36 differs).
+  Base template = generate.build_messages(text, "base"); model sha af89d219; transformers 5.22.0.
+  SOURCE OF TRUTH = HF artefact repo (no Drive copy). Mac mirror = ACTIVATIONS (download with hf_hub_download).
+- Directions: DIRECTIONS/dir_tinyaya_{contrast}_{pos}_{lang}_v1.pt, [37, 2048], contrast in {refusal, control}, pos in {last, user}
+  (computed on the Mac from activations; TBD details in Phase 3 block 5)
 
 ## Rules
 1. A frozen file is never edited; changes = new version (v2), old kept.

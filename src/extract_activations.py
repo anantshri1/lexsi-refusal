@@ -113,6 +113,8 @@ def main():
         rows = bench[(bench.lang == lang) & bench.uid.str.endswith("-" + var)].reset_index(drop=True)
         if a.limit:
             rows = rows.head(a.limit)
+            else:
+                assert len(rows) == (266 if var == "orig" else 58), (name, len(rows))   # 133 pairs x 2; para 29 x 2
         t0 = time.time()
         acts, lens = extract_shard(model, tok, rows, grab, a.budget, check_hs=a.limit is not None)
         buf = io.BytesIO()
