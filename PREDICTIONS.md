@@ -231,3 +231,7 @@ GO if (AUROC_en - AUROC_hi) CI > 0 [Wang / A]  OR  (trigger_en - trigger_hi) CI 
 KILL if neither: r_en geometry does not distinguish hi from en -> the gap is not along this direction; Phase 4 steering on it is
 on shaky ground (fallback: report as a negative geometric result; Phase 4 tests r_hi and pooled anyway).
 Which branch fires is the Wang-vs-Aziz verdict. it/de reported with the same rule (secondary).
+P3.2-rule amendment (2026-11-09 17:55, after shard norms seen, BEFORE any direction/score computed): mean residual norm at slot 18
+is lower for hi-Latn (36.4) and ml (35.3) than en/it/de/hi (39.6-40.7). Projections scale with ||h||, and the next layer reads
+LayerNorm(h), so a "shift" could be partly a norm effect. Added SENSITIVITY (not a second test): trigger rate and d' recomputed
+on cosine scores s/||h|| with tau_en recomputed the same way. Headline stays the raw projection, as registered.
