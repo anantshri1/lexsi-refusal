@@ -235,3 +235,20 @@ P3.2-rule amendment (2026-11-09 17:55, after shard norms seen, BEFORE any direct
 is lower for hi-Latn (36.4) and ml (35.3) than en/it/de/hi (39.6-40.7). Projections scale with ||h||, and the next layer reads
 LayerNorm(h), so a "shift" could be partly a norm effect. Added SENSITIVITY (not a second test): trigger rate and d' recomputed
 on cosine scores s/||h|| with tau_en recomputed the same way. Headline stays the raw projection, as registered.
+5b outcome (2026-11-09 17:53, English only): slot-0 spread 0 (position indexing correct); fold-direction cosine >= 0.96 at slot 6,
+>= 0.988 from slot 12 (direction stable); en held-out d' rises to a PLATEAU ~4.3-4.65 over slots 18-36; k* = 24 (d' 4.65).
+Claude: k* in 12-24 ✔ (at the edge); d' >= 3 ✔. Because the plateau is flat (differences ~0.1, within noise), k* is near-arbitrary
+inside it -> declared BEFORE 5c: robustness = the verdict is also read at every slot 18-36 from the curves (reported, not a re-choice).
+P3.2 OUTCOME (2026-11-09 17:59; src/killtest.py; figures/p3_killtest_v1.csv, p3_killtest_curves_v1.csv)
+Verdict by the registered rule: KILL for hi. AUROC en-hi +0.004 [-0.002,+0.012]; trig_h en 0.95 vs hi 0.91, diff [-0.01,+0.08].
+it, de: same (no CI excludes 0). Cosine sensitivity: identical conclusions (norm effect negligible for it/de/hi).
+Plateau robustness (point estimates, slots 18-36): hi trig_h 0.87-0.92 vs en 0.94-0.96 -> a small CONSISTENT ~3-9 pp deficit,
+never near the 17 pp behavioural gap. If crossing tau_en were the decision, hi compliance would be ~9%, observed 22.6% ->
+r_en geometry accounts for at most ~1/4 of the hi gap; most complied hi prompts sit ABOVE the English threshold.
+d' (descriptive, not tested): en 4.60 > it 4.23 > hi 4.07 > de 3.89 at k*; lower in all three by 8-15% at every plateau slot,
+but the ordering (de lowest) does not follow behaviour (hi worst). AUROC saturated (~0.99) as feared.
+ml / hi-Latn (descriptive): COLLAPSE — all pairs d' 0.89 / 0.80, AUROC 0.76 / 0.72, trig_h 0.09 / 0.08 (squeeze AND shift);
+pair_keep subsets (n=32 / 10) d' 1.24 / 1.30. Script flip hi -> hi-Latn: d' 4.07 -> 0.80 on the same content.
+Scoring: Anant "hi > it/de > en, all within 0.05": within 0.05 ✔, ordering ✗ (en highest); "hi-Latn, ml worse" ✔.
+Claude: AUROC within 0.05 ✔; trigger tracks behaviour CI>0 ✗ (right sign, ~4 pp, n.s.); k* in 12-24 ✔; hi-Latn d' >25% below hi ✔
+(-80%); ml lowest ✗ (ml ~ hi-Latn); row-level (complied hi project lower) -> PENDING (needs j1 join).

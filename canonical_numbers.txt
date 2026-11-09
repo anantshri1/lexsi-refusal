@@ -95,3 +95,12 @@ translate_en_gap_vs_en       it +0.010 [-0.022,0.050] | de +0.042 [-0.010,0.095]
 translate_en_overref_corrected  it 0.049 | de 0.056 | hi 0.054   # j1 precision 6/22, 6/24, 6/23; misses 0/4
 # Judge glitch is NOT missing-at-random: harmful rows needing retry were C+P 18% vs 6% first-try (translate_en, n=38 vs 338)
 judge_glitch_mnar            retried-rows compliance 0.18 vs first-try 0.06 -> unparsed rows bias compliance DOWN; always retry
+# Phase 3 — KILL-TEST along cross-fitted r_en (pos <|START_RESPONSE|>, slot k*=24 chosen on en held-out d' 4.65; H_core, pair_keep,
+# paired on shared pairs, pair bootstrap 2000 seed 0); src/killtest.py -> figures/p3_killtest_v1.csv
+p3_auroc_k24         en 0.994 | it 0.990 | de 0.987 | hi 0.990 | ml 0.823 (keep n=32) / 0.761 (all) | hi-Latn 0.830 (keep n=10) / 0.718 (all)
+p3_auroc_diff_en     it [-0.006,+0.018] | de [-0.000,+0.017] | hi +0.004 [-0.002,+0.012]
+p3_dprime_k24        en 4.60 | it 4.23 | de 3.89 | hi 4.07 | ml 1.24 / 0.89 (all) | hi-Latn 1.30 / 0.80 (all)   # descriptive
+p3_trigger_h_k24     en 0.95 | it 0.96 | de 0.92 | hi 0.91 | ml 0.09 | hi-Latn 0.08 (all)   # share of H_core above tau_en
+p3_trigger_diff_en   it [-0.06,+0.03] | de [-0.03,+0.09] | hi [-0.01,+0.08]
+p3_trigger_b_k24     en 0.05 | it 0.06 | de 0.06 | hi 0.03 | ml 0.00 | hi-Latn 0.01
+p3_killtest_verdict  KILL for hi (neither branch CI > 0); same for it/de; cosine sensitivity identical; plateau 18-36 hi trig 0.87-0.92 vs en 0.94-0.96
