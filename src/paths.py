@@ -8,10 +8,15 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 ON_COLAB = "google.colab" in sys.modules
 
+import os
+ON_KAGGLE = "KAGGLE_KERNEL_RUN_TYPE" in os.environ
+
 # Artefacts: on Colab, write to Drive so disconnects don't lose compute.
 # Locally, keep them in the repo (git-ignored).
 if ON_COLAB:
     ARTEFACT_ROOT = Path("/content/drive/MyDrive/lexsi-refusal")
+elif ON_KAGGLE:
+    ARTEFACT_ROOT = Path("/kaggle/working/artefacts")
 else:
     ARTEFACT_ROOT = REPO_ROOT
 
