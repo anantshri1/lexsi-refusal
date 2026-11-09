@@ -13,7 +13,9 @@ ON_KAGGLE = "KAGGLE_KERNEL_RUN_TYPE" in os.environ
 
 # Artefacts: on Colab, write to Drive so disconnects don't lose compute.
 # Locally, keep them in the repo (git-ignored).
-if ON_COLAB:
+if "LEXSI_ARTEFACT_ROOT" in os.environ:          # HF Jobs / Kaggle / any container
+    ARTEFACT_ROOT = Path(os.environ["LEXSI_ARTEFACT_ROOT"])
+elif ON_COLAB:
     ARTEFACT_ROOT = Path("/content/drive/MyDrive/lexsi-refusal")
 elif ON_KAGGLE:
     ARTEFACT_ROOT = Path("/kaggle/working/artefacts")
