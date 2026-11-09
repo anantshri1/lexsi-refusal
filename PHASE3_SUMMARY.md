@@ -1,4 +1,4 @@
-# Phase 3 (Geometry) — study notes (in progress, 2026-11-09)
+# Phase 3 (Geometry) — study notes (2026-11-09/10; figure figures/p3_geometry_v1.png; numbers canonical_numbers.txt)
 
 ## The objects
 - h = the model's internal state (residual stream, 2048 numbers) at layer k, at the token <|START_RESPONSE|>
@@ -17,6 +17,8 @@
 | trig_h | Share of harmful prompts with s > tau | "How many harmful prompts look harmful by English standards." |
 | trig_b | Share of benign prompts with s > tau | False alarms. |
 | [lo, hi] | 95% pair-bootstrap CI of (en - language), paired on shared pairs | Contains 0 -> cannot tell the two languages apart. |
+| transfer (step 4) | cross-language cosine of directions from DISJOINT prompt halves / sqrt(within-language split-half reliabilities) | 1.0 = switching language costs nothing beyond re-sampling prompts. Removes shared-content and noise effects. |
+| random-sign null | cosine of a direction built from randomly signed food/travel differences | How much cosine ANY grouping of the same translated content gets for free (Zhang). |
 | row AUROC (5d) | Within ONE language, P(refused harmful prompt scores higher than complied one) | Does the ruler predict what the model actually DID, prompt by prompt? |
 
 ## Hypothesis pictures (along r_en)
@@ -57,9 +59,42 @@
    below the zone where English actually refuses (11-18). Verdict reported as registered + this sensitivity, flagged post-hoc.
    Lesson: thresholds must be calibrated to BEHAVIOUR, not to class-mean midpoints.
 
+7. Step 4 cosine vs a neutral control (food vs travel, 64 pairs, built 9 Nov; Zhang 2026). Raw cosines ~0.95 in the middle
+   layers, but a RANDOM grouping of the same content already gets 0.56-0.77 -> raw cosine means little. Two defects found and
+   fixed on the way: (a) unequal resampling biased the CIs; (b) the control direction is noisier (split-half 0.87 vs 0.96),
+   which lowers its cosine for free. Fix = disattenuated transfer on disjoint halves.
+   Result: refusal transfers NO better than the topic control in the shared middle (slot 18 diff ~0; slot 24 it/de -0.02/-0.03,
+   hi +0.01), slightly better at slot 12 (+0.03..+0.05), worse in the last layer (hi -0.13). Zhang holds for Tiny Aya:
+   the refusal direction is shared, but not SPECIALLY shared. ml/hi-Latn: not estimable (reliability of 32-pair halves ~0).
+   Depth profile (panel B): everything is shared in layers ~15-24 and becomes language-specific again at 30-36 (the model
+   prepares to answer in the input language).
+8. Step 5 twin depth (exploratory, panel C): the extra harm signal lost by failing prompts appears in the MIDDLE layers
+   (from ~12-15, peak -0.15..-0.20 of the English separation at 18-21), not at input reading and not only at output.
+   Slots < 9 unreadable (division by ~0 separation). Late fade = the English ruler stops transferring, not recovery.
+
+## Phase 3 answer in one paragraph
+Tiny Aya represents harm along a direction that is shared across it/de/hi exactly as much as any other concept in its middle
+layers (step 4). Along that English direction, harmful and benign stay just as separable in it/de/hi as in English (5c), so
+the gap is not a squeeze. Instead, a subset of prompts loses ~15-20% of their harm signal in the middle layers (step 5, 5e)
+and drops out of the zone where the model refuses (5f, post-hoc); outside English the score->refusal mapping is also noisier
+(5d/5e). In ml and hi-Latn (not understood) the signal largely collapses (d' ~0.8). The registered kill-test said KILL only
+because our threshold (class-mean midpoint) sat below where English actually refuses -> lesson: calibrate to behaviour.
+
 ## Hypotheses status (SCOPE A/B/C)
-- [superseded by 5e, see point 5] C was the leading candidate before 5e: representation shared (English ruler separates hi
-  as well as en), readout differs (hi complies at scores that refuse in en).
-- B (language-specific) disfavoured for it/de/hi: a separate Hindi mechanism would not leave the English ruler this sharp in hi.
-  Not excluded: hi could have its own refusal readout. Tests: cosine(r_en, r_hi) vs control (step 4), Phase 4 steering.
-- A (shared, weaker trigger) in its Wang form (squeeze) is out for it/de/hi.
+- A (shared, weaker trigger): best fit, in a LOCAL form (a subset of prompts loses signal along the shared direction), not
+  Wang's global squeeze (out for it/de/hi).
+- C (shared representation, different readout): partly (noisier score->decision outside English).
+- B (language-specific): disfavoured for it/de/hi (English ruler separates them as well; transfer ~0.95). Phase 4 checks
+  causally: if steering with r_hi beats r_en, B returns.
+
+## Phase 4 consequences (decided 2026-11-10)
+- Intervene at layers 18, 21, 24 (where the loss sits AND the direction is shared). English direction (+ target direction,
+  + food/travel control direction as the non-safety control). Prediction to register: adding r_en rescues exactly the
+  prompts that lost signal.
+- Metric thresholds calibrated to English behaviour; SafeTune for the hooks; AuditKIT for capability (D9).
+
+## Mistakes / lessons this phase (for the write-up and for me)
+- Class-mean midpoint threshold != the model's decision threshold (5c KILL vs 5f).
+- Cosine comparisons need matched n, equal resampling, and reliability correction (step 4 v1 had two defects).
+- Ratios with noisy denominators explode at small n (ml/hi-Latn transfer CIs).
+- Nearly dropped the neutral control for time; building it properly took ~1.5 h and changed the conclusion's strength.

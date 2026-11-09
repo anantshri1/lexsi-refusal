@@ -91,6 +91,7 @@ if __name__ == "__main__":
 
     print("\nDisattenuated transfer: cross-language cosine on DISJOINT halves / sqrt(within-language reliabilities)")
     print("(1.0 = same direction up to sampling noise; different prompts on each side -> no shared-content cosine)")
+    TR=[]
     for L1, L2 in COMPARE:
         need = [l for l in (L1, L2) if l not in DESCR]
         PR = np.array(sorted(set.intersection(*[KEEP[l] for l in need])))
@@ -104,3 +105,24 @@ if __name__ == "__main__":
                 w1.append(cos(a1, b1)); w2.append(cos(a2, b2)); cr.append((cos(a1, b2) + cos(a2, b1)) / 2)
             out[name] = np.mean(cr, 0) / np.sqrt(np.clip(np.mean(w1, 0) * np.mean(w2, 0), 1e-6, None))
         print(f"{L1} vs {L2} | slots {SLOTS} | refusal {out['refusal'].round(2)} | control {out['control'].round(2)}")
+        TR += [dict(L1=L1, L2=L2, slot=s, refusal=out["refusal"][i], control=out["control"][i]) for i, s in enumerate(SLOTS)]
+    pd.DataFrame(TR).to_csv(FIGURES / "p3_transfer_v1.csv", index=False)
+
+    def transfer(store, L1, L2, P, rs):
+        """one draw: disjoint halves A/B, resampled WITHIN each half; cross-language cosine / sqrt(reliabilities)."""
+        q = rs.permutation(P)[:n]; A, Bh = q[: n // 2], q[n // 2:]
+        A, Bh = A[rs.integers(0, len(A), len(A))], Bh[rs.integers(0, len(Bh), len(Bh))]
+        a1, b1 = direction(store, L1, A, sl=True), direction(store, L1, Bh, sl=True)
+        a2, b2 = direction(store, L2, A, sl=True), direction(store, L2, Bh, sl=True)
+        return ((cos(a1, b2) + cos(a2, b1)) / 2) / np.sqrt(np.clip(cos(a1, b1) * cos(a2, b2), 1e-6, None))
+
+    print("\nTransfer(refusal) - transfer(control): median [95% CI], B=500 (splits AND pairs resampled, halves disjoint)")
+    T = []
+    for L1, L2 in COMPARE:
+        need = [l for l in (L1, L2) if l not in DESCR]
+        PR = np.array(sorted(set.intersection(*[KEEP[l] for l in need])))
+        dd = np.array([transfer(REF, L1, L2, PR, rng) - transfer(CT, L1, L2, PC, rng) for _ in range(500)])
+        lo, md, hi = np.percentile(dd, [2.5, 50, 97.5], axis=0)
+        print(f"{L1:2s} vs {L2:7s} | " + " | ".join(f"s{s} {m:+.2f} [{l:+.2f},{h:+.2f}]" for s, l, m, h in zip(SLOTS, lo, md, hi)))
+        T += [dict(L1=L1, L2=L2, slot=s, diff_median=m, lo=l, hi=h) for s, l, m, h in zip(SLOTS, lo, md, hi)]
+    pd.DataFrame(T).to_csv(FIGURES / "p3_transfer_diff_v1.csv", index=False)

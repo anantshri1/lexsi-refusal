@@ -119,3 +119,13 @@ p3_trig_gap_t15   it +0.02 [-0.02,0.06] | de +0.06 [0.01,0.13] | hi +0.12 [0.05,
 p3_trig_gap_t18   it +0.08 [0.02,0.15] | de +0.16 [0.08,0.24] | hi +0.16 [0.09,0.25]
 # Control set (Phase 3 step 4): data/frozen/control_neutral_v1.jsonl, 64 food/travel pairs x 6 langs = 768 rows
 control_neutral_v1_sha256   441cd2d412ac1d1a88977c398cf2f3a4b4c89e7a8f91451fbafe6f510b83ba15   # en reviewed; it/de checked (A2/B1); hi checked native
+# Phase 3 step 4 — disattenuated cross-language TRANSFER (disjoint 32-pair halves / sqrt(within-language split-half reliabilities)),
+# refusal (H_core - benign) vs neutral control (food - travel, 64 pairs), matched n; src/cosine.py; figures/p3_transfer*_v1.csv
+p3_en_splithalf_rel_s24      refusal 0.964 | control 0.868   (32 vs 32 pairs)
+p3_transfer_s24              en-it 0.95/0.97 | en-de 0.95/0.97 | en-hi 0.90/0.89 | en-ml 0.74/0.70 (descr) | en-hiLatn 0.76/0.76 (descr) | hi-hiLatn 0.81/0.83 (descr)   # refusal/control
+p3_transfer_diff_s12         it +0.03 [0.01,0.06] | de +0.05 [0.02,0.07] | hi +0.05 [0.03,0.08]
+p3_transfer_diff_s18         it +0.00 [-0.02,0.02] | de -0.00 [-0.03,0.02] | hi +0.01 [-0.03,0.03]
+p3_transfer_diff_s24         it -0.02 [-0.04,-0.01] | de -0.03 [-0.05,-0.01] | hi +0.01 [-0.02,0.04]
+p3_transfer_diff_s36         it -0.04 [-0.08,0.00] | de -0.05 [-0.10,-0.01] | hi -0.13 [-0.18,-0.09]
+p3_transfer_verdict          refusal direction NOT specially shared vs neutral topic (Zhang holds); ml/hi-Latn CIs not estimable
+p3_random_null_cos_s24       en-it 0.74 | en-de 0.77 | en-hi 0.56 | en-ml 0.28 | en-hiLatn 0.10   # shared-content cosine of random-sign groupings

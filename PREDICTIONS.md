@@ -308,3 +308,26 @@ slot 18: it 0.96/0.96, de 0.96/0.96, hi 0.96/0.96. slot 12: refusal slightly hig
 Reading: in the shared middle layers the refusal direction is no more language-invariant than a neutral topic direction -> Zhang's
 point holds for Tiny Aya: shared, but not specially shared. ml/hi-Latn: direction ~shared (0.75) though separation along it collapsed (5c).
 TODO next chat: CI for transfer(refusal) - transfer(control) (resample splits AND pairs) before canonical numbers.
+P3.3 FINAL (2026-11-09 23:52; cosine.py with transfer CI; figures/p3_transfer_v1.csv, p3_transfer_diff_v1.csv)
+Pre-run predictions for the transfer CI: Claude (stated in chat 23:35, before the run; logged after): s18/s24 CI incl. 0 for it/de/hi (75%);
+s12 refusal > control CI > 0 for de/hi (50%). Anant: not logged (missed).
+Outcome transfer(refusal) - transfer(control), median [95% CI]:
+ s12 it +0.03 [+0.01,+0.06] | de +0.05 [+0.02,+0.07] | hi +0.05 [+0.03,+0.08]   -> Claude 50% ✔ (all three)
+ s18 it +0.00 [-0.02,+0.02] | de -0.00 [-0.03,+0.02] | hi +0.01 [-0.03,+0.03]   -> ✔
+ s24 it -0.02 [-0.04,-0.01] | de -0.03 [-0.05,-0.01] | hi +0.01 [-0.02,+0.04]   -> ✗ for it/de (tiny NEGATIVE: refusal slightly LESS shared)
+ s30 it -0.05 [-0.09,-0.01] | de +0.05 [-0.01,+0.10] | hi +0.07 [+0.03,+0.12]   (mixed)
+ s36 it -0.04 [-0.08,-0.00] | de -0.05 [-0.10,-0.01] | hi -0.13 [-0.18,-0.09]   (refusal less shared late)
+ml / hi-Latn / hi-vs-hiLatn: NOT ESTIMABLE (CIs up to +249: within-language reliability of 32-pair halves ~0 in some draws -> ratio explodes).
+Use only the point-estimate transfers for them, descriptively.
+Verdict step 4: no consistent safety-specific sharing. Refusal is slightly MORE shared than a neutral topic contrast early (layer 12,
++0.03-0.05), indistinguishable in the shared middle (18), marginally less at 24 for it/de, and clearly less in the last layer.
+Zhang 2026 holds for Tiny Aya: high cross-language cosine of the refusal direction is generic.
+Step 5 twin-depth (2026-11-10 00:02, EXPLORATORY, medians, no CI; figures/p3_twin_depth_v1.csv). extra = median(GAP delta) - median(both-refused delta),
+in units of the English harmful-benign separation at that layer. n GAP it 10 / de 11 / hi 17.
+Predictions: Anant "appears late; representation fine". Claude "onset 9-15, ~-0.25..-0.35 by 18, flat to 24" (55%).
+Outcome: slots < 9 UNRELIABLE (English separation ~0 there -> dividing by ~0; e.g. slot 3 it -0.61, de +0.42, hi +0.49 = noise).
+Reliable window 12-24: extra loss in all three, peaking 18-21: it -0.10..-0.22, de -0.01..-0.19, hi -0.09..-0.20; fades at 30-36
+(where the direction itself stops transferring, step 4 -> r_en no longer a valid ruler for non-English late layers).
+Consistency: slot 24 hi -0.16 x English separation ~= the raw 5e result (-8.2 vs -3.4).
+Scoring: loss emerges in the MIDDLE layers (12-21) -> Anant "late, representation fine" ✗; Claude onset ✔, size ✗ (-0.15..-0.20, not -0.3), flat to 24 ~✔.
+Phase 4 implication: intervene where the loss sits AND the direction is shared: layers 18-24 (k*=24; 18 as the alternative).
