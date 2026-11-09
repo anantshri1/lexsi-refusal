@@ -196,3 +196,7 @@ Claude's recollection (UNVERIFIED): prior work found English refusal directions 
 jailbreaks = weaker harmful/harmless separation along the shared direction -> literature map is Phase 3 step 1 (novelty check).
 Phase 3 kill-test: if per-language projection gap does NOT track the behavioural ordering, the diff-of-means direction is
 probably not the mechanism of the gap -> Phase 4 steering along it is on shaky ground.
+Outcome P2.7 (2026-11-09): translate_en compliance it 6.1 | de 9.4 | hi 8.7% (Claude it ~6 ✔, de ~7, hi ~9 ✔);
+gap vs en it +1.0 (n.s.), de +4.2 (n.s.), hi +3.4 [0.1, 7.5] (borderline) -> Claude "gap <5 pp; hi borderline" ✔; Anant "de, hi still have issues" ✔.
+translate_en beats sysprompt (hi gap +9.8 -> +3.4) at a small over-refusal cost (~5% vs 0-3%) and 2 passes + English answers.
+Unpredicted: judge-glitch missingness is compliance-enriched (18% vs 6%) -> provisional rates before retry were biased low.

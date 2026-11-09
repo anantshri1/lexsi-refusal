@@ -51,6 +51,13 @@ Never hard-code a path string anywhere else.
   JUDGE_RUBRIC.md Part A changes); g = generation version; t = response cut in new tokens (B8: 512/256/128 all rows, 64 audit only).
   fields: uid, judge, cut, truncated, raw, reason, label, response_lang, has_disclaimer, offers_alternative, restates_prompt, raw_clean
   label None = unparseable judge output (kept, never mapped). Built by src/judge.py run_judge().
+- Phase 2 generation files (GENERATIONS): gen_tinyaya_base_v1 (all 1770), gen_tinyaya_sysprompt_v1 (en/it/de/hi pair_keep, 1032),
+  gen_tinyaya_itHT_v1 (100 H_core, MultiJail human Italian, uid {pair_id}-h-itHT-orig), gen_tinyaya_to_en_v1 (step-1 translations,
+  it/de/hi 768), gen_tinyaya_translate_en_v1 (answers to cleaned translations, same uids). gen_tinyaya_base_v0 = throwaway test.
+- Phase 2 judgement files (JUDGEMENTS): judge_qwen72b-j1_* for base (t512/256/128 all; t64 audit), sysprompt, itHT, translate_en (t512);
+  judge_qwen72b-j2_* = DEV ONLY (audit rows). Always read via judge.load_judgements(); retry unparsed rows (missingness biased).
+- Human audits (JUDGEMENTS; Anant): audit_v1_anant (72, j1 dev, adjudication in src/audit_kappa.py ADJ), audit_j1check_anant (112, B4.3),
+  audit_overref_{sysprompt,translate_en}_anant. Each has _sheet (blind) and _key (strata). Never re-draw.
 - Directions: TBD in Phase 3
 
 ## Rules

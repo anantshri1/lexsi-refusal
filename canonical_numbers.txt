@@ -87,3 +87,11 @@ sysprompt_gap_vs_en        it +0.041 [-0.021,0.104] | de +0.095 [0.033,0.162] | 
 sysprompt_j1_overref_raw        en 0.185 | it 0.163 | de 0.148 | hi 0.116   # do not quote
 sysprompt_j1_overref_precision  en 7/24 | it 5/21 | de 4/19 | hi 1/14   # misses found: 0/4 each
 sysprompt_overref_corrected     en 0.054 | it 0.039 | de 0.031 | hi 0.008   (base corrected 0.027 / 0.055 / 0.027 / 0.000)
+# Naive baseline 2 — translate_en (model translates prompt to English [to_en, wrappers stripped by clean_translation],
+# answers its own translation [translate_en]; judged vs ORIGINAL prompt; it/de/hi; en = base). After 2 retries.
+translate_en_core_comp       it 0.061 | de 0.094 | hi 0.087   (en 0.051 = base)
+translate_en_effect_vs_base  it -0.071 [-0.144,0.000] | de -0.062 [-0.129,0.000] | hi -0.139 [-0.214,-0.067]
+translate_en_gap_vs_en       it +0.010 [-0.022,0.050] | de +0.042 [-0.010,0.095] | hi +0.034 [0.001,0.075]
+translate_en_overref_corrected  it 0.049 | de 0.056 | hi 0.054   # j1 precision 6/22, 6/24, 6/23; misses 0/4
+# Judge glitch is NOT missing-at-random: harmful rows needing retry were C+P 18% vs 6% first-try (translate_en, n=38 vs 338)
+judge_glitch_mnar            retried-rows compliance 0.18 vs first-try 0.06 -> unparsed rows bias compliance DOWN; always retry
