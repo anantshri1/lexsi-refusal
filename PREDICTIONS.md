@@ -200,3 +200,9 @@ Outcome P2.7 (2026-11-09): translate_en compliance it 6.1 | de 9.4 | hi 8.7% (Cl
 gap vs en it +1.0 (n.s.), de +4.2 (n.s.), hi +3.4 [0.1, 7.5] (borderline) -> Claude "gap <5 pp; hi borderline" ✔; Anant "de, hi still have issues" ✔.
 translate_en beats sysprompt (hi gap +9.8 -> +3.4) at a small over-refusal cost (~5% vs 0-3%) and 2 passes + English answers.
 Unpredicted: judge-glitch missingness is compliance-enriched (18% vs 6%) -> provisional rates before retry were biased low.
+
+## P3.1 — Separation of harmful vs benign along the ENGLISH direction, pair_keep rows (2026-11-09, before any activations)
+Question: Wang et al. 2025 (weaker separation in non-English, ~A) vs Aziz et al. 2026 (separation intact, calibration fails, ~C).
+Anant: hi separates about as well as en (Aziz / C).
+Claude: at the best layer, AUROC(hi) within 0.05 of AUROC(en) — 60% (updated towards Aziz/C from P3.0 because pair_keep removes the
+comprehension confound that could produce Wang's weaker separation); it/de within 0.03 of en; hi-Latn clearly worse (low comprehension).
