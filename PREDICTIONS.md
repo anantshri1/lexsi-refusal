@@ -206,3 +206,28 @@ Question: Wang et al. 2025 (weaker separation in non-English, ~A) vs Aziz et al.
 Anant: hi separates about as well as en (Aziz / C).
 Claude: at the best layer, AUROC(hi) within 0.05 of AUROC(en) — 60% (updated towards Aziz/C from P3.0 because pair_keep removes the
 comprehension confound that could produce Wang's weaker separation); it/de within 0.03 of en; hi-Latn clearly worse (low comprehension).
+
+## P3.2 (kill-test): at the best layer, what ordering of harmful–benign separation along r_en do you expect across en/it/de/hi, and does it track behaviour? 
+Anant: hi > it/de > en (but all within 0.05 of en); hi-Latn and ml worse
+Claude (2026-11-09 17:50, activations extracted, NOT yet loaded or analysed):
+- AUROC (pos last, best layer): en ~0.99, it/de >= 0.97, hi >= 0.95; all within 0.05 of en, CIs overlapping -> separation does NOT
+  clearly track behaviour (60%, as P3.1). Ceiling risk: AUROC may saturate at ~1.0 everywhere -> d' is the informative number.
+- Calibration (trigger rate: share of H_core above the English threshold tau_en) DOES track behaviour: en > it ~ de > hi,
+  with trigger_en - trigger_hi CI > 0 (65%). I.e. hi harmful AND hi benign both sit lower on r_en (a shift, not a squeeze).
+- Within hi, complied H_core rows project lower on r_en than refused ones (row-level AUROC ~0.7) (55%).
+- Best layer (chosen on en d') in the middle third (layers 12-24 of 36) (70%).
+- hi-Latn d' clearly below hi (>25% lower) (75%); ml lowest of all (80%).
+
+## P3.2-rule — kill-test operationalisation (pre-registered 2026-11-09 17:50, before loading any activations)
+Data: pos = last (<|START_RESPONSE|>), original variant, H_core pairs, pair_keep rows of each language.
+Direction: r_en^(k) = mean(en harmful) - mean(en benign), estimated by 5-fold CROSS-FIT over pair_id (seed 0): every evaluated
+pair is held out from the direction it is scored on (else en is in-sample and looks better than it is; pairs are shared across
+languages, so held-out-by-pair also stops hi being scored on its own twins' direction).
+Score: s = h . r_hat (unit vector). Threshold tau_en = midpoint of en harmful/benign mean scores on the TRAINING folds.
+Layer k*: argmax of en cross-fit d' (chosen on English only -> no tuning on the languages being tested).
+Metrics at k* (all layers reported as curves): AUROC and d' = (mu_H - mu_B)/pooled sd (separation); trigger rate = share of
+H_core with s > tau_en (calibration). CIs: pair bootstrap, 2000 draws, seed 0; en-vs-hi paired on shared pairs.
+GO if (AUROC_en - AUROC_hi) CI > 0 [Wang / A]  OR  (trigger_en - trigger_hi) CI > 0 [Aziz / C].
+KILL if neither: r_en geometry does not distinguish hi from en -> the gap is not along this direction; Phase 4 steering on it is
+on shaky ground (fallback: report as a negative geometric result; Phase 4 tests r_hi and pooled anyway).
+Which branch fires is the Wang-vs-Aziz verdict. it/de reported with the same rule (secondary).
