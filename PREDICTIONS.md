@@ -280,3 +280,11 @@ Reading: once tau sits where English actually starts refusing (11-18), the trigg
 (t=15: hi > de > it; behaviour hi > de > it). The registered KILL was driven by tau_mid being BELOW the English decision zone.
 Verdict stays KILL as registered; write-up reports this sensitivity explicitly as post-hoc (forking-path risk: 4 thresholds).
 LESSON (for Phase 4 + future rules): calibrate thresholds to BEHAVIOUR on English held-out data, not to class-mean midpoints.
+
+## P3.3 — cross-language cosine, REFUSAL vs neutral CONTROL (food/travel, 64 pairs), slot 24, matched n (2026-11-09 23:10,
+## control activations extracted, NOT loaded or analysed)
+Anant: refusal ~0.80-0.85, control ~0.80-0.85; |difference| ~0.05-0.10.
+Claude: refusal ~0.85, control ~0.75 (Zhang-like, high); refusal - control ~ +0.1 with CI excluding 0 for it/de/hi (55%);
+ml / hi-Latn refusal cosine well below it/de/hi (~0.4) and below their control cosine (60%).
+Interpretation rule (fixed now): refusal - control CI > 0 -> the refusal direction is shared MORE than a generic semantic
+contrast (shared safety direction beyond shared content); CI includes 0 -> cosine alone says nothing (Zhang applies to us).

@@ -117,3 +117,5 @@ p3_trig_gap_t9    it -0.01 [-0.06,0.03] | de +0.02 [-0.04,0.08] | hi +0.03 [-0.0
 p3_trig_gap_t12   it -0.01 [-0.05,0.02] | de +0.05 [0.00,0.11] | hi +0.03 [-0.01,0.09]
 p3_trig_gap_t15   it +0.02 [-0.02,0.06] | de +0.06 [0.01,0.13] | hi +0.12 [0.05,0.20]
 p3_trig_gap_t18   it +0.08 [0.02,0.15] | de +0.16 [0.08,0.24] | hi +0.16 [0.09,0.25]
+# Control set (Phase 3 step 4): data/frozen/control_neutral_v1.jsonl, 64 food/travel pairs x 6 langs = 768 rows
+control_neutral_v1_sha256   441cd2d412ac1d1a88977c398cf2f3a4b4c89e7a8f91451fbafe6f510b83ba15   # en reviewed; it/de checked (A2/B1); hi checked native
