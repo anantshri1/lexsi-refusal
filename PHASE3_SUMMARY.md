@@ -52,6 +52,11 @@
    and the score->refusal mapping is noisier outside English. Closer to A ("shared direction, weaker trigger" on a
    subset) + a bit of C, than to either pure form.
 
+6. 5f (post-hoc): trigger gap at fixed thresholds 9/12/15/18. At 9 (≈ registered tau) nothing; at 15, hi +0.12 [0.05,0.20],
+   de +0.06, it +0.02 (ordered like behaviour); at 18 all three significant. So the registered KILL came from tau sitting
+   below the zone where English actually refuses (11-18). Verdict reported as registered + this sensitivity, flagged post-hoc.
+   Lesson: thresholds must be calibrated to BEHAVIOUR, not to class-mean midpoints.
+
 ## Hypotheses status (SCOPE A/B/C)
 - [superseded by 5e, see point 5] C was the leading candidate before 5e: representation shared (English ruler separates hi
   as well as en), readout differs (hi complies at scores that refuse in en).

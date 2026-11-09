@@ -270,3 +270,13 @@ mechanically; delta noise sd ~2 (both-refused IQR) makes a 5-unit extra drop unl
 (3) Reconciles with 5c KILL: the shift is LOCAL (~17 hi prompts) and tau_mid (~9) sits below where en actually starts
 refusing (between 11.2 and 17.9), so shifted prompts mostly stayed "above tau". Registered verdict stands; a
 behaviour-calibrated tau is a POST-HOC sensitivity (5f).
+5f OUTCOME (2026-11-09 20:32, POST-HOC sensitivity; trigger gap en - L at fixed thresholds on slot-24 score, paired, pair bootstrap)
+t=9 (registered tau~9): it -0.01 n.s. | de +0.02 n.s. | hi +0.03 n.s.
+t=12: it -0.01 n.s. | de +0.05 [0.00,0.11] | hi +0.03 n.s.
+t=15: it +0.02 n.s. | de +0.06 [0.01,0.13] | hi +0.12 [0.05,0.20]
+t=18: it +0.08 [0.02,0.15] | de +0.16 [0.08,0.24] | hi +0.16 [0.09,0.25]
+Predictions: Claude "t=15 hi ~+0.10, CI excl 0 (65%)" ✔. Anant "~0.1" ✔.
+Reading: once tau sits where English actually starts refusing (11-18), the trigger deficit is real and ordered like behaviour
+(t=15: hi > de > it; behaviour hi > de > it). The registered KILL was driven by tau_mid being BELOW the English decision zone.
+Verdict stays KILL as registered; write-up reports this sensitivity explicitly as post-hoc (forking-path risk: 4 thresholds).
+LESSON (for Phase 4 + future rules): calibrate thresholds to BEHAVIOUR on English held-out data, not to class-mean midpoints.
