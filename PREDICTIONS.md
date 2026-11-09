@@ -299,3 +299,12 @@ Point estimates meanwhile: slot 24 refusal vs control en-it 0.943/0.949, en-de 0
 0.56-0.77 (Zhang's generic cosine is real here). Depth profile: cosine rises to ~0.95 at slots 18-24, falls to ~0.45 at 36 for BOTH
 contrasts and the null -> property of the representation space (shared middle, language-specific late layers), not of safety.
 Provisional scoring: Anant "refusal ~ control" ✔ at 18-24; Claude "+0.1" ✗; Claude "ml/hi-Latn ~0.4, below control" ✗ (0.66-0.69, ~= control).
+P3.3 v2 (2026-11-09 23:30; cosine.py + 6c diffs) — still PROVISIONAL (transfer numbers have no CI yet).
+Fix (1) (resampling) changed only the CIs; point estimates unchanged by design. CIs still skewed upward (point near lower edge,
+e.g. en-hi slot 18 +0.026 [+0.025,+0.061]) -> residual bias from the noisier control under resampling = the reliability confound.
+=> the raw "refusal - control" CIs are NOT to be used. Headline = disattenuated transfer (disjoint halves / sqrt(reliabilities)):
+slot 24 refusal vs control: en-it 0.95/0.97 | en-de 0.95/0.97 | en-hi 0.90/0.89 | en-ml 0.74/0.70 | en-hi-Latn 0.76/0.76 | hi-hiLatn 0.81/0.83
+slot 18: it 0.96/0.96, de 0.96/0.96, hi 0.96/0.96. slot 12: refusal slightly higher (0.92-0.94 vs 0.87-0.89). slot 36: refusal lower.
+Reading: in the shared middle layers the refusal direction is no more language-invariant than a neutral topic direction -> Zhang's
+point holds for Tiny Aya: shared, but not specially shared. ml/hi-Latn: direction ~shared (0.75) though separation along it collapsed (5c).
+TODO next chat: CI for transfer(refusal) - transfer(control) (resample splits AND pairs) before canonical numbers.
