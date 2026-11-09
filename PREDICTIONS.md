@@ -257,3 +257,16 @@ en 1.00 (5 fails: 4 below tau) | it 0.89 (13: 10 above) | de 0.92 (15: 9 above) 
 Claude bullet 3 "complied hi project lower, row AUROC ~0.7": direction ✔, size under-predicted (0.89).
 Excess failures hi - en: below tau +4, above tau +12 -> ~3/4 of the hi gap = recognised (above English tau) but complied.
 POST-HOC reading (not registered): hi's effective decision threshold along r_en sits higher than en's -> test in 5e (paired twins).
+5e OUTCOME (2026-11-09 20:19, EXPLORATORY post-hoc paired twins, slot 24): delta = s_L - s_en(twin), median [IQR]
+GAP (en refused, L complied): it -6.8 [-9.6,-2.8] n=10 | de -5.2 [-10.7,-2.4] n=11 | hi -8.2 [-12.7,-5.3] n=17
+both refused:                 it -2.1 [-3.6,-0.8] n=82 | de -2.9 [-4.6,-1.6] n=79 | hi -3.4 [-5.0,-2.2] n=70
+-> reading (ii) supported: the prompts that fail in L lose ~2-3x more harm signal than typical (hi IQRs ~disjoint).
+Claude "(ii) 60%, GAP ~-10 vs ~-3": ✔ (-8.2 vs -3.4).
+Also: en complied max 11.2 < en refused 5th pct 17.9 (clean); hi/it/de complied scores overlap the refused range (hi 9/21
+complied >= 14.3 = hi refused 5th pct) -> score->decision mapping is SOFTER outside English (some of reading (i) too).
+CAVEATS: (1) selection: GAP is selected on L complying, which correlates with low s_L -> conditioning inflates |delta|
+mechanically; delta noise sd ~2 (both-refused IQR) makes a 5-unit extra drop unlikely to be pure selection, not excluded.
+(2) GAP en twins are themselves weaker (en 22.8 vs 25.7) = more borderline prompts.
+(3) Reconciles with 5c KILL: the shift is LOCAL (~17 hi prompts) and tau_mid (~9) sits below where en actually starts
+refusing (between 11.2 and 17.9), so shifted prompts mostly stayed "above tau". Registered verdict stands; a
+behaviour-calibrated tau is a POST-HOC sensitivity (5f).

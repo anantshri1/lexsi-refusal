@@ -108,3 +108,7 @@ p3_killtest_verdict  KILL for hi (neither branch CI > 0); same for it/de; cosine
 p3_row_auroc_refused_gt_complied  en 1.00 | it 0.89 | de 0.92 | hi 0.89
 p3_fail_above_below_tau           en 1/4 | it 10/3 | de 9/6 | hi 13/8   (of n_fail 5 / 13 / 15 / 21)
 p3_mean_score_refused_complied    en 25.3/5.7 | it 23.3/14.6 | de 22.3/11.3 | hi 22.1/11.4 (tau ~9.0)
+# 5e — paired twins (EXPLORATORY): median delta s_L - s_en twin at slot 24 [IQR]
+p3_twin_delta_gap            it -6.8 [-9.6,-2.8] (10) | de -5.2 [-10.7,-2.4] (11) | hi -8.2 [-12.7,-5.3] (17)   # en refused, L complied
+p3_twin_delta_both_refused   it -2.1 [-3.6,-0.8] (82) | de -2.9 [-4.6,-1.6] (79) | hi -3.4 [-5.0,-2.2] (70)
+p3_en_complied_max_vs_refused_p5   en 11.2 vs 17.9 | hi refused p5 14.3 (9/21 hi complied >= 14.3)

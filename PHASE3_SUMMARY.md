@@ -42,8 +42,18 @@
         but still lands above our (too low) tau -> a localised shift that cloud averages hide.
    Implication for Phase 4 either way: pushing hi activations up along r_en might close the gap.
 
+5. 5e paired twins (exploratory): for pairs where en refused but hi complied, the hi prompt scores 8.2 below its own
+   English twin (median), vs 3.4 for pairs both refused -> the prompts that fail in Hindi LOSE EXTRA HARM SIGNAL (reading ii).
+   Same in it (-6.8 vs -2.1), de (-5.2 vs -2.9). Plus: outside English, complied and refused scores overlap (softer decision).
+   Why 5c said KILL anyway: the shift hits ~17 prompts (local, averaged away in clouds) and our tau (~9) is below the score
+   where English actually starts refusing (11-18), so shifted prompts still counted as "above tau".
+   Caveat: selecting pairs BY hi compliance favours low hi scores (selection bias); size makes pure artefact unlikely.
+   Current story: shared ruler; a subset of prompts loses harm signal in translation and drops below the refusal zone,
+   and the score->refusal mapping is noisier outside English. Closer to A ("shared direction, weaker trigger" on a
+   subset) + a bit of C, than to either pure form.
+
 ## Hypotheses status (SCOPE A/B/C)
-- C (shared representation, different readout) is the leading candidate, pending 5e: representation shared (English ruler separates hi
+- [superseded by 5e, see point 5] C was the leading candidate before 5e: representation shared (English ruler separates hi
   as well as en), readout differs (hi complies at scores that refuse in en).
 - B (language-specific) disfavoured for it/de/hi: a separate Hindi mechanism would not leave the English ruler this sharp in hi.
   Not excluded: hi could have its own refusal readout. Tests: cosine(r_en, r_hi) vs control (step 4), Phase 4 steering.
