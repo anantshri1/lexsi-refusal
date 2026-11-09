@@ -252,3 +252,8 @@ pair_keep subsets (n=32 / 10) d' 1.24 / 1.30. Script flip hi -> hi-Latn: d' 4.07
 Scoring: Anant "hi > it/de > en, all within 0.05": within 0.05 ✔, ordering ✗ (en highest); "hi-Latn, ml worse" ✔.
 Claude: AUROC within 0.05 ✔; trigger tracks behaviour CI>0 ✗ (right sign, ~4 pp, n.s.); k* in 12-24 ✔; hi-Latn d' >25% below hi ✔
 (-80%); ml lowest ✗ (ml ~ hi-Latn); row-level (complied hi project lower) -> PENDING (needs j1 join).
+5d OUTCOME (2026-11-09 20:12, row level, H_core harmful, pair_keep, j1 @ t512, slot 24): row AUROC(refused > complied)
+en 1.00 (5 fails: 4 below tau) | it 0.89 (13: 10 above) | de 0.92 (15: 9 above) | hi 0.89 (21: 13 above, 8 below; refused below tau 0).
+Claude bullet 3 "complied hi project lower, row AUROC ~0.7": direction ✔, size under-predicted (0.89).
+Excess failures hi - en: below tau +4, above tau +12 -> ~3/4 of the hi gap = recognised (above English tau) but complied.
+POST-HOC reading (not registered): hi's effective decision threshold along r_en sits higher than en's -> test in 5e (paired twins).

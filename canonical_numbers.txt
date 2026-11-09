@@ -104,3 +104,7 @@ p3_trigger_h_k24     en 0.95 | it 0.96 | de 0.92 | hi 0.91 | ml 0.09 | hi-Latn 0
 p3_trigger_diff_en   it [-0.06,+0.03] | de [-0.03,+0.09] | hi [-0.01,+0.08]
 p3_trigger_b_k24     en 0.05 | it 0.06 | de 0.06 | hi 0.03 | ml 0.00 | hi-Latn 0.01
 p3_killtest_verdict  KILL for hi (neither branch CI > 0); same for it/de; cosine sensitivity identical; plateau 18-36 hi trig 0.87-0.92 vs en 0.94-0.96
+# 5d — row level (src/r_en_score.py): does the r_en score at slot 24 predict j1 behaviour within a language? (H_core, pair_keep, NA excluded)
+p3_row_auroc_refused_gt_complied  en 1.00 | it 0.89 | de 0.92 | hi 0.89
+p3_fail_above_below_tau           en 1/4 | it 10/3 | de 9/6 | hi 13/8   (of n_fail 5 / 13 / 15 / 21)
+p3_mean_score_refused_complied    en 25.3/5.7 | it 23.3/14.6 | de 22.3/11.3 | hi 22.1/11.4 (tau ~9.0)
