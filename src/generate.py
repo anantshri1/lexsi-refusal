@@ -1,5 +1,5 @@
 """Phase 2 B1 — greedy generation for one (model, condition) over benchmark rows. Resumable by uid."""
-import hashlib, json, time
+import hashlib, json, re, time
 import torch, pandas as pd
 from paths import DATA_FROZEN, DATA_INTERIM, GENERATIONS
 
@@ -22,6 +22,13 @@ def load_itHT():
             .assign(uid=lambda x: "mj" + x.id.astype(str).str.zfill(3) + "-h-itHT-orig",
                     pair_id=lambda x: "mj" + x.id.astype(str).str.zfill(3))
             .rename(columns={"it_multijail": "text"})[["uid", "pair_id", "tier", "text"]])
+
+
+def clean_translation(t):
+    """translate_en step 2 input: strip wrappers the model puts around its translation ('**Translation:**', 'Text:', quotes).
+    Refusals at the translation step are left as they are (a deployed pipeline would pass them on)."""
+    t = re.sub(r"^\s*(\*\*)?\s*(translation|text)\s*:?\s*(\*\*)?\s*:?\s*", "", t, flags=re.I)
+    return t.strip().strip('"').strip()
 
 
 def build_messages(text, condition):
