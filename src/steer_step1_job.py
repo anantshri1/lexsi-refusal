@@ -36,6 +36,18 @@ def st_idx(slot):              # SLOT k = output of decoder layer k-1 -> SafeTun
     return slot - 1
 
 
+class NoHead(torch.nn.Module):
+    """The decoder WITHOUT lm_head, for SafeTune's extractor. Its full-CausalLM forward computes logits at every position
+    (16 x ~550 tok x 262k vocab fp16 = 4.3 GB -> T4 OOM, first step 1 run 2026-11-10). Same layer modules: SafeTune finds
+    them via model.model.layers and hooks exactly what it would hook on the full model; only the unused logits are skipped."""
+    def __init__(self, base):
+        super().__init__()
+        self.model = base
+
+    def forward(self, **kw):
+        return self.model(**kw, use_cache=False)
+
+
 def load_bench():
     p = hf_hub_download(BENCH_REPO, "benchmark_v1.jsonl", repo_type="dataset")
     assert hashlib.sha256(open(p, "rb").read()).hexdigest() == BENCH_SHA, "wrong benchmark"
@@ -110,7 +122,7 @@ def main():
     cfg = RefusalDirectionConfig(target_layers=[st_idx(k) for k in SLOTS], pick_layer=st_idx(24),
                                  pool_method="last_token", normalize=False)
     t0 = time.time()
-    d, layer, per = extract_refusal_direction(model, tok, harm, ben, cfg)
+    d, layer, per = extract_refusal_direction(NoHead(model.model), tok, harm, ben, cfg)
     assert layer == st_idx(24), f"SafeTune picked {layer}, expected {st_idx(24)}"
     upload(dict(direction=d.cpu(), layer=layer, per_layer={k: v.cpu() for k, v in per.items()}, n_harm=len(harm),
                 n_ben=len(ben), cfg=vars(cfg), note="per_layer keys = SafeTune idx = slot - 1"), "safetune_dir_en_v1.pt", api)
