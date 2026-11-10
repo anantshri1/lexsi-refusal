@@ -141,3 +141,7 @@ p4_fc_hi_bar_translate   alpha/Delta 0.23 (s18) | 0.28 (s21) | 0.25 (s24); fc ov
 p4_safetune_vs_r_en_cos     slot 18 1.000 | 21 1.000 | 24 1.000   # SafeTune extract_refusal_direction (last_token, pick_layer=23, normalize=False), same 99+99 en rows
 p4_steer_unit_check         slot-24 projection change = alpha exactly (7.586, 8/8 rows); slot 25 = 1.00-1.06 x alpha
 p4_gen_time_t4              16 longest prompts x 512 new tokens: 51 s, peak 8.2 GB (t4-small)
+# Phase 4 step 2 — WildGuard (AuditKIT GuardJudge, fp16) vs Anant labels; en/it/de/hi; src/wildguard_val.py; registered rule FAIL
+p4_wg_benign_pooled       precision 0.79 [0.60,0.91] | recall 0.49 [0.34,0.64] | kappa 0.54 (n 223, 39 pos); j1 same rows precision 0.23
+p4_wg_benign_by_tier      H_core recall 0.95 (19/20) precision 0.79 (n 119) | H_bait recall 0.00 (0/19) (n 104)   # post-hoc split
+p4_wg_harmful             harmful_response 0/51 human-compliant flagged | not-refusal precision 0.75 recall 0.98 kappa 0.68 (j1 0.83/0.86/0.71)

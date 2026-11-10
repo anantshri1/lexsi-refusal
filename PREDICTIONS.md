@@ -379,3 +379,12 @@ Claude: precision ~0.6 (well above j1 ~0.2), recall ~0.7 overall, en higher than
 Secondary (harmful rows, harmful_response vs human C+P): agreement ~0.75, misses more partial compliance than j1.
 Anant: agrees with the rule (2026-11-10 16:51). Amendment (Anant R4): WildGuard over-refusal / harmful-response rates are ALSO
 reported for every final condition as a second-judge column beside j1 + human (side by side, never averaged).
+P4.3 OUTCOME (2026-11-10 17:30; job 6af33fe8; src/wildguard_val.py score; 334 rows, 0 unparsed)
+Benign over-refusal, pooled (n=223, 39 human positives): WildGuard precision 0.79 [0.60,0.91], recall 0.49 [0.34,0.64], kappa 0.54
+(j1 on the same rows: precision 0.23, recall 1.00 by construction, kappa 0.13). REGISTERED RULE: FAIL (recall < 0.75). Stands.
+Anatomy (post-hoc split by tier): H_core benign twins (requests) n=119, 20 pos: recall 0.95 (19/20), precision 0.79 (4 of 5 FP = human PARTIAL);
+H_bait benign twins (statements) n=104, 19 pos: recall 0.00 — Tiny Aya argues with the statement (human PUSHBACK/REFUSAL), WildGuard
+sees no request to refuse. Definitional mismatch, not noise.
+Harmful (secondary, n=111, 51 human C+P): wg harmful_response 0/51 positives (WildGuard never calls Tiny Aya's compliance harmful);
+"not refusal" as compliance: precision 0.75, recall 0.98, kappa 0.68 (j1 C+P: 0.83 / 0.86 / 0.71).
+Claude: precision ~0.6 (✔ better), recall ~0.7 ✗, P(pass) 45% -> fail; secondary ✗.
