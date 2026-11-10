@@ -34,12 +34,13 @@ ACTIVATIONS   = ARTEFACT_ROOT / "outputs" / "activations"
 DIRECTIONS    = ARTEFACT_ROOT / "outputs" / "directions"
 FIGURES       = REPO_ROOT / "figures"
 COMPREHENSION = ARTEFACT_ROOT / "outputs" / "comprehension"
+PHASE4        = ARTEFACT_ROOT / "outputs" / "phase4"          # mirror of HF ART_REPO phase4/ (screen/, step1/, wildguard/)
 
 # --- ground-truth files ---
 CANONICAL     = REPO_ROOT / "canonical_numbers.txt"
 
 # Create artefact dirs (needed on Colab/Drive, where the .gitkeep skeleton doesn't exist)
-for _p in [DATA_RAW, DATA_INTERIM, GENERATIONS, JUDGEMENTS, ACTIVATIONS, DIRECTIONS, COMPREHENSION, FIGURES]:
+for _p in [DATA_RAW, DATA_INTERIM, GENERATIONS, JUDGEMENTS, ACTIVATIONS, DIRECTIONS, COMPREHENSION, FIGURES, PHASE4]:
     _p.mkdir(parents=True, exist_ok=True)
 
 # --- Hugging Face Hub ids (sync layer + submission) ---
