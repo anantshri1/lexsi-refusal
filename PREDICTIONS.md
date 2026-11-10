@@ -358,3 +358,9 @@ Bars reached much EARLIER than predicted: sysprompt at alpha/Delta 0.11-0.13 (�
   translate_en bar en 12-15, hi 9-13 (✔ range), it 15-24, de 19-28 (✗, above). Slot 18 vs 24: tie in alpha/Delta (✗/undecided).
 Reading: under the shift-only assumption the slots are interchangeable in alpha/Delta units -> the forecast cannot choose a slot;
 over-refusal is steeply non-linear (alpha/Delta 0.5 -> 31-60%). Screening grid set by this: alpha/Delta in {0.1, 0.2, 0.3}.
+
+## P4.2 — Step 1 job smoke expectations (Claude, 2026-11-10 16:10, before launch)
+A cos(SafeTune dir, our r_en full) >= 0.999 at slots 18/21/24 (same rows, same position, both fp16 -> only summation order differs).
+B template ids equal for all langs. C slot 23 change exactly 0; slot-24 projection change = alpha (7.59) +- 0.05; off-direction
+change ~0; slot 25 projection change 0.6-1.0 x alpha (later layers partly carry the push). D strength 0 identical 8/8;
+Phase 2 first-64 equal >= 6/8 (batching numerics). E 16x512 in 100-200 s, peak ~12 GB (Phase 2: 116 s, 12.3 GB at bs16).
