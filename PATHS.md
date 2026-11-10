@@ -76,6 +76,12 @@ Never hard-code a path string anywhere else.
   -> [extract_activations.py --control] activations/act_tinyaya_base_v1_ctrl_{lang}_orig.pt (6 shards).
 - Directions: DIRECTIONS/dir_tinyaya_{contrast}_{pos}_{lang}_v1.pt, [37, 2048], contrast in {refusal, control}, pos in {last, user}
   (computed on the Mac from activations; TBD details in Phase 3 block 5)
+- Phase 4 steering vectors (src/steer_prep.py): DIRECTIONS/dir_tinyaya_steer_v1.pt = dict(slots [18,21,24], st_idx [17,20,23],
+  fold_map (= Phase 3), en_folds/hi_folds [5,3,2048], en_full/hi_full/ctrl/rand [3,2048], delta_en [3]); all unit vectors;
+  axis 'slot' follows `slots`. ctrl = en food - travel (64 pairs); rand = seed 0.
+  LAYER NAMING (Phase 4 trap T1): we say SLOT k (= output of decoder layer k-1). SafeTune RefusalDirectionModel(layers=[i]) /
+  pick_layer=i index DECODER BLOCKS -> always pass i = st_idx(k) = k - 1. SafeTune 'steer' strength alpha is in raw score units
+  at that slot -> report alpha/Delta_k.
 
 ## Rules
 1. A frozen file is never edited; changes = new version (v2), old kept.
