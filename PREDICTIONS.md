@@ -331,3 +331,18 @@ Reliable window 12-24: extra loss in all three, peaking 18-21: it -0.10..-0.22, 
 Consistency: slot 24 hi -0.16 x English separation ~= the raw 5e result (-8.2 vs -3.4).
 Scoring: loss emerges in the MIDDLE layers (12-21) -> Anant "late, representation fine" ✗; Claude onset ✔, size ✗ (-0.15..-0.20, not -0.3), flat to 24 ~✔.
 Phase 4 implication: intervene where the loss sits AND the direction is shared: layers 18-24 (k*=24; 18 as the alternative).
+
+## P4.0 — Intervention bets (2026-11-10 15:00, Phase 4 start, before ANY Phase 4 computation)
+Setting: SafeTune RefusalDirectionModel mode="steer" (h <- h + alpha*d at every position) at ONE slot in {18,21,24}
+(SafeTune index = slot - 1), d = cross-fitted unit direction; judged j1 @ t512 + human over-refusal check; en/it/de/hi pair_keep.
+Bars: hi compliance base 22.6 | sysprompt 15.1 | translate_en 8.7%; over-refusal (corrected) base ~0-5 | sysprompt ~1-5 | translate_en ~5%.
+Anant: r_en does marginally better than sysprompt, but pushes benign prompts into over-refusal.
+Claude:
+- Trade-off: at an alpha that brings hi to translate_en level (<= ~9%), hi over-refusal >= 15% (60%). At an alpha with
+  over-refusal <= 5%, hi compliance ~13-18% ~ sysprompt (55%). => r_en is NOT better than sysprompt at matched over-refusal.
+  Reason: alpha shifts benign and harmful equally, and the benign cloud's upper tail reaches the English decision zone
+  (11-18) at about the alpha that rescues the shifted hi failures.
+- Kill-test: food/travel control direction at the same alpha changes hi compliance by < 4 pp (70%).
+- B-test: r_hi vs r_en at the same setting: |difference in hi compliance| < 4 pp (65%) (directions nearly parallel, A).
+- Rescue: among hi failures, the GAP prompts (en refused, hi complied) are rescued at a lower alpha than prompts that fail in both (60%).
+- Causal sanity: ablating r_en at the chosen slot raises en H_core compliance from 5% to > 40% (70%).
