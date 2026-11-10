@@ -123,3 +123,12 @@ Interim files (DATA_INTERIM, not frozen):
 - multijail_selection_log.csv — all 315 rows + selected flag (drop log)
 - multijail_selected_v1.csv — 133 selected + it_multijail (MT reference, NOT a benchmark row)
 NOT in the frozen file: comprehension results (outputs/, keyed by uid).
+## Phase 4 screening (src/screen_split.py, src/screen_job.py; PHASE4_PLAN.md)
+- PHASE4 = ARTEFACT_ROOT/outputs/phase4 (Mac mirror of HF ART_REPO phase4/): step1/, wildguard/, screen/.
+- phase4/screen/split_v1.json: fold_map (= Phase 3), train_pairs {en, hi}, dev_pairs (55; H_core, folds 0-2, kept in en/hi/de),
+  test_pairs (34; folds 3-4), dev_uids (330 = 55 x {h,b} x {en,hi,de}).
+- phase4/screen/safetune_dirs_v1.pt: SafeTune-extracted unit vectors en_folds / hi_folds [5,3,2048], ctrl [3,2048] (slots 18/21/24),
+  cos_vs_ours (worst 0.999999). These are what screening steers with; rand comes from dir_tinyaya_steer_v1.pt.
+- phase4/screen/gen_tinyaya_{cond}_{dev|smoke}_v1.jsonl, cond = steer-{ren|ctrl|rand|rhi}-s{slot}-a{100*alpha/Delta:03d} | ablate-ren-s24-all.
+  Fields = Phase 2 generation fields + direction, slot, st_idx, layers, alpha, frac, mode, fold, vec_source. smoke = never analysed.
+- logs: phase4/screen/log_extract_v1.json, log_screen_{dev|smoke}_v1.json (per-condition secs, hit_eos, mean_new).
