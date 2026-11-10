@@ -137,3 +137,7 @@ p4_cos_en_ctrl           slot 18 0.043 | 21 0.016 | 24 -0.019  # food-travel con
 p4_logit_mid_width_s24   en 9.75/6.4 (penalty-driven, separable) | it 13.2/13.7 | de 10.9/16.1 | hi 13.6/13.7
 p4_fc_overref_alpha0     en 4.0-4.5 | it 4.7-8.0 | de 6.5-8.8 | hi 2.3-3.0   # vs human-corrected 2.7/5.5/2.7/0.0 -> pessimistic
 p4_fc_hi_bar_translate   alpha/Delta 0.23 (s18) | 0.28 (s21) | 0.25 (s24); fc over-refusal at s24 en 12.4 it 14.5 de 19.3 hi 8.7
+# Phase 4 step 1 (HF Job 6af332e3; phase4/step1/step1_log_v1.json)
+p4_safetune_vs_r_en_cos     slot 18 1.000 | 21 1.000 | 24 1.000   # SafeTune extract_refusal_direction (last_token, pick_layer=23, normalize=False), same 99+99 en rows
+p4_steer_unit_check         slot-24 projection change = alpha exactly (7.586, 8/8 rows); slot 25 = 1.00-1.06 x alpha
+p4_gen_time_t4              16 longest prompts x 512 new tokens: 51 s, peak 8.2 GB (t4-small)

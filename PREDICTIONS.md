@@ -364,3 +364,10 @@ A cos(SafeTune dir, our r_en full) >= 0.999 at slots 18/21/24 (same rows, same p
 B template ids equal for all langs. C slot 23 change exactly 0; slot-24 projection change = alpha (7.59) +- 0.05; off-direction
 change ~0; slot 25 projection change 0.6-1.0 x alpha (later layers partly carry the push). D strength 0 identical 8/8;
 Phase 2 first-64 equal >= 6/8 (batching numerics). E 16x512 in 100-200 s, peak ~12 GB (Phase 2: 116 s, 12.3 GB at bs16).
+P4.2 OUTCOME (2026-11-10 16:20; job 6af332e39737d9a9e090c4e8; ART_REPO phase4/step1/step1_log_v1.json)
+A cos(SafeTune, r_en full) 1.000 at slots 18/21/24 ✔; unnormalised norm at slot 24 = 30.87 (full-data mean difference;
+  cross-fitted Delta_24 = 30.34 is ~1.7% smaller, as expected for held-out scoring). B template ids equal 6/6 ✔.
+C slot 23 change 0.0 ✔; slot-24 projection change 7.586 = alpha on 8/8 ✔; off-direction change <= 0.013 (fp16) ✔;
+  slot 25 projection change 7.57-8.04 = 1.00-1.06 x alpha ✗ (predicted 0.6-1.0): the next layer carries the push fully, slightly amplified.
+D strength 0 == no hooks 8/8 ✔; Phase 2 comparison skipped (base generations not on the HF artefact repo).
+E 16 longest prompts x 512 tokens: 51 s, peak 8.2 GB ✗ (predicted 100-200 s, ~12 GB): ~2x faster than Phase 2 Colab.

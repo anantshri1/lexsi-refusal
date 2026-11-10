@@ -50,3 +50,18 @@ Setup: `pip uninstall -y torchao` BEFORE import; `sys.path.insert(0, "/content/S
 All four toolkits support Tiny Aya; no install changed pinned versions.
 Pipeline: CuratorKIT (benchmark QC/provenance) -> SafeTune (directions, ablation, steering) -> AuditKIT (guards + lm-eval capability) [+ CircuitKIT stretch].
 Our own code: multilingual judge orchestration, geometry analysis, per-language/per-layer direction handling, translations.
+## Phase 4 verification (2026-11-10, SafeTune @ 26f59e6 on Tiny Aya, HF Job t4-small)
+- VERIFIED: RefusalDirectionModel modes are "ablate" / "steer" (no "add"); direction renormalised to unit inside; "steer" adds
+  strength*d at EVERY position (preamble, prompt, generated tokens); ONE direction for all `layers` (per-layer directions ->
+  one instance per layer). strength is in raw residual units: slot-24 projection moved by exactly alpha (job C).
+- TRAP T1 (layer index): layers=[i] / pick_layer=i index DECODER BLOCKS (0-based) = our SLOT i+1. Always st_idx(slot) = slot - 1.
+- VERIFIED: extract_refusal_direction with pick_layer set runs no sweep; per-layer dict filled for target_layers; normalize=False
+  -> raw mean difference (norm 30.87 at slot 24). With the same rows it reproduces our r_en exactly (cos 1.000 at 18/21/24).
+  Its template path (string then tokenise without special tokens) gives our token ids (6/6 langs).
+- TRAP T4 (memory): SteeringVectorExtractor calls the FULL CausalLM forward -> logits at every position (262k vocab):
+  bs 16 x ~550 tokens = 4.3 GB -> OOM on a T4. Batch size not exposed. Fix: pass NoHead(model.model) (decoder without lm_head;
+  same layer modules hooked). Feedback for Lexsi.
+- AuditKIT (TRAP T3): run_lmeval takes only a model-name string (lm-eval reloads weights -> hooks lost). The NATIVE engine does
+  MC-by-loglikelihood (runner.py) with HFGenModel.loglikelihood (teacher forcing, unbatched, one forward per choice) on
+  self._pipeline.model -> install SafeTune hooks on that model object to evaluate a steered model natively. Belebele is not a
+  built-in scenario -> custom samples (to build in the utility block).
