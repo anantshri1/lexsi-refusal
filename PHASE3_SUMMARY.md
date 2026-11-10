@@ -98,3 +98,14 @@ because our threshold (class-mean midpoint) sat below where English actually ref
 - Cosine comparisons need matched n, equal resampling, and reliability correction (step 4 v1 had two defects).
 - Ratios with noisy denominators explode at small n (ml/hi-Latn transfer CIs).
 - Nearly dropped the neutral control for time; building it properly took ~1.5 h and changed the conclusion's strength.
+
+## Explain-back (2026-11-10 14:29) — Anant
+Solid: r_en + why cross-fit (1), kill-test vs post-hoc (2), 5d readings (3), 5e + caveat (4), script confound (7), hypothesis (8).
+Gaps filled by Claude:
+- Q2 nuance: the verdict was NOT changed; 5f is a labelled post-hoc GRID of thresholds (9/12/15/18), not one tau picked after looking.
+- Q5 (missed): raw cosine is meaningless alone because any contrast on the same translated content aligns (random-sign null 0.56-0.77,
+  topic control ~0.95). Three controls: matched n + equal resampling; reliability (noisier direction -> lower cosine) -> divide by
+  split-half reliability; shared content -> disjoint prompt halves. Then refusal ~ topic.
+- Q6 (partly): panel B early layers are not noise (cosine ~0.9 at 12); shape = rise to ~0.96 at 18, flat to 24, drop at 30-36
+  (language-specific output). The "noise" was panel C slots < 9. Steer at 18-24 because: direction shared there (B), twin loss sits
+  there (C), separation on its plateau (A).
