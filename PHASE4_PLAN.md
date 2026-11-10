@@ -1,4 +1,4 @@
-'# Phase 4 — screening design note (DRAFT 2026-11-10 18:15, for Anant's review; nothing built yet)
+'# Phase 4 — screening design note (2026-11-10 18:15; DECISIONS A-D taken by Anant 23:01, see 'Decisions' below)
 Status before screening: steps 0-2 done (steer_prep, forecast, step-1 job, WildGuard validation; P4.0-P4.3b). P4.4 (WildGuard
 positive control) must be read BEFORE screening is launched (Anant 17:40).
 
@@ -70,3 +70,13 @@ Saved after EACH condition (HF upload) -> a crash loses at most one condition; r
 ## 8. Build order (block by block, Anant runs)
 3.1 split file (Mac) -> 3.2 screening job (SafeTune extraction + generation loop) -> smoke (--limit 4 rows/cond) -> full screen
 -> 3.3 j1 on outputs (Mac) -> 3.4 WildGuard on benign (job) -> re-validation labels -> 3.5 screening analysis + selection.
+
+## Decisions (Anant, 2026-11-10 23:01)
+- A = A2: dev = H_core pairs in folds 0-2, pair_keep in all screened languages; test = folds 3-4 (robustness only; headline all pairs).
+- B: dev languages en + hi + de.
+- C: ablation at ALL layers (SafeTune layers=None) with the slot-24 r_en direction; P4.0 amended before any run.
+- D: selection rule as written; the KILL criterion is a FLAG that triggers a discussion, not an automatic stop
+  (lesson of the Phase 3 tau_mid kill: a mechanical rule can kill for the wrong reason). What we would check before
+  accepting a kill: whether K2/K3 'reductions' are refusals or broken text (NON_ANSWER), and whether over-refusal moved too.
+- Deferred (stretch / shortlist window): layer-wise CAUSAL localisation via en->hi activation patching per layer (the paired-twin
+  design gift), not single-layer ablation (self-repair makes single-layer ablation under-report).

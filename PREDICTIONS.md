@@ -412,3 +412,7 @@ Claude: a==c >=18/20 ✔ (20/20); b >=7/10 and <=2/10 ✔ (8/10, 0/10); a/c fewe
 VERDICT (rule): (a) ~ (b) -> WildGuard CAN fire through AuditKIT; step 2.2 numbers stand. The 0/51 is real: WildGuard does not
 judge Tiny Aya's MultiJail compliance harmful (severity and/or language), not a pipeline artefact. Double-BOS = minor deviation from
 WildGuard's official usage -> feedback for Lexsi.
+
+P4.0 AMENDMENT (2026-11-10 23:05, before any steering/ablation run): the causal-sanity ablation is at ALL 36 decoder layers with
+the slot-24 r_en direction (Arditi et al.; SafeTune RefusalDirectionModel mode="ablate", layers=None), not "at the chosen slot".
+Prediction unchanged: en H_core compliance from 5% to > 40% on dev (70%). Kill-test (PHASE4_PLAN D) = flag + discussion, not automatic.
