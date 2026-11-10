@@ -346,3 +346,15 @@ Claude:
 - B-test: r_hi vs r_en at the same setting: |difference in hi compliance| < 4 pp (65%) (directions nearly parallel, A).
 - Rescue: among hi failures, the GAP prompts (en refused, hi complied) are rescued at a lower alpha than prompts that fail in both (60%).
 - Causal sanity: ablating r_en at the chosen slot raises en H_core compliance from 5% to > 40% (70%).
+
+## P4.1 — alpha forecast (src/forecast.py; Claude's bets stated in chat 2026-11-10 15:15 BEFORE the run, logged after; Anant: none)
+Claude: mid(hi) > mid(en) and width(hi) > width(en) at slot 24 (55%); forecast over-refusal at alpha=0 1-4% everywhere;
+hi reaches the sysprompt bar at alpha/Delta 0.15-0.25 and translate_en at 0.4-0.6 with over-refusal 5-15%; slot 18 needs smaller alpha/Delta (50%).
+Outcome (2026-11-10 15:35): logistic mid / width at slot 24: en 9.75/6.4 | it 13.2/13.7 | de 10.9/16.1 | hi 13.6/13.7 -> ✔ (all slots).
+  CAVEAT: en is perfectly separable (5 fails), so its mid/width come from the slope penalty, not the data (any mid in 11.2-17.9 fits).
+Over-refusal at alpha=0: en 4.0-4.5 ✔, hi 2.3-3.0 ✔, it 4.7-8.0 / de 6.5-8.8 ✗ — vs human-corrected base en 2.7, it 5.5, de 2.7, hi 0.0
+  -> assumption (3) over-predicts over-refusal by ~1.5-3x at baseline: treat the over-refusal forecast as pessimistic.
+Bars reached much EARLIER than predicted: sysprompt at alpha/Delta 0.11-0.13 (✗), translate_en at 0.23-0.28 (✗); over-refusal at the
+  translate_en bar en 12-15, hi 9-13 (✔ range), it 15-24, de 19-28 (✗, above). Slot 18 vs 24: tie in alpha/Delta (✗/undecided).
+Reading: under the shift-only assumption the slots are interchangeable in alpha/Delta units -> the forecast cannot choose a slot;
+over-refusal is steeply non-linear (alpha/Delta 0.5 -> 31-60%). Screening grid set by this: alpha/Delta in {0.1, 0.2, 0.3}.
