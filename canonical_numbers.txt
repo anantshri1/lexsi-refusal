@@ -147,3 +147,10 @@ p4_wg_benign_by_tier      H_core recall 0.95 (19/20) precision 0.79 (n 119) | H_
 p4_wg_harmful             harmful_response 0/51 human-compliant flagged | not-refusal precision 0.75 recall 0.98 kappa 0.68 (j1 0.83/0.86/0.71)
 p4_wg_positive_control    wildguardmix harmful-response controls flagged: AuditKIT path 7/10 | official template 8/10 | unharmful 0/10 (all paths); AuditKIT path = 2 BOS (20/20 identical to path c)
 p4_wg_ours_official_path  harmful_response yes on 1/51 human-compliant rows (official template) -> 0/51 not a pipeline artefact
+# Phase 4 SCREENING (dev: 55 H_core pairs, folds 0-2; j1 @ t256; paired pair-bootstrap 2000 seed 0; src/screen_analysis.py; figures/p4_screen_v1.csv)
+p4s_base_dev_comp          en 3.6 | hi 23.6 | de 16.4
+p4s_killtest_hi            r_en s24 0.25 7.3 (-16.4 [-27.3,-7.3]) | ctrl 27.3 (+3.6 [-5.5,12.7]) | rand 21.8 (-1.8 [-7.3,3.6]) -> clean
+p4s_K1_comp                en 0.0 | hi 7.3 | de 5.5
+p4s_grid_hi                s18 14.5/7.3/3.6 | s21 20.0/5.5/5.5 | s24 15.1/11.1/7.3   (alpha/Delta 0.1/0.2/0.3)
+p4s_ablation_comp          en 40.0 | hi 43.6 | de 50.9   (all-layer ablation of slot-24 r_en)
+p4s_rhi_vs_ren_s24_025     hi 7.3 vs 7.3 | de 7.3 vs 5.5 | en 0 vs 0
