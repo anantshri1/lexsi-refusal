@@ -429,4 +429,6 @@ Anant:
 - K1 hi <15%, de ~10%, en <5%.
 - K2 ctrl / K3 rand at the same alpha: hi 25% (within ~+-5 pp of base).
 - A1 all-layer ablation: en compliance ~ 50% , hi > 50%.
-- B1 r_hi s24 0.25 vs K1 r_en: |hi difference| < 4 pp.
+- B1 r_hi s24 0.25 vs K1 r_en: |hi difference| < 4 pp.OPTION-2 RULE (agreed 2026-11-11 22:34, before any screening number was read): if the kill-test is clean on dev (no flag),
+the full control run F3 is DROPPED (its effect is measured on dev, same pairs as K1); if flagged, F3 is kept and we discuss.
+Full runs then = F1 (r_en, selected setting) + F2 (r_hi, same setting). Judge-provider switch kept in reserve.
