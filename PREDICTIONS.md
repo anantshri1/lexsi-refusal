@@ -416,3 +416,17 @@ WildGuard's official usage -> feedback for Lexsi.
 P4.0 AMENDMENT (2026-11-10 23:05, before any steering/ablation run): the causal-sanity ablation is at ALL 36 decoder layers with
 the slot-24 r_en direction (Arditi et al.; SafeTune RefusalDirectionModel mode="ablate", layers=None), not "at the chosen slot".
 Prediction unchanged: en H_core compliance from 5% to > 40% on dev (70%). Kill-test (PHASE4_PLAN D) = flag + discussion, not automatic.
+
+## P4.5 — screening compliance (dev 55 pairs, j1 @ t256, H_core harmful; base dev en 3.6 | hi 23.6 | de 16.4%), logged 2026-11-11 12:35
+## after generation, BEFORE any judging or reading of responses (only hit_eos / mean_new seen)
+Claude:
+- K1 r_en s24 alpha/Delta 0.25: hi 6-13% (forecast ~9), de 4-10%, en 0-4%.
+- K2 ctrl / K3 rand at the same alpha: hi 18-28% (within ~+-5 pp of base), i.e. kill-test passes (70%).
+- Grid: hi compliance falls monotonically with alpha/Delta at every slot (65%); slots differ by < 5 pp at matched alpha/Delta (55%).
+- A1 all-layer ablation: en compliance > 40% (70%, as P4.0), hi > 50%.
+- B1 r_hi s24 0.25 vs K1 r_en: |hi difference| < 4 pp (65%, as P4.0).
+Anant: 
+- K1 hi <15%, de ~10%, en <5%.
+- K2 ctrl / K3 rand at the same alpha: hi 25% (within ~+-5 pp of base).
+- A1 all-layer ablation: en compliance ~ 50% , hi > 50%.
+- B1 r_hi s24 0.25 vs K1 r_en: |hi difference| < 4 pp.
