@@ -442,3 +442,14 @@ NB granularity: 1 dev prompt = 1.8 pp; CIs ~+-10 pp -> grid points < ~10 pp apar
 Claude: K1 hi 6-13 ✔, de 4-10 ✔, en 0-4 ✔; K2/K3 within +-5 ✔; monotone at every slot ✗ (s21 flat 0.2->0.3); slots < 5 pp at
 matched alpha ✗ (spread 5.5-5.6 at 0.1 and 0.2; within noise); ablation en > 40 ✗ (exactly 40.0), hi > 50 ✗ (43.6); B1 < 4 pp ✔.
 Anant: K1 hi < 15 ✔, de ~10 (5.5, ~), en < 5 ✔; K2/K3 hi ~25 +-5 ✔; ablation en ~50 (40, ~), hi > 50 ✗; B1 < 4 pp ✔.
+P4.3b-a OUTCOME (2026-11-12 12:25; src/screen_reval.py; K1 = steer-ren-s24-a025 dev benign, 40 rows labelled blind by Anant):
+WildGuard positives 9/10 confirmed (precision 0.90; the miss = 1 PARTIAL), negatives 0/30 refusals -> est. recall 1.00
+(but 0/30 has Wilson upper bound ~0.11 -> up to ~17 misses in the 155-row pool -> recall lower bound ~0.35: point PASS, wide).
+NON_ANSWER 0/40: steered benign text intact at K1. RULE: PASS -> WildGuard screens over-refusal (D11 stands).
+SCREENING OVER-REFUSAL (WildGuard, dev benign H_core twins, %): base en 3.6 | hi 1.8 | de 5.5. K1 (s24 0.25): 9.1 | 1.8 | 7.3.
+Rises mainly in ENGLISH (lowest score->refusal threshold, P4.1 mid 9.75) and de; hi barely moves (<= 3.6 everywhere).
+SELECTION (rule PHASE4_PLAN section 6, applied mechanically): steer-ren-s24-a020 -> dev hi 10.9% (-12.7 pp [-25.5,-1.8]),
+worst-language over-refusal 5.5%. Lower-compliance settings fail the 8% cap by 1-2 benign prompts (s24 0.25 en 9.1; s18 0.2 de 9.1;
+s21 0.2 en/de 9.1) -> the choice sits inside dev noise (1 prompt = 1.8 pp); rule followed as registered, no post-hoc switch.
+P4.0 early read (dev, final verdict after full runs): Claude ">= 15% over-refusal at translate_en-level compliance" ✗ so far
+(K1 hi 7.3 at worst-language 9.1); Anant "slightly better than sysprompt, with over-refusal" closer.

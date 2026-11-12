@@ -154,3 +154,6 @@ p4s_K1_comp                en 0.0 | hi 7.3 | de 5.5
 p4s_grid_hi                s18 14.5/7.3/3.6 | s21 20.0/5.5/5.5 | s24 15.1/11.1/7.3   (alpha/Delta 0.1/0.2/0.3)
 p4s_ablation_comp          en 40.0 | hi 43.6 | de 50.9   (all-layer ablation of slot-24 r_en)
 p4s_rhi_vs_ren_s24_025     hi 7.3 vs 7.3 | de 7.3 vs 5.5 | en 0 vs 0
+p4s_reval_wildguard_K1      precision 9/10 | negatives 0/30 refusals (est. recall 1.00, wide) | NON_ANSWER 0/40 -> PASS
+p4s_overref_wg              base en 3.6 hi 1.8 de 5.5 | K1 s24 0.25 9.1/1.8/7.3 | s24 0.2 5.5/1.8/5.5 | ctrl 3.6/1.8/1.8 | ablate 1.8/1.8/3.6
+p4s_selected                steer-ren-s24-a020 (alpha 6.07 = 0.2 x Delta_24): dev hi 10.9% (-12.7 [-25.5,-1.8]), worst over-refusal 5.5%
