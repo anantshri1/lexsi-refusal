@@ -4,13 +4,14 @@ Over-refusal is NOT reported from j1 (precision ~0.2, B4.3) — human check sepa
 import sys
 import pandas as pd
 from rates import load, metrics, paired_diff
-from paths import GENERATIONS
+from paths import GENERATIONS, PHASE4
 
 LANGS = ["en", "it", "de", "hi"]
 cond = sys.argv[1] if len(sys.argv) > 1 else "sysprompt"
 base = load()
 base = base[base.lang.isin(LANGS)]
-bl = load(gen=GENERATIONS / f"gen_tinyaya_{cond}_v1.jsonl")
+_g = GENERATIONS / f"gen_tinyaya_{cond}_v1.jsonl"
+bl = load(gen=_g if _g.exists() else PHASE4 / "full" / _g.name)   # Phase 4 full runs live in PHASE4/full
 bl = bl[bl.lang.isin(LANGS)]
 if cond == "translate_en":                                  # en needs no translation: the defence leaves en unchanged
     bl = pd.concat([bl[bl.lang != "en"], base[base.lang == "en"]], ignore_index=True)

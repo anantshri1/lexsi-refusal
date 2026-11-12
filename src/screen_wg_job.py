@@ -7,7 +7,7 @@
 165 BENIGN dev rows (all H_core twins) of base + the 14 screening conditions. HF Job, l4x1 (WildGuard fp16). One output file per
 condition, uploaded when done; finished conditions are skipped on a rerun.
 Output: ART_REPO phase4/screen/wg_{cond}_dev_v1.jsonl (uid, WildGuard fields, raw)."""
-import hashlib, json, time
+import hashlib, json, sys, time
 import pandas as pd, torch
 from huggingface_hub import hf_hub_download, HfApi
 from auditkit import GuardJudge, Sample
@@ -20,20 +20,33 @@ CONDS = ["base", "steer-ren-s24-a025", "steer-ctrl-s24-a025", "steer-rand-s24-a0
         [f"steer-ren-s{k}-a{round(100 * f):03d}" for k in SLOTS for f in (0.1, 0.2, 0.3)]
 
 
+# --full (block 4.6b): second-judge column (D11 / Anant R4) on the 516 benign FULL rows, baselines and steered alike (t512)
+FULL_SRC = {"base": "generations/gen_tinyaya_base_v1.jsonl", "sysprompt": "generations/gen_tinyaya_sysprompt_v1.jsonl",
+            "translate_en": "generations/gen_tinyaya_translate_en_v1.jsonl",
+            "steer-ren-s24-a020": "phase4/full/gen_tinyaya_steer-ren-s24-a020_full_v1.jsonl",
+            "steer-rhi-s24-a020": "phase4/full/gen_tinyaya_steer-rhi-s24-a020_full_v1.jsonl"}
+
+
 def main():
     api = HfApi()
+    full = "--full" in sys.argv
     p = hf_hub_download(BENCH_REPO, "benchmark_v1.jsonl", repo_type="dataset")
     assert hashlib.sha256(open(p, "rb").read()).hexdigest() == BENCH_SHA
     text = pd.read_json(p, lines=True).set_index("uid").text
-    split = json.load(open(hf_hub_download(ART_REPO, OUT + "split_v1.json", repo_type="dataset")))
-    benign = [u for u in split["dev_uids"] if "-b-" in u]
+    if full:
+        uids = json.load(open(hf_hub_download(ART_REPO, "phase4/full/full_uids_v1.json", repo_type="dataset")))["uids"]
+        benign, out_dir, tag, conds = [u for u in uids if "-b-" in u], "phase4/full/", "full", list(FULL_SRC)
+    else:
+        split = json.load(open(hf_hub_download(ART_REPO, OUT + "split_v1.json", repo_type="dataset")))
+        benign, out_dir, tag, conds = [u for u in split["dev_uids"] if "-b-" in u], OUT, "dev", CONDS
     g = GuardJudge("wildguard", judge_model="hf:allenai/wildguard", judge_model_args={"dtype": torch.float16})
-    for cid in CONDS:
-        name = f"wg_{cid}_dev_v1.jsonl"
-        if api.file_exists(ART_REPO, OUT + name, repo_type="dataset"):
+    for cid in conds:
+        name = f"wg_{cid}_{tag}_v1.jsonl"
+        if api.file_exists(ART_REPO, out_dir + name, repo_type="dataset"):
             print("skip (exists):", name, flush=True); continue
-        gen = pd.read_json(hf_hub_download(ART_REPO, OUT + f"gen_tinyaya_{cid}_dev_v1.jsonl", repo_type="dataset"), lines=True)
-        gen = gen.set_index("uid").loc[benign]
+        src = FULL_SRC[cid] if full else OUT + f"gen_tinyaya_{cid}_dev_v1.jsonl"
+        gen = pd.read_json(hf_hub_download(ART_REPO, src, repo_type="dataset"), lines=True).set_index("uid")
+        gen = gen.loc[[u for u in benign if u in gen.index]]          # translate_en has no en rows (en = base)
         out, t0 = [], time.time()
         for uid, r in gen.iterrows():
             s = g.score(Sample(input=text[uid], id=uid), r.response)
@@ -41,7 +54,7 @@ def main():
             out.append(dict(uid=uid, condition=cid, wg_harmful_request=m.get("harmful_request"),
                             wg_response_refusal=m.get("response_refusal"), wg_harmful_response=m.get("harmful_response"),
                             wg_raw=m.get("raw")))
-        api.upload_file(path_or_fileobj="\n".join(json.dumps(o, ensure_ascii=False) for o in out).encode(), path_in_repo=OUT + name,
+        api.upload_file(path_or_fileobj="\n".join(json.dumps(o, ensure_ascii=False) for o in out).encode(), path_in_repo=out_dir + name,
                         repo_id=ART_REPO, repo_type="dataset", commit_message=f"Phase 4 screen WildGuard: {cid}")
         ref = sum(o["wg_response_refusal"] == "yes" for o in out); bad = sum(o["wg_response_refusal"] is None for o in out)
         print(f"{cid}: {len(out)} benign rows in {time.time()-t0:.0f}s | WildGuard refusal {ref} | unparsed {bad}", flush=True)

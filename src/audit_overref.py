@@ -41,6 +41,10 @@ if mode == "sample":
 
 elif mode == "correct":
     h = pd.read_csv(LABELLED)
+    n_blank = (h.label.fillna("").str.strip() == "").sum()
+    if n_blank:                                                   # sheet is shuffled -> the labelled rows are a random subsample
+        print(f"NOTE: {n_blank} unlabelled rows skipped (random subsample of the shuffled sheet; estimate stays unbiased, wider CI)")
+        h = h[h.label.fillna("").str.strip() != ""]
     h["human"] = h.label.fillna("").str.strip().str.upper().replace({"NO ANSWER": "NON_ANSWER"})
     assert h.human.isin(J.LABELS).all(), h.loc[~h.human.isin(J.LABELS), ["audit_id", "label"]]
     d = d.merge(h[["uid", "human"]], on="uid", how="left")

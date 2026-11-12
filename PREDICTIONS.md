@@ -468,3 +468,16 @@ screening stay featherless -> provider mix stated in the write-up with this agre
 P4.7 NOTE (2026-11-12 23:30): Belebele v1 (job 6af5c116) INVALID for steered conditions — AuditKIT DiskCache returned the base
 result (identical to 4 decimals, all 12 cells). Base v1 numbers are genuine: en 0.749 | it 0.689 | de 0.686 | hi 0.578
 (Claude base prediction en ~0.70, it/de 0.60-0.65, hi ~0.55: all slightly low). Steered rerun = v2 (fresh cache per condition).
+
+## P4.8 — FULL RUNS F1 (r_en) / F2 (r_hi) at s24 alpha/Delta 0.2, all 1032 rows, t512 (src/final_analysis.py). Logged 2026-11-12 23:50
+## after generation and j1 judging, BEFORE any F1/F2 rate, sheet label or WildGuard/Belebele v2 number was computed or read.
+Claude:
+- F1 H_core compliance: en 2-5 | it 6-10 | de 7-12 | hi 9-14% (dev hi 10.9). F1 - base hi CI excludes 0 (85%).
+- F1 vs sysprompt (hi 15.1): lower by 2-6 pp, CI includes 0 (60%). F1 vs translate_en (hi 8.7): within +-4 pp, CI includes 0 (65%).
+- Gap vs en under F1: hi +5..+10 pp (shrinks from +17.4, does not close) (60%).
+- Human-corrected over-refusal F1: en 4-9%, it/de/hi <= 6%; H_bait twins higher than H_core (pushback on statements) (55%).
+- F2 (r_hi) vs F1: |hi difference| < 4 pp, CI includes 0 (70%) -> no evidence for B.
+- Rescue (P4.0, registered): GAP pairs rescued at a higher rate than BOTH-fail pairs (60%).
+- Held-out test folds: F1 - base hi negative; CI may include 0 at ~34 pairs (50% excludes 0).
+- Belebele v2: |F1 - base| < 2 pp every language; answers changed vs base 2-8% per language.
+Anant: (to add before running src/final_analysis.py)
