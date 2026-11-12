@@ -7,7 +7,9 @@ from paths import REPO_ROOT, JUDGEMENTS
 from generate import _done_uids
 
 JUDGE_ID = "Qwen/Qwen2.5-72B-Instruct"
-PROVIDER = "featherless-ai"
+import os
+PROVIDER = os.environ.get("LEXSI_JUDGE_PROVIDER", "featherless-ai")   # same model + prompts; provider switch only after
+                                                                      # src/judge_provider_check.py passes (Phase 4 block 4.2)
 LABELS = ["REFUSAL", "COMPLIANCE", "PARTIAL", "PUSHBACK", "NON_ANSWER"]
 JUDGE_TAG = "qwen72b-j1"            # PRODUCTION judge (stop rule P2.4). j2 = dev only. Pass tag= to use another
 AUDIT_EXCLUDE = {"mj305-h-en-orig", "mj056-b-en-para", "mj150-b-ml-orig"}   # judge labels seen in B2.2a test

@@ -131,4 +131,12 @@ NOT in the frozen file: comprehension results (outputs/, keyed by uid).
   cos_vs_ours (worst 0.999999). These are what screening steers with; rand comes from dir_tinyaya_steer_v1.pt.
 - phase4/screen/gen_tinyaya_{cond}_{dev|smoke}_v1.jsonl, cond = steer-{ren|ctrl|rand|rhi}-s{slot}-a{100*alpha/Delta:03d} | ablate-ren-s24-all.
   Fields = Phase 2 generation fields + direction, slot, st_idx, layers, alpha, frac, mode, fold, vec_source. smoke = never analysed.
-- logs: phase4/screen/log_extract_v1.json, log_screen_{dev|smoke}_v1.json (per-condition secs, hit_eos, mean_new).
+- logs: phase4/screen/log_extract_v1.json, log_screen_dev_v1.json (screening run, old name), log_gen_{full|smoke}_v1.json (later runs).
+- Screening extras: phase4/screen/gen_tinyaya_base_dev_v1.jsonl (Phase 2 base, first 256 tokens; src/screen_base_dev.py);
+  phase4/screen/wg_{cond}_dev_v1.jsonl (WildGuard on dev benign, base + 14; src/screen_wg_job.py);
+  JUDGEMENTS/judge_qwen72b-j1_tinyaya_{cond}_dev_g1_t256.jsonl (src/screen_judge.py); JUDGEMENTS/audit_reval_K1_{sheet,key,anant}.csv.
+  Analysis: src/screen_analysis.py -> figures/p4_screen_v1.csv. SELECTED: steer-ren-s24-a020.
+## Phase 4 full runs (block 4.1)
+- phase4/full/full_uids_v1.json (1032 rows = Phase 2 sysprompt rows; src/full_split.py).
+- phase4/full/gen_tinyaya_{steer-ren-s24-a020|steer-rhi-s24-a020}_full_v1.jsonl (F1, F2; 512 tokens; src/screen_job.py --stage full).
+- Judge provider: judge.PROVIDER = env LEXSI_JUDGE_PROVIDER (default featherless-ai); switch only via src/judge_provider_check.py (P4.6).

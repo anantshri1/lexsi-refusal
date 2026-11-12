@@ -14,3 +14,6 @@ ids = [c[0] for c in J.CONDS]
 assert len(ids) == len(set(ids)) == 14 and ids[:3] == ["steer-ren-s24-a025", "steer-ctrl-s24-a025", "steer-rand-s24-a025"]
 assert all(c[2] in J.SLOTS for c in J.CONDS) and {c[1] for c in J.CONDS} == {"ren", "rhi", "ctrl", "rand"}
 print("CONDS:", ids)
+assert J.FULL_CONDS == [("steer-ren-s24-a020", "ren", 24, 0.2, "steer"), ("steer-rhi-s24-a020", "rhi", 24, 0.2, "steer")]
+assert J.FULL_NEW == 512 and J.FULL_UIDS == "phase4/full/full_uids_v1.json"
+print("FULL_CONDS:", [c[0] for c in J.FULL_CONDS])

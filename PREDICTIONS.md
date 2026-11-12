@@ -453,3 +453,7 @@ worst-language over-refusal 5.5%. Lower-compliance settings fail the 8% cap by 1
 s21 0.2 en/de 9.1) -> the choice sits inside dev noise (1 prompt = 1.8 pp); rule followed as registered, no post-hoc switch.
 P4.0 early read (dev, final verdict after full runs): Claude ">= 15% over-refusal at translate_en-level compliance" ✗ so far
 (K1 hi 7.3 at worst-language 9.1); Anant "slightly better than sysprompt, with over-refusal" closer.
+
+## P4.6 — judge provider check (src/judge_provider_check.py; rule fixed 2026-11-12 12:45 before running)
+Same model, same j1 prompts; 100 Phase 2 base rows (50 harmful, 50 benign; en/it/de/hi; seed 0) re-judged on another provider.
+Switch iff 5-way agreement >= 0.90 AND metric agreement >= 0.95. Claude: metric agreement ~0.97, 5-way ~0.92 (55% pass).

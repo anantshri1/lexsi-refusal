@@ -11,6 +11,8 @@
   --stage screen    (block 3.2b) condition loop on the 330 dev rows (CONDS below; kill-test first). Each prompt in fold f is
                     steered with the fold-f vector (never saw its pair). Greedy, 256 new tokens. One file per condition,
                     uploaded as soon as it is done; finished conditions are skipped on a rerun. --limit N = smoke (tag smoke).
+  --stage full      (block 4.1b) F1/F2 at the SELECTED setting (PHASE4_PLAN section 6 -> steer-ren-s24-a020) on all 1032 full rows
+                    (phase4/full/full_uids_v1.json), 512 new tokens (= baselines), same per-fold SafeTune vectors. -> phase4/full/.
 Inputs: ART_REPO phase4/screen/split_v1.json (src/screen_split.py), directions/dir_tinyaya_steer_v1.pt, control/control_neutral_v1.jsonl."""
 import argparse, hashlib, io, json, time
 import torch, pandas as pd, transformers
@@ -36,6 +38,8 @@ SLOTS      = [18, 21, 24]
 K_FOLD     = 5
 COS_MIN    = 0.9999
 MAX_NEW, BS = 256, 16
+FULL_NEW, FULL_DIR, FULL_UIDS = 512, "phase4/full/", "phase4/full/full_uids_v1.json"
+FULL_CONDS = [("steer-ren-s24-a020", "ren", 24, 0.2, "steer"), ("steer-rhi-s24-a020", "rhi", 24, 0.2, "steer")]   # F1, F2
 # id, direction, slot, alpha/Delta, mode. Order = priority (kill-test + sanity first, then the grid).
 CONDS = [("steer-ren-s24-a025", "ren", 24, 0.25, "steer"), ("steer-ctrl-s24-a025", "ctrl", 24, 0.25, "steer"),
          ("steer-rand-s24-a025", "rand", 24, 0.25, "steer"), ("ablate-ren-s24-all", "ren", 24, None, "ablate"),
@@ -134,10 +138,10 @@ def vector(D, V, direction, fold, j):
 
 
 @torch.no_grad()
-def generate(model, tok, texts):
+def generate(model, tok, texts, max_new=MAX_NEW):
     enc = tok.apply_chat_template([build_messages(t) for t in texts], add_generation_prompt=True, return_dict=True,
                                   return_tensors="pt", padding=True).to("cuda")
-    gen = model.generate(**enc, max_new_tokens=MAX_NEW, do_sample=False)
+    gen = model.generate(**enc, max_new_tokens=max_new, do_sample=False)
     eos = model.generation_config.eos_token_id
     eos = set(eos if isinstance(eos, list) else [eos])
     out = []
@@ -150,19 +154,29 @@ def generate(model, tok, texts):
 
 
 def stage_screen(model, tok, bench, split, V, api, log, limit):
+    run_conds(model, tok, bench, split, V, api, log, limit, split["dev_uids"], CONDS, MAX_NEW, OUT, "dev")
+
+
+def stage_full(model, tok, bench, split, V, api, log, limit):
+    uids = json.load(open(hf_hub_download(ART_REPO, FULL_UIDS, repo_type="dataset")))["uids"]
+    assert len(uids) == 1032, len(uids)
+    run_conds(model, tok, bench, split, V, api, log, limit, uids, FULL_CONDS, FULL_NEW, FULL_DIR, "full")
+
+
+def run_conds(model, tok, bench, split, V, api, log, limit, uid_list, conds, max_new, out_dir, run_tag):
     D = torch.load(hf_hub_download(ART_REPO, DIRS_FILE, repo_type="dataset"), weights_only=False)
     assert D["slots"] == SLOTS and min(min(v) for v in D["cos_vs_ours"].values()) >= COS_MIN
-    rows = bench.set_index("uid").loc[split["dev_uids"]].reset_index()
+    rows = bench.set_index("uid").loc[uid_list].reset_index()
     rows["fold"] = rows.pair_id.map(split["fold_map"])
     rows["n_tok"] = [len(tok.apply_chat_template(build_messages(t), add_generation_prompt=True, return_dict=True)["input_ids"])
                      for t in rows.text]
     if limit:
         rows = rows.groupby("fold").head(max(1, limit // K_FOLD)).head(limit)
-    tag = "smoke" if limit else "dev"
+    tag = "smoke" if limit else run_tag
     log["conds"] = {}
-    for cid, direction, slot, frac, mode in CONDS:
+    for cid, direction, slot, frac, mode in conds:
         name = f"gen_tinyaya_{cid}_{tag}_v1.jsonl"
-        if api.file_exists(ART_REPO, OUT + name, repo_type="dataset"):
+        if api.file_exists(ART_REPO, out_dir + name, repo_type="dataset"):
             print("skip (exists):", name, flush=True); continue
         j = SLOTS.index(slot)
         alpha = None if mode == "ablate" else frac * V["delta_en"][j].item()
@@ -176,25 +190,26 @@ def stage_screen(model, tok, bench, split, V, api, log, limit):
                 g = g.sort_values("n_tok", ascending=False)                  # longest first: an OOM shows up at once
                 for i in range(0, len(g), BS):
                     b = g.iloc[i:i + BS]
-                    for (_, r), res in zip(b.iterrows(), generate(model, tok, b.text.tolist())):
-                        out.append(dict(uid=r.uid, model="tinyaya", condition=cid, max_new_tokens=MAX_NEW, **res,
+                    for (_, r), res in zip(b.iterrows(), generate(model, tok, b.text.tolist(), max_new)):
+                        out.append(dict(uid=r.uid, model="tinyaya", condition=cid, max_new_tokens=max_new, **res,
                                         direction=direction, slot=slot, st_idx=None if mode == "ablate" else st_idx(slot),
                                         layers="all" if mode == "ablate" else [st_idx(slot)], alpha=alpha, frac=frac,
                                         mode=mode, fold=int(f), vec_source="ours" if direction == "rand" else "safetune"))
             finally:
                 hook.remove()
         assert len(out) == len(rows) and len({o["uid"] for o in out}) == len(rows)
-        upload("\n".join(json.dumps(o, ensure_ascii=False) for o in out), name, api)
+        api.upload_file(path_or_fileobj="\n".join(json.dumps(o, ensure_ascii=False) for o in out).encode(),
+                        path_in_repo=out_dir + name, repo_id=ART_REPO, repo_type="dataset", commit_message=f"Phase 4: {name}")
         secs = round(time.time() - t0)
         log["conds"][cid] = dict(secs=secs, n=len(out), alpha=alpha, hit_eos=round(sum(o["hit_eos"] for o in out) / len(out), 3),
                                  mean_new=round(sum(o["n_new_tokens"] for o in out) / len(out), 1))
         print(cid, log["conds"][cid], flush=True)
-        upload(json.dumps(log, indent=1), f"log_screen_{tag}_v1.json", api)   # progress log survives a crash
+        upload(json.dumps(log, indent=1), f"log_gen_{tag}_v1.json", api)   # progress log (phase4/screen/); tag dev|full|smoke
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", choices=["extract", "screen"], required=True)
+    ap.add_argument("--stage", choices=["extract", "screen", "full"], required=True)
     ap.add_argument("--limit", type=int, default=None)      # smoke: first N dev rows per condition, files tagged smoke
     a = ap.parse_args()
     api, bench = HfApi(), load_bench()
@@ -209,8 +224,10 @@ def main():
     t0 = time.time()
     if a.stage == "extract":
         stage_extract(model, tok, bench, split, V, api, log)
-    else:
+    elif a.stage == "screen":
         stage_screen(model, tok, bench, split, V, api, log, a.limit)
+    else:
+        stage_full(model, tok, bench, split, V, api, log, a.limit)
     log["secs"] = round(time.time() - t0)
     upload(json.dumps(log, indent=1), f"log_{a.stage}_v1.json", api)
     print("DONE", log["secs"], "s", flush=True)
