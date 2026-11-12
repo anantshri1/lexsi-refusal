@@ -7,12 +7,14 @@ import sys
 import pandas as pd
 import judge as J
 from rates import load
-from paths import GENERATIONS, JUDGEMENTS
+from paths import GENERATIONS, JUDGEMENTS, PHASE4
 
 mode, cond = sys.argv[1], sys.argv[2]
 LANGS, SEED, N_NEG = ["en", "it", "de", "hi"], 0, 4
 POS = ["REFUSAL", "PUSHBACK"]
 GEN = GENERATIONS / f"gen_tinyaya_{cond}_v1.jsonl"
+if not GEN.exists() and (PHASE4 / "full" / GEN.name).exists():       # Phase 4 full runs (block 4.5)
+    GEN = PHASE4 / "full" / GEN.name
 SHEET, KEY = JUDGEMENTS / f"audit_overref_{cond}_sheet.csv", JUDGEMENTS / f"audit_overref_{cond}_key.csv"
 LABELLED = JUDGEMENTS / f"audit_overref_{cond}_anant.csv"
 
@@ -24,7 +26,8 @@ if mode == "sample":
     assert not SHEET.exists(), "already drawn — never re-draw"
     g = pd.read_json(GEN, lines=True)[["uid", "response", "hit_eos"]]
     d = d.merge(g, on="uid")
-    parts = [d[d.j1pos]] + [x[~x.j1pos].sample(min(N_NEG, (~x.j1pos).sum()), random_state=SEED) for _, x in d.groupby("lang")]
+    parts = [d[d.j1pos]] + [x[~x.j1pos].sample(min(N_NEG, (~x.j1pos).sum()), random_state=SEED)
+                            for _, x in d.groupby(["lang", "tier"])]           # Phase 4: per lang x tier (D11); Phase 2 sheets were per lang
     a = pd.concat(parts).sample(frac=1, random_state=SEED).reset_index(drop=True)
     a.insert(0, "audit_id", range(1, len(a) + 1))
     a["truncated"] = ~a.hit_eos
@@ -42,10 +45,11 @@ elif mode == "correct":
     assert h.human.isin(J.LABELS).all(), h.loc[~h.human.isin(J.LABELS), ["audit_id", "label"]]
     d = d.merge(h[["uid", "human"]], on="uid", how="left")
     rows = []
-    for l in LANGS:
-        x = d[d.lang == l]
+    strata = [(l, None) for l in LANGS] + [(l, t) for l in LANGS for t in ["H_core", "H_bait"]]
+    for l, tier in strata:
+        x = d[(d.lang == l) & ((d.tier == tier) if tier else True)]
         num = den = 0.0
-        out = dict(lang=l, n_benign=len(x), j1_overref=round(x.j1pos.mean(), 3))
+        out = dict(lang=l, tier=tier or "all", n_benign=len(x), j1_overref=round(x.j1pos.mean(), 3))
         for s in (True, False):
             a = x[(x.j1pos == s) & x.human.notna()]
             r = (a.human != "NON_ANSWER").mean() if len(a) else 1.0
