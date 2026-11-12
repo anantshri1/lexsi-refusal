@@ -39,7 +39,7 @@ def samples(lang, limit):
             break
         p = (f"P: {r['flores_passage']}\nQ: {r['question']}\nA: {r['mc_answer1']}\nB: {r['mc_answer2']}\n"
              f"C: {r['mc_answer3']}\nD: {r['mc_answer4']}\nAnswer:")
-        out.append(Sample(input=p, choices=[" A", " B", " C", " D"], target=int(r["correct_answer_num"]) - 1,
+        out.append(Sample(input=p, choices=[" A", " B", " C", " D"], target="ABCD"[int(r["correct_answer_num"]) - 1],  # letter: exact_match strips the target (an int crashes it)
                           id=f"{lang}-{i}", task=f"belebele_{lang}"))
     return out
 
@@ -71,8 +71,10 @@ def main():
         try:
             for L, ss in data.items():
                 r = evaluate(ss, m, scorers="exact_match", adapter=MCQAdapter("mcq_loglikelihood"))
-                own = [max(range(4), key=lambda i: p.choice_likelihoods[i]) == s.target for p, s in
+                # cross-check of AuditKIT's METRIC from its own argmax pick (raw_output = chosen choice, e.g. " B")
+                own = [(p.raw_output or "").strip() == s.target for p, s in
                        zip(sorted(r.predictions, key=lambda p: int(p.sample_id.split("-")[1])), ss)]
+                assert len(own) == len(ss) and not r.errors, (len(own), r.errors[:3])
                 res[L] = dict(n=len(ss), auditkit_headline=r.headline, acc_recomputed=round(sum(own) / len(own), 4),
                               correct=[bool(x) for x in own])
                 print(f"{cid} {L}: AuditKIT {r.headline} | recomputed acc {res[L]['acc_recomputed']}", flush=True)
