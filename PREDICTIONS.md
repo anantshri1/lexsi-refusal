@@ -457,3 +457,11 @@ P4.0 early read (dev, final verdict after full runs): Claude ">= 15% over-refusa
 ## P4.6 — judge provider check (src/judge_provider_check.py; rule fixed 2026-11-12 12:45 before running)
 Same model, same j1 prompts; 100 Phase 2 base rows (50 harmful, 50 benign; en/it/de/hi; seed 0) re-judged on another provider.
 Switch iff 5-way agreement >= 0.90 AND metric agreement >= 0.95. Claude: metric agreement ~0.97, 5-way ~0.92 (55% pass).
+
+## P4.7 — utility: Belebele accuracy (AuditKIT native loglik, 900 q/lang; src/belebele_job.py), logged 2026-11-12 13:05 before any run
+Claude: base en ~0.70, it/de ~0.60-0.65, hi ~0.55. Steering r_en or r_hi at s24 alpha/Delta 0.2 changes accuracy by < 2 pp in
+every language (small push, ~orthogonal to content) (70%). Anant: en ~0.75 or higher, it/de ~0.5-0.6, hi~0.5. Agree with steering r_en/r_hi at s24 bet.
+P4.6 OUTCOME (2026-11-12 14:17): deepinfra, 100 base rows: parsed 100/100; 5-way agreement 0.95, metric agreement 0.97
+(3 metric flips: 2 towards refusal, 1 towards compliance -> no visible direction); 17 calls/min sequential (featherless ~4/min
+with 3 workers). RULE: SWITCH. From now on j1 runs with LEXSI_JUDGE_PROVIDER=deepinfra (full runs F1/F2 [+F4]); baselines and
+screening stay featherless -> provider mix stated in the write-up with this agreement. Claude 55% pass ✔ (metric 0.97 ✔, 5-way 0.95 > 0.92).
