@@ -465,3 +465,6 @@ P4.6 OUTCOME (2026-11-12 14:17): deepinfra, 100 base rows: parsed 100/100; 5-way
 (3 metric flips: 2 towards refusal, 1 towards compliance -> no visible direction); 17 calls/min sequential (featherless ~4/min
 with 3 workers). RULE: SWITCH. From now on j1 runs with LEXSI_JUDGE_PROVIDER=deepinfra (full runs F1/F2 [+F4]); baselines and
 screening stay featherless -> provider mix stated in the write-up with this agreement. Claude 55% pass ✔ (metric 0.97 ✔, 5-way 0.95 > 0.92).
+P4.7 NOTE (2026-11-12 23:30): Belebele v1 (job 6af5c116) INVALID for steered conditions — AuditKIT DiskCache returned the base
+result (identical to 4 decimals, all 12 cells). Base v1 numbers are genuine: en 0.749 | it 0.689 | de 0.686 | hi 0.578
+(Claude base prediction en ~0.70, it/de 0.60-0.65, hi ~0.55: all slightly low). Steered rerun = v2 (fresh cache per condition).

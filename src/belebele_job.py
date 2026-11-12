@@ -9,8 +9,10 @@
 run_lmeval reloads weights and would lose hooks). Steering = SafeTune RefusalDirectionModel installed on the model object inside
 AuditKIT's HFGenModel, same op as the full runs. Prompt = lm-eval's Belebele format (P:/Q:/A-D, targets ' A'..' D'), zero-shot, raw text.
 Steering vector for utility = normalised mean of the 5 SafeTune fold vectors at the slot (Belebele has no pairs to cross-fit;
-fold vectors agree at cos >= ~0.99). HF Job t4-small. Output: ART_REPO phase4/belebele/belebele_{cond}_v1.json."""
-import argparse, json, time
+fold vectors agree at cos >= ~0.99). HF Job t4-small. Output: ART_REPO phase4/belebele/belebele_{cond}_v2.json.
+TRAP T5 (v1 INVALID): AuditKIT's Runner returns a DiskCache hit keyed on (model name, samples, config) -> a hooked model has the
+SAME fingerprint as base -> v1 steered results were the cached BASE results. v2: a fresh XDG_CACHE_HOME per condition + n_changed vs base."""
+import argparse, json, os, time
 import torch
 from datasets import load_dataset
 from huggingface_hub import hf_hub_download, HfApi
@@ -54,8 +56,10 @@ def main():
     m = AutoModel.resolve(f"hf:{MODEL_ID}", dtype=torch.float16)
     m._ensure_pipeline()                                       # load once; hooks go on m._pipeline.model
     data = {L: samples(L, a.limit) for L in LANGS}
-    tag = "smoke" if a.limit else "v1"
+    tag = "smoke" if a.limit else "v2"
+    base_correct = {}
     for cid, spec in CONDS.items():
+        os.environ["XDG_CACHE_HOME"] = f"/tmp/auditkit_cache_{cid}"      # T5: never share AuditKIT's result cache across conditions
         name = f"belebele_{cid}_{tag}.json"
         if api.file_exists(ART_REPO, OUT + name, repo_type="dataset"):
             print("skip (exists):", name, flush=True); continue
@@ -75,9 +79,14 @@ def main():
                 own = [(p.raw_output or "").strip() == s.target for p, s in
                        zip(sorted(r.predictions, key=lambda p: int(p.sample_id.split("-")[1])), ss)]
                 assert len(own) == len(ss) and not r.errors, (len(own), r.errors[:3])
+                picks = [(p.raw_output or "").strip() for p in sorted(r.predictions, key=lambda p: int(p.sample_id.split("-")[1]))]
+                if cid == "base":
+                    base_correct[L] = picks
+                n_changed = sum(x != y for x, y in zip(picks, base_correct[L]))
                 res[L] = dict(n=len(ss), auditkit_headline=r.headline, acc_recomputed=round(sum(own) / len(own), 4),
-                              correct=[bool(x) for x in own])
-                print(f"{cid} {L}: AuditKIT {r.headline} | recomputed acc {res[L]['acc_recomputed']}", flush=True)
+                              correct=[bool(x) for x in own], picks=picks, n_changed_vs_base=n_changed)
+                print(f"{cid} {L}: AuditKIT {r.headline} | recomputed acc {res[L]['acc_recomputed']} | answers changed vs base "
+                      f"{n_changed}/{len(ss)}" + ("   <-- WARNING: identical to base" if cid != "base" and n_changed == 0 else ""), flush=True)
         finally:
             if hook:
                 hook.remove()

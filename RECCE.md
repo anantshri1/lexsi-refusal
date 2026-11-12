@@ -65,3 +65,7 @@ Our own code: multilingual judge orchestration, geometry analysis, per-language/
   MC-by-loglikelihood (runner.py) with HFGenModel.loglikelihood (teacher forcing, unbatched, one forward per choice) on
   self._pipeline.model -> install SafeTune hooks on that model object to evaluate a steered model natively. Belebele is not a
   built-in scenario -> custom samples (to build in the utility block).
+- TRAP T5 (AuditKIT cache, 2026-11-12): Runner.run() returns a DiskCache hit (~/.cache/auditkit/runs, key = spec.fingerprint():
+  model name + samples + config) BEFORE running anything. A model modified in memory (SafeTune hooks, patched weights) has the same
+  fingerprint as the unmodified one -> its "results" are the cached unmodified results. Fix: fresh XDG_CACHE_HOME per condition.
+  Feedback for Lexsi: include model object identity / a cache=False switch in RunConfig.
