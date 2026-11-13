@@ -481,3 +481,19 @@ Claude:
 - Held-out test folds: F1 - base hi negative; CI may include 0 at ~34 pairs (50% excludes 0).
 - Belebele v2: |F1 - base| < 2 pp every language; answers changed vs base 2-8% per language.
 Anant: (to add before running src/final_analysis.py)
+Anant: no P4.8 bet logged (ran final_analysis first).
+P4.8 OUTCOME (2026-11-13 16:10; src/final_analysis.py -> figures/p4_final_v1.csv; WildGuard second-judge column still pending)
+H_core compliance F1 (r_en s24 0.2) en 3.0 | it 7.1 | de 9.4 | hi 8.6  (base 5.1/13.3/15.6/22.6; sysprompt 5.1/9.2/14.6/15.1; translate_en 5.1/6.1/9.4/8.7)
+F1-base hi -14.0 [-21.7,-6.5] | F1-sysprompt hi -6.5 [-12.9,0.0] | F1-translate_en hi -0.1 [-5.3,5.3] | F2-F1 hi +1.1 [-2.3,4.7]
+gap vs en hi: base +17.4 -> F1 +5.4 [0.0,11.5] (translate_en +3.4, sysprompt +9.8). Rescue: GAP 13/17 vs BOTH-fail 1/4.
+Held-out test folds (34 pairs): base hi 5/34 (3 GAP, 2 BOTH); F1 rescues 1 GAP, creates no new failure: -2.9 [-8.8,0.0] -> inconclusive.
+Over-refusal human-corrected (after the post-hoc hi census below): F1 en 4.5 | it 2.3 | de 5.4 | hi 9.6; F2 6.8/3.8/5.4/9.8.
+  H_core twins 2.0-4.2 everywhere (F1 hi 2.2); H_bait twins 3.0-18.2 (F1 hi 9.7). Baselines: base 2.7/5.5/2.7/0.0, sysprompt
+  5.4/3.9/3.1/0.8, translate_en 2.7/4.8/5.5/5.5 (no tier split available for baselines: Phase 2 sheets were drawn per language).
+Belebele v2: F1 -0.1/-0.3/-0.8/-0.1 pp (de CI excludes 0), answers changed 8-18 of 900.
+Claude: compliance en/it/de ✔, hi 8.6 below 9-14 (better) ✗; F1-base CI excl 0 ✔; F1 vs sysprompt 2-6 pp ✗ (6.5) with CI touching 0 ✔;
+vs translate_en within +-4 ✔; gap +5..+10 ✔; over-refusal en ✔, it/de ✔, hi <= 6 ✗ (9.6); H_bait > H_core ✔; F2 ~ F1 ✔;
+rescue GAP > BOTH ✔; test folds negative ✔, CI excl 0 ✗ (upper bound 0.0); Belebele < 2 pp ✔, answers changed 2-8% ✗ (0.9-2%).
+POST-HOC (2026-11-13 15:40, symmetric F1+F2): F1 hi over-refusal first read 12.8% resting on ONE labelled negative (hi H_bait 1/4);
+census of the remaining hi H_bait j1-negatives (src/audit_supp.py: 15 F1 + 14 F2 rows, blind) -> hi H_bait negatives 2/19 (F1),
+2/18 (F2) refusals -> hi corrected over-refusal F1 12.8 -> 9.6, F2 2.4 -> 9.8. The earlier F1/F2 difference was sampling noise.

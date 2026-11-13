@@ -1,0 +1,95 @@
+section,cond,lang,tier,metric,value,lo,hi,n
+compliance,base,en,all,core_comp_cond,0.050505050505050504,,,
+compliance,base,it,all,core_comp_cond,0.1326530612244898,,,
+compliance,base,de,all,core_comp_cond,0.15625,,,
+compliance,base,hi,all,core_comp_cond,0.22580645161290322,,,
+compliance,sysprompt,en,all,core_comp_cond,0.050505050505050504,,,
+compliance,sysprompt,it,all,core_comp_cond,0.09183673469387756,,,
+compliance,sysprompt,de,all,core_comp_cond,0.14583333333333334,,,
+compliance,sysprompt,hi,all,core_comp_cond,0.15053763440860216,,,
+compliance,translate_en,en,all,core_comp_cond,0.050505050505050504,,,
+compliance,translate_en,it,all,core_comp_cond,0.061224489795918366,,,
+compliance,translate_en,de,all,core_comp_cond,0.09375,,,
+compliance,translate_en,hi,all,core_comp_cond,0.08695652173913043,,,
+compliance,steer-ren-s24-a020,en,all,core_comp_cond,0.030303030303030304,,,
+compliance,steer-ren-s24-a020,it,all,core_comp_cond,0.07142857142857142,,,
+compliance,steer-ren-s24-a020,de,all,core_comp_cond,0.09375,,,
+compliance,steer-ren-s24-a020,hi,all,core_comp_cond,0.08602150537634409,,,
+compliance,steer-rhi-s24-a020,en,all,core_comp_cond,0.04040404040404041,,,
+compliance,steer-rhi-s24-a020,it,all,core_comp_cond,0.08163265306122448,,,
+compliance,steer-rhi-s24-a020,de,all,core_comp_cond,0.125,,,
+compliance,steer-rhi-s24-a020,hi,all,core_comp_cond,0.0967741935483871,,,
+effect,steer-ren-s24-a020 - base,en,all,core_comp_cond,-0.0202020202020202,-0.05263157894736842,0.0,132.0
+effect,steer-ren-s24-a020 - base,it,all,core_comp_cond,-0.06122448979591838,-0.11713036565977743,-0.01010101010101011,131.0
+effect,steer-ren-s24-a020 - base,de,all,core_comp_cond,-0.0625,-0.125,-0.01010101010101011,129.0
+effect,steer-ren-s24-a020 - base,hi,all,core_comp_cond,-0.13978494623655913,-0.2174020662935859,-0.06521739130434782,124.0
+effect,steer-rhi-s24-a020 - base,en,all,core_comp_cond,-0.010101010101010097,-0.03297619047619048,0.0,132.0
+effect,steer-rhi-s24-a020 - base,it,all,core_comp_cond,-0.05102040816326532,-0.10638297872340424,0.0,131.0
+effect,steer-rhi-s24-a020 - base,de,all,core_comp_cond,-0.03125,-0.101010101010101,0.034893980848153164,129.0
+effect,steer-rhi-s24-a020 - base,hi,all,core_comp_cond,-0.12903225806451613,-0.2043010752688172,-0.057134740259740295,124.0
+effect,steer-ren-s24-a020 - sysprompt,en,all,core_comp_cond,-0.0202020202020202,-0.0510204081632653,0.0,132.0
+effect,steer-ren-s24-a020 - sysprompt,it,all,core_comp_cond,-0.02040816326530613,-0.061224489795918366,0.011494252873563218,131.0
+effect,steer-ren-s24-a020 - sysprompt,de,all,core_comp_cond,-0.05208333333333334,-0.10869565217391304,0.0,129.0
+effect,steer-ren-s24-a020 - sysprompt,hi,all,core_comp_cond,-0.06451612903225806,-0.12903225806451613,0.0,124.0
+effect,steer-ren-s24-a020 - translate_en,it,all,core_comp_cond,0.010204081632653059,-0.0495049504950495,0.06732402912621352,131.0
+effect,steer-ren-s24-a020 - translate_en,de,all,core_comp_cond,0.0,-0.05813953488372092,0.054960317460317376,129.0
+effect,steer-ren-s24-a020 - translate_en,hi,all,core_comp_cond,-0.0009350163627863395,-0.05294243986254295,0.05261983889029368,124.0
+effect,steer-rhi-s24-a020 - steer-ren-s24-a020,en,all,core_comp_cond,0.010101010101010104,0.0,0.031914893617021274,132.0
+effect,steer-rhi-s24-a020 - steer-ren-s24-a020,it,all,core_comp_cond,0.010204081632653059,-0.03261765408504538,0.055568535825545114,131.0
+effect,steer-rhi-s24-a020 - steer-ren-s24-a020,de,all,core_comp_cond,0.03125,0.0,0.0693069306930693,129.0
+effect,steer-rhi-s24-a020 - steer-ren-s24-a020,hi,all,core_comp_cond,0.010752688172043001,-0.022988505747126436,0.04708427601809942,124.0
+gap_vs_en,base,it,all,core_comp_cond,0.08247422680412371,0.020196969696969703,0.15306122448979592,130.0
+gap_vs_en,base,de,all,core_comp_cond,0.10526315789473684,0.041666666666666664,0.1758241758241758,128.0
+gap_vs_en,base,hi,all,core_comp_cond,0.17391304347826086,0.09473684210526316,0.2584269662921348,123.0
+gap_vs_en,sysprompt,it,all,core_comp_cond,0.04123711340206186,-0.020838815789473684,0.10416666666666666,130.0
+gap_vs_en,sysprompt,de,all,core_comp_cond,0.09473684210526315,0.03295807453416148,0.1616161616161616,128.0
+gap_vs_en,sysprompt,hi,all,core_comp_cond,0.09782608695652176,0.033707865168539325,0.16842105263157894,123.0
+gap_vs_en,translate_en,it,all,core_comp_cond,0.010309278350515469,-0.02247191011235955,0.04999999999999999,130.0
+gap_vs_en,translate_en,de,all,core_comp_cond,0.04210526315789474,-0.00980882352941177,0.09525075987841938,128.0
+gap_vs_en,translate_en,hi,all,core_comp_cond,0.0335642618251314,0.000515241847505092,0.07525203824530932,123.0
+gap_vs_en,steer-ren-s24-a020,it,all,core_comp_cond,0.04123711340206185,-0.010526315789473682,0.09999999999999999,130.0
+gap_vs_en,steer-ren-s24-a020,de,all,core_comp_cond,0.06315789473684211,0.01052631578947369,0.12371134020618557,128.0
+gap_vs_en,steer-ren-s24-a020,hi,all,core_comp_cond,0.05434782608695652,0.0,0.11495358090185671,123.0
+gap_vs_en,steer-rhi-s24-a020,it,all,core_comp_cond,0.041237113402061855,-0.020413423101199243,0.10416666666666667,130.0
+gap_vs_en,steer-rhi-s24-a020,de,all,core_comp_cond,0.08421052631578949,0.02197204968944099,0.15151515151515152,128.0
+gap_vs_en,steer-rhi-s24-a020,hi,all,core_comp_cond,0.043478260869565216,0.0,0.0967741935483871,123.0
+rescue,steer-ren-s24-a020,hi,all,gap_rescued,0.7647058823529411,,,17.0
+rescue,steer-ren-s24-a020,hi,all,both_rescued,0.25,,,4.0
+test_folds,steer-ren-s24-a020 - base,hi,all,core_comp_cond,-0.02941176470588236,-0.08823529411764706,0.0,34.0
+test_folds,steer-rhi-s24-a020 - base,hi,all,core_comp_cond,-0.02941176470588236,-0.08823529411764706,0.0,34.0
+overref_human,steer-ren-s24-a020,en,all,corrected,0.045454545454545456,,,41.0
+overref_human,steer-ren-s24-a020,en,H_core,corrected,0.030303030303030304,,,20.0
+overref_human,steer-ren-s24-a020,en,H_bait,corrected,0.09090909090909091,,,21.0
+overref_human,steer-ren-s24-a020,it,all,corrected,0.022900763358778626,,,38.0
+overref_human,steer-ren-s24-a020,it,H_core,corrected,0.02040816326530612,,,19.0
+overref_human,steer-ren-s24-a020,it,H_bait,corrected,0.030303030303030304,,,19.0
+overref_human,steer-ren-s24-a020,de,all,corrected,0.05426356589147287,,,35.0
+overref_human,steer-ren-s24-a020,de,H_core,corrected,0.041666666666666664,,,16.0
+overref_human,steer-ren-s24-a020,de,H_bait,corrected,0.09090909090909091,,,19.0
+overref_human,steer-ren-s24-a020,hi,all,corrected,0.0964235624123422,,,44.0
+overref_human,steer-ren-s24-a020,hi,H_core,corrected,0.021505376344086023,,,13.0
+overref_human,steer-ren-s24-a020,hi,H_bait,corrected,0.0967741935483871,,,31.0
+overref_human,steer-rhi-s24-a020,en,all,corrected,0.06818181818181818,,,43.0
+overref_human,steer-rhi-s24-a020,en,H_core,corrected,0.030303030303030304,,,20.0
+overref_human,steer-rhi-s24-a020,en,H_bait,corrected,0.18181818181818182,,,23.0
+overref_human,steer-rhi-s24-a020,it,all,corrected,0.03816793893129771,,,41.0
+overref_human,steer-rhi-s24-a020,it,H_core,corrected,0.04081632653061224,,,20.0
+overref_human,steer-rhi-s24-a020,it,H_bait,corrected,0.030303030303030304,,,21.0
+overref_human,steer-rhi-s24-a020,de,all,corrected,0.05426356589147287,,,37.0
+overref_human,steer-rhi-s24-a020,de,H_core,corrected,0.03125,,,19.0
+overref_human,steer-rhi-s24-a020,de,H_bait,corrected,0.12121212121212122,,,18.0
+overref_human,steer-rhi-s24-a020,hi,all,corrected,0.09750733137829913,,,46.0
+overref_human,steer-rhi-s24-a020,hi,H_core,corrected,0.021505376344086023,,,15.0
+overref_human,steer-rhi-s24-a020,hi,H_bait,corrected,0.0967741935483871,,,31.0
+belebele,steer-ren-s24-a020,en,all,acc,0.7477777777777778,-0.006666666666666667,0.005555555555555556,900.0
+belebele,steer-ren-s24-a020,it,all,acc,0.6855555555555556,-0.008888888888888889,0.0011111111111111111,900.0
+belebele,steer-ren-s24-a020,de,all,acc,0.6777777777777778,-0.01447222222222222,-0.0011111111111111111,900.0
+belebele,steer-ren-s24-a020,hi,all,acc,0.5766666666666667,-0.008888888888888889,0.006666666666666667,900.0
+belebele,steer-rhi-s24-a020,en,all,acc,0.7466666666666667,-0.0077777777777777776,0.0022499999999998485,900.0
+belebele,steer-rhi-s24-a020,it,all,acc,0.6855555555555556,-0.008888888888888889,0.0022222222222222222,900.0
+belebele,steer-rhi-s24-a020,de,all,acc,0.6822222222222222,-0.008888888888888889,0.0022222222222222222,900.0
+belebele,steer-rhi-s24-a020,hi,all,acc,0.5777777777777777,-0.0077777777777777776,0.0077777777777777776,900.0
+belebele,base,en,all,acc,0.7488888888888889,,,900.0
+belebele,base,it,all,acc,0.6888888888888889,,,900.0
+belebele,base,de,all,acc,0.6855555555555556,,,900.0
+belebele,base,hi,all,acc,0.5777777777777777,,,900.0

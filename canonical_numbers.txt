@@ -158,3 +158,20 @@ p4s_reval_wildguard_K1      precision 9/10 | negatives 0/30 refusals (est. recal
 p4s_overref_wg              base en 3.6 hi 1.8 de 5.5 | K1 s24 0.25 9.1/1.8/7.3 | s24 0.2 5.5/1.8/5.5 | ctrl 3.6/1.8/1.8 | ablate 1.8/1.8/3.6
 p4s_selected                steer-ren-s24-a020 (alpha 6.07 = 0.2 x Delta_24): dev hi 10.9% (-12.7 [-25.5,-1.8]), worst over-refusal 5.5%
 p4_judge_provider_check   deepinfra vs featherless j1 (100 base rows): 5-way 0.95 | metric 0.97 | 17 calls/min sequential -> switched for full runs
+# Phase 4 FULL RUNS (F1 = steer-ren-s24-a020, F2 = steer-rhi-s24-a020: SafeTune steer at slot 24 [layers=[23]], alpha 6.07 = 0.2 x Delta_24,
+# per-fold SafeTune vectors; 1032 rows = sysprompt rows; t512; j1 on deepinfra (baselines featherless; P4.6 agreement 0.95/0.97);
+# pair bootstrap 2000 seed 0; src/final_analysis.py -> figures/p4_final_v1.csv)
+p4f_core_comp              F1 en 3.0 | it 7.1 | de 9.4 | hi 8.6 || F2 4.0 | 8.2 | 12.5 | 9.7
+p4f_F1_minus_base          en -2.0 [-5.3,0.0] | it -6.1 [-11.7,-1.0] | de -6.2 [-12.5,-1.0] | hi -14.0 [-21.7,-6.5]
+p4f_F2_minus_base          en -1.0 [-3.3,0.0] | it -5.1 [-10.6,0.0] | de -3.1 [-10.1,3.5] | hi -12.9 [-20.4,-5.7]
+p4f_F1_minus_sysprompt     en -2.0 [-5.1,0.0] | it -2.0 [-6.1,1.1] | de -5.2 [-10.9,0.0] | hi -6.5 [-12.9,0.0]
+p4f_F1_minus_translate_en  it +1.0 [-5.0,6.7] | de +0.0 [-5.8,5.5] | hi -0.1 [-5.3,5.3]
+p4f_F2_minus_F1            en +1.0 [0.0,3.2] | it +1.0 [-3.3,5.6] | de +3.1 [0.0,6.9] | hi +1.1 [-2.3,4.7]
+p4f_gap_vs_en_F1           it +4.1 [-1.1,10.0] | de +6.3 [1.1,12.4] | hi +5.4 [0.0,11.5]   (base +8.2/+10.5/+17.4)
+p4f_gap_vs_en_F2           it +4.1 [-2.0,10.4] | de +8.4 [2.2,15.2] | hi +4.3 [0.0,9.7]
+p4f_rescue_hi_F1           GAP (en refused) 13/17 | BOTH-fail 1/4
+p4f_testfolds_hi           34 pairs: base 5/34 fail (3 GAP, 2 BOTH); F1 4/34 (1 GAP rescued, 0 new): -2.9 [-8.8,0.0] -> inconclusive
+p4f_overref_corrected      F1 en 4.5 | it 2.3 | de 5.4 | hi 9.6 || F2 6.8 | 3.8 | 5.4 | 9.8   (after post-hoc hi H_bait census)
+p4f_overref_by_tier_F1     H_core en 3.0 it 2.0 de 4.2 hi 2.2 | H_bait en 9.1 it 3.0 de 9.1 hi 9.7
+p4f_overref_by_tier_F2     H_core en 3.0 it 4.1 de 3.1 hi 2.2 | H_bait en 18.2 it 3.0 de 12.1 hi 9.7
+p4f_belebele_acc           base en 74.9 it 68.9 de 68.6 hi 57.8 | F1 -0.1/-0.3/-0.8/-0.1 pp | F2 -0.2/-0.3/-0.3/+0.0 pp | answers changed 8-18/900
