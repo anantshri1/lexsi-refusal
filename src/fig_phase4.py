@@ -13,17 +13,23 @@ S1, S2, S3 = "#2a78d6", "#eb6834", "#1baf7a"            # categorical slots 1-3 
 GEN = {"base": GENERATIONS / "gen_tinyaya_base_v1.jsonl", "sysprompt": GENERATIONS / "gen_tinyaya_sysprompt_v1.jsonl",
        "translate_en": GENERATIONS / "gen_tinyaya_translate_en_v1.jsonl",
        "steer r_en (F1)": PHASE4 / "full" / "gen_tinyaya_steer-ren-s24-a020_full_v1.jsonl",
-       "steer r_hi (F2)": PHASE4 / "full" / "gen_tinyaya_steer-rhi-s24-a020_full_v1.jsonl"}
-OVERREF_HI = {"base": 0.000, "sysprompt": 0.008, "translate_en": 0.054, "steer r_en (F1)": 0.096, "steer r_hi (F2)": 0.098}  # canonical
-COL = {"base": GREY, "sysprompt": GREY, "translate_en": GREY, "steer r_en (F1)": S1, "steer r_hi (F2)": S2}
-OFF = {"base": (6, 4), "sysprompt": (6, 4), "translate_en": (6, -12), "steer r_en (F1)": (16, -14), "steer r_hi (F2)": (12, 4)}
+       "steer r_hi (F2)": PHASE4 / "full" / "gen_tinyaya_steer-rhi-s24-a020_full_v1.jsonl",
+       "steer r_en, hi 0.3 (P4.9)": PHASE4 / "full" / "gen_tinyaya_steer-ren-s24-a030_fullhi_v1.jsonl"}
+OVERREF_HI = {"base": 0.000, "sysprompt": 0.008, "translate_en": 0.054, "steer r_en (F1)": 0.096, "steer r_hi (F2)": 0.098,
+             "steer r_en, hi 0.3 (P4.9)": None}  # canonical; P4.9 value from audit_overref correct (fill, as a fraction)
+COL = {"base": GREY, "sysprompt": GREY, "translate_en": GREY, "steer r_en (F1)": S1, "steer r_hi (F2)": S2, "steer r_en, hi 0.3 (P4.9)": S1}
+OFF = {"base": (6, 4), "sysprompt": (6, 4), "translate_en": (6, -12), "steer r_en (F1)": (16, -14), "steer r_hi (F2)": (12, 4),
+       "steer r_en, hi 0.3 (P4.9)": (10, -4)}
 
 plt.rcParams.update({"font.size": 10, "axes.edgecolor": GRID, "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2,
                      "axes.spines.top": False, "axes.spines.right": False})
 fig, (a, b) = plt.subplots(1, 2, figsize=(11, 4.4), gridspec_kw={"wspace": 0.28})
 
 # ---- A: full-run trade-off ----
+pts = {}
 for name, g in GEN.items():
+    if OVERREF_HI[name] is None:
+        print("skip (over-refusal not filled):", name); continue
     d = load(gen=g)
     h = d[d.lang == "hi"]
     y = metrics(h)["core_comp_cond"]
@@ -31,12 +37,19 @@ for name, g in GEN.items():
     x = OVERREF_HI[name]
     a.errorbar(100 * x, 100 * y, yerr=[[100 * (y - lo)], [100 * (hi - y)]], fmt="o", ms=8, color=COL[name], ecolor=COL[name],
                elinewidth=2, capsize=0, mec="white", mew=2, zorder=3)
+    pts[name] = (100 * x, 100 * y)
     a.annotate(name, (100 * x, 100 * y), xytext=OFF[name], textcoords="offset points", color=INK, fontsize=9,
                ha="right" if OFF[name][0] < 0 else "left")                    # F1/F2 sit 0.2 pp apart: both labels right of the orange bar, F2 above, F1 below
+if "steer r_en, hi 0.3 (P4.9)" in pts:                                 # same direction, two strengths: a short curve
+    (x0, y0), (x1, y1) = pts["steer r_en (F1)"], pts["steer r_en, hi 0.3 (P4.9)"]
+    a.plot([x0, x1], [y0, y1], "-", color=S1, lw=1, alpha=0.6, zorder=2)
+    a.set_xlim(-1, max(13, x1 + 4))
 a.set_xlabel("Hindi over-refusal, human-corrected (%)")
 a.set_ylabel("Hindi harmful-request compliance (%)")
 a.set_title("A  Full runs (Hindi, 512 tokens): lower-left is better", loc="left", color=INK, fontsize=10)
-a.set_xlim(-1, 13); a.set_ylim(0, 35)
+a.set_ylim(0, 35)
+if "steer r_en, hi 0.3 (P4.9)" not in pts:
+    a.set_xlim(-1, 13)                                                  # (widened above when the P4.9 point is drawn)
 a.grid(color=GRID, linewidth=0.8); a.set_axisbelow(True)
 
 # ---- B: dev screening dose-response ----
