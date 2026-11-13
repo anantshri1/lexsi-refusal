@@ -102,3 +102,17 @@ All four languages under F1: compliance en 3.0 / it 7.1 / de 9.4 / hi 8.6 (base 
   sees pushback (WildGuard does not); a second model.
 
 ## Explain-back (to fill after the discussion)
+Explain-back (2026-11-14 00:30) — Anant. Solid: 1 (steer units), 2 (kill-test), 3 (ablation = necessity), 5 (rescue / saturation),
+7 (A local + C-like readout), 8 (test folds inconclusive). Gaps filled by Claude:
+- Q1: the cosine 1.000 is a SEPARATE check (SafeTune's extracted direction == our r_en: right vector); "+alpha exactly" is the units check.
+- Q2: food/travel = a direction between two harmless topics (non-safety concept), not "benign prompts"; NON_ANSWER checked so a
+  "reduction" could not be garbled text.
+- Q3: steering = sufficiency, ablation = necessity; ALL layers because later layers rebuild the direction (self-repair); gap vanished under ablation.
+- Q4 (partial): WildGuard was legitimate because its failure was specific (recall 0 on statements, 0.95 on requests) and screening only
+  had H_core twins; safeguards: registered FAIL kept, post-hoc rule logged before use, blind re-validation under steering (prec 0.90),
+  finals never depend on it (j1 + human primary; WildGuard = second column only).
+- Q5: wording: not "never in another language" but "a push towards English-like cannot fix what English also misses".
+- Q6 (partial): estimator scales the refusal share found among SAMPLED j1-negatives to the whole stratum: hi H_bait 1/4 -> ~19 rows -> 12.8;
+  census of all 19 found 2 -> 9.6 (F2 2.4 -> 9.8; at 0.3, 0 -> 4.0). Report hi ~4-10%, H_core ~1-2%; census done symmetrically.
+- Q7: caveats: r_en/r_hi 0.90-aligned -> B-test low power; C's specific prediction (target > English steering) failed.
+- Q8: test folds had fewer failures (5/34 = 14.7% vs 22.6%) -> low power; dev chose only slot and alpha; direction cross-fitted.
