@@ -140,3 +140,9 @@ NOT in the frozen file: comprehension results (outputs/, keyed by uid).
 - phase4/full/full_uids_v1.json (1032 rows = Phase 2 sysprompt rows; src/full_split.py).
 - phase4/full/gen_tinyaya_{steer-ren-s24-a020|steer-rhi-s24-a020}_full_v1.jsonl (F1, F2; 512 tokens; src/screen_job.py --stage full).
 - Judge provider: judge.PROVIDER = env LEXSI_JUDGE_PROVIDER (default featherless-ai); switch only via src/judge_provider_check.py (P4.6).
+## Shipping (2026-11-14)
+- HF ART_REPO now also holds judgements/ (all JUDGEMENTS), comprehension/ (all COMPREHENSION), curation/ (= DATA_INTERIM),
+  generations/gen_tinyaya_base_v0.jsonl, directions/dir_tinyaya_refusal_last_en_v1.pt (src/publish_artefacts.py, S2).
+  Check with src/inventory_hf.py (expect LOCAL NOT ON REMOTE 0). Bench repo also holds control_neutral_v1.jsonl.
+- Cards: bench = DATA_FROZEN/README.md; artefacts = REPO_ROOT/cards/artefacts_README.md -> pushed as README.md by src/release_repos.py (S4),
+  which also sets ART_REPO gated=auto (before public) and both repos public.

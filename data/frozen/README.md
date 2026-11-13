@@ -8,6 +8,8 @@ size_categories: [1K<n<10K]
 configs:
 - config_name: default
   data_files: benchmark_v1.jsonl
+- config_name: control_neutral
+  data_files: control_neutral_v1.jsonl
 ---
 
 # Lexsi Multilingual Refusal Benchmark (v1)
@@ -19,6 +21,8 @@ Paired harmful / benign prompts in English, Italian, German, Hindi, Malayalam an
 - **Rows:** 1,770 — 133 pairs × 2 polarities × 6 language forms (original) + 29 pairs × 2 × {en, hi, ml} (paraphrase)
 - **File:** `benchmark_v1.jsonl`, sha256 `9d727751d3cbbad74ad8e179e4e2b505f83681623febe9e2d424959b21a3871d`
 - **Frozen:** 2026-11-03. Never edited; corrections ship as v2.
+- **Also here:** `control_neutral_v1.jsonl`, sha256 `441cd2d412ac1d1a88977c398cf2f3a4b4c89e7a8f91451fbafe6f510b83ba15` (food vs travel control set; see below).
+- **Generations, judgements, human audits, activations and steering vectors:** [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts) (gated). **Code:** [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal).
 
 ## Schema
 | field | meaning |
@@ -53,8 +57,14 @@ Paired harmful / benign prompts in English, Italian, German, Hindi, Malayalam an
 
 **Paraphrases.** Pivot back-translations (en→de/it/hi/ml→en) for 30 pairs. Pair #169 was dropped because its paraphrase was weakened.
 
+## Control set (`control_neutral_v1.jsonl`)
+A neutral *topic* contrast used to build a non-safety control direction for steering. Pairs of harmless prompts about food vs travel, drafted by an LLM (Claude), reviewed by a human, then translated with the same engines as the benchmark (it/de NLLB-200; hi/ml Google Translate). uid `ctrlNNN-{f|t}-{lang}-orig`. English reviewed; it/de checked by the author (A2/B1 German); hi checked by a native speaker.
+
+## Validation update (2026-11-14, card only)
+After freezing, all Hindi rows were read by a native Hindi speaker (the author). [CONFIRM: outcome, e.g. "no row needed a correction"]. The file is frozen, so the `validation` field still reads `bt+llm_check` for these rows; **treat Hindi as natively validated**. `hi-Latn` is a mechanical transliteration of the validated Hindi.
+
 ## Known limitations
-- No native-speaker validation for de, hi or ml. **Malayalam is validated by back-translation plus an LLM checker only.** Subtle errors may remain.
+- No native-speaker validation for de or ml (Hindi: see the update above). **Malayalam is validated by back-translation plus an LLM checker only.** Subtle errors may remain.
 - The LLM checker reads back-translations, so it cannot tell forward errors from back-translation errors.
 - Paraphrases are shallow ("mild rewording"), not structural.
 - hi-Latn is formal romanisation (inherent vowels kept: "kitana", not "kitna"); English loanwords are rendered phonetically.
