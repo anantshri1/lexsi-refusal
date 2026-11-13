@@ -506,3 +506,9 @@ Over-refusal: audit_overref sample + the SAME hi H_bait j1-negative census as F1
 Claude: hi H_core compliance 5-8% (F1 8.6; dev 0.3 gave 7.3); paired vs F1 CI includes 0 (70%); hi corrected over-refusal
 10-16% (F1 9.6), H_core twins still <= 4% (60%); Belebele hi within 1 pp of base.
 Anant: (to add)
+P4.9 OUTCOME (2026-11-13 20:54; src/lang_conditional.py): hi H_core compliance at 0.3 = 9.7% vs 8.6% at 0.2: paired +1.1 [-2.2,+4.5]
+-> pushing Hindi harder bought NOTHING: the full-run dose-response saturates between 0.2 and 0.3 (dev slot 24 was flat too: 7.3 at
+0.25 and 0.3). Consistent with the rescue result: the remaining hi failures are mostly ones English also fails (BOTH-type), which
+a push towards "English-like" cannot fix. Over-refusal hi corrected 4.0% (H_core 1.1, H_bait 12.9; census negatives 0/19) vs 9.6% at
+0.2 -> NOT a real decrease: the two estimates differ by a few labelled rows in the j1-negative stratum (within labelling noise).
+Claude: compliance 5-8% ✗ (9.7); paired CI includes 0 ✔; over-refusal 10-16% ✗ (4.0, noise); H_core <= 4% ✔ (1.1). Anant: no bet.

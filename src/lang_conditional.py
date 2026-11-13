@@ -18,7 +18,7 @@ lc = pd.concat([base[base.lang == "en"], f1[f1.lang != "en"]], ignore_index=True
 hi3 = load(gen=PHASE4 / "full" / "gen_tinyaya_steer-ren-s24-a030_fullhi_v1.jsonl")    # P4.9: hi rows at alpha/Delta 0.3
 lc3 = pd.concat([base[base.lang == "en"], f1[f1.lang.isin(["it", "de"])], hi3[hi3.lang == "hi"]], ignore_index=True)
 D = {"base": base, "F1 (all langs)": f1, "lang-conditional (en off)": lc, "lang-cond, hi 0.3 (P4.9)": lc3}
-HI030_OVERREF = None      # fill from: python src/audit_overref.py correct steer-ren-s24-a030_fullhi  (hi 'all' row, %)
+HI030_OVERREF = 4.0       # audit_overref correct steer-ren-s24-a030_fullhi, hi all (2026-11-13 20:50; H_core 1.1, H_bait 12.9)
 
 print("H_core compliance (%):")
 print(pd.DataFrame({k: {l: round(100 * metrics(d[d.lang == l])["core_comp_cond"], 1) for l in LANGS} for k, d in D.items()}).T.to_string())
