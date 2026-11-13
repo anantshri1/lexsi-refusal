@@ -40,6 +40,7 @@ COS_MIN    = 0.9999
 MAX_NEW, BS = 256, 16
 FULL_NEW, FULL_DIR, FULL_UIDS = 512, "phase4/full/", "phase4/full/full_uids_v1.json"
 FULL_CONDS = [("steer-ren-s24-a020", "ren", 24, 0.2, "steer"), ("steer-rhi-s24-a020", "rhi", 24, 0.2, "steer")]   # F1, F2
+HI_CONDS = [("steer-ren-s24-a030", "ren", 24, 0.3, "steer")]   # P4.9: hi only, pushed harder (tag fullhi)
 # id, direction, slot, alpha/Delta, mode. Order = priority (kill-test + sanity first, then the grid).
 CONDS = [("steer-ren-s24-a025", "ren", 24, 0.25, "steer"), ("steer-ctrl-s24-a025", "ctrl", 24, 0.25, "steer"),
          ("steer-rand-s24-a025", "rand", 24, 0.25, "steer"), ("ablate-ren-s24-all", "ren", 24, None, "ablate"),
@@ -163,6 +164,12 @@ def stage_full(model, tok, bench, split, V, api, log, limit):
     run_conds(model, tok, bench, split, V, api, log, limit, uids, FULL_CONDS, FULL_NEW, FULL_DIR, "full")
 
 
+def stage_fullhi(model, tok, bench, split, V, api, log, limit):
+    uids = [u for u in json.load(open(hf_hub_download(ART_REPO, FULL_UIDS, repo_type="dataset")))["uids"] if "-hi-" in u]
+    assert len(uids) == 248, len(uids)
+    run_conds(model, tok, bench, split, V, api, log, limit, uids, HI_CONDS, FULL_NEW, FULL_DIR, "fullhi")
+
+
 def run_conds(model, tok, bench, split, V, api, log, limit, uid_list, conds, max_new, out_dir, run_tag):
     D = torch.load(hf_hub_download(ART_REPO, DIRS_FILE, repo_type="dataset"), weights_only=False)
     assert D["slots"] == SLOTS and min(min(v) for v in D["cos_vs_ours"].values()) >= COS_MIN
@@ -209,7 +216,7 @@ def run_conds(model, tok, bench, split, V, api, log, limit, uid_list, conds, max
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", choices=["extract", "screen", "full"], required=True)
+    ap.add_argument("--stage", choices=["extract", "screen", "full", "fullhi"], required=True)
     ap.add_argument("--limit", type=int, default=None)      # smoke: first N dev rows per condition, files tagged smoke
     a = ap.parse_args()
     api, bench = HfApi(), load_bench()
@@ -226,8 +233,10 @@ def main():
         stage_extract(model, tok, bench, split, V, api, log)
     elif a.stage == "screen":
         stage_screen(model, tok, bench, split, V, api, log, a.limit)
-    else:
+    elif a.stage == "full":
         stage_full(model, tok, bench, split, V, api, log, a.limit)
+    else:
+        stage_fullhi(model, tok, bench, split, V, api, log, a.limit)
     log["secs"] = round(time.time() - t0)
     upload(json.dumps(log, indent=1), f"log_{a.stage}_v1.json", api)
     print("DONE", log["secs"], "s", flush=True)

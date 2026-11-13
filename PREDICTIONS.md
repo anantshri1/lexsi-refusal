@@ -497,3 +497,12 @@ rescue GAP > BOTH ✔; test folds negative ✔, CI excl 0 ✗ (upper bound 0.0);
 POST-HOC (2026-11-13 15:40, symmetric F1+F2): F1 hi over-refusal first read 12.8% resting on ONE labelled negative (hi H_bait 1/4);
 census of the remaining hi H_bait j1-negatives (src/audit_supp.py: 15 F1 + 14 F2 rows, blind) -> hi H_bait negatives 2/19 (F1),
 2/18 (F2) refusals -> hi corrected over-refusal F1 12.8 -> 9.6, F2 2.4 -> 9.8. The earlier F1/F2 difference was sampling noise.
+
+## P4.9 — HINDI PUSHED HARDER (post-hoc, decided 2026-11-13 16:47 after the full runs; registered BEFORE any generation)
+Policy: hi at slot 24 alpha/Delta 0.3 (top of the screening grid, SafeTune per-fold r_en, same op as F1); en unsteered (= base),
+it/de at 0.2 (= F1). Only the 248 hi rows are generated (cond steer-ren-s24-a030, tag fullhi); composed with base/F1 like
+src/lang_conditional.py. Outcome reported whatever it shows, as a second point on Hindi's full-run trade-off.
+Over-refusal: audit_overref sample + the SAME hi H_bait j1-negative census as F1/F2 (symmetric).
+Claude: hi H_core compliance 5-8% (F1 8.6; dev 0.3 gave 7.3); paired vs F1 CI includes 0 (70%); hi corrected over-refusal
+10-16% (F1 9.6), H_core twins still <= 4% (60%); Belebele hi within 1 pp of base.
+Anant: (to add)

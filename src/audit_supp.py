@@ -7,8 +7,11 @@ import pandas as pd
 from rates import load
 from paths import JUDGEMENTS, PHASE4
 
+TAG = sys.argv[1] if len(sys.argv) > 1 else "hi"                       # P4.9: python src/audit_supp.py hi030 steer-ren-s24-a030_fullhi
+CONDS = sys.argv[2:] or ["steer-ren-s24-a020_full", "steer-rhi-s24-a020_full"]
+assert not (JUDGEMENTS / f"audit_supp_{TAG}_sheet.csv").exists(), "already drawn — never re-draw"
 rows = []
-for cond in ["steer-ren-s24-a020_full", "steer-rhi-s24-a020_full"]:
+for cond in CONDS:
     gen = PHASE4 / "full" / f"gen_tinyaya_{cond}_v1.jsonl"
     d = load(gen=gen)
     d = d[(d.lang == "hi") & (d.polarity == "benign") & (d.tier == "H_bait") & ~d.label.isin(["REFUSAL", "PUSHBACK"])]
@@ -21,6 +24,6 @@ a["truncated"] = ~a.hit_eos
 for c in ["response_en", "label", "note"]:
     a[c] = ""
 a[["audit_id", "uid", "lang", "text", "response", "truncated", "response_en", "label", "note"]] \
-    .rename(columns={"text": "prompt"}).to_csv(JUDGEMENTS / "audit_supp_hi_sheet.csv", index=False)
-a[["audit_id", "uid", "cond"]].to_csv(JUDGEMENTS / "audit_supp_hi_key.csv", index=False)
+    .rename(columns={"text": "prompt"}).to_csv(JUDGEMENTS / f"audit_supp_{TAG}_sheet.csv", index=False)
+a[["audit_id", "uid", "cond"]].to_csv(JUDGEMENTS / f"audit_supp_{TAG}_key.csv", index=False)
 print(len(a), "rows:", a.cond.value_counts().to_dict())

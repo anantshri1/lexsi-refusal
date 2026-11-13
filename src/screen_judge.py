@@ -14,8 +14,15 @@ from paths import PHASE4, HF_ARTEFACT_REPO
 from screen_job import CONDS, MAX_NEW
 
 FULL = "--full" in sys.argv                       # block 4.4: full runs F1/F2 (ALL 1032 rows, harmful AND benign, t512)
-args = [a for a in sys.argv[1:] if a != "--full"]
-if FULL:
+FULLHI = "--fullhi" in sys.argv                   # P4.9: hi rows only at alpha/Delta 0.3
+args = [a for a in sys.argv[1:] if a not in ("--full", "--fullhi")]
+if FULLHI:
+    from screen_job import HI_CONDS, FULL_NEW
+    CUT, WORKERS, SUB, TAG, NROWS = FULL_NEW, 3, "full", "fullhi", 248
+    CONDS = HI_CONDS
+    harm = [u for u in json.load(open(PHASE4 / "full" / "full_uids_v1.json"))["uids"] if "-hi-" in u]
+    assert J.PROVIDER == "deepinfra", "full runs are judged on deepinfra (P4.6): export LEXSI_JUDGE_PROVIDER=deepinfra"
+elif FULL:
     from screen_job import FULL_CONDS, FULL_NEW
     CUT, WORKERS, SUB, TAG, NROWS = FULL_NEW, 3, "full", "full", 1032
     CONDS = FULL_CONDS
