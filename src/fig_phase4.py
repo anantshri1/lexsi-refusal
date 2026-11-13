@@ -16,7 +16,7 @@ GEN = {"base": GENERATIONS / "gen_tinyaya_base_v1.jsonl", "sysprompt": GENERATIO
        "steer r_hi (F2)": PHASE4 / "full" / "gen_tinyaya_steer-rhi-s24-a020_full_v1.jsonl"}
 OVERREF_HI = {"base": 0.000, "sysprompt": 0.008, "translate_en": 0.054, "steer r_en (F1)": 0.096, "steer r_hi (F2)": 0.098}  # canonical
 COL = {"base": GREY, "sysprompt": GREY, "translate_en": GREY, "steer r_en (F1)": S1, "steer r_hi (F2)": S2}
-OFF = {"base": (6, 4), "sysprompt": (6, 4), "translate_en": (6, -12), "steer r_en (F1)": (-8, -14), "steer r_hi (F2)": (6, 4)}
+OFF = {"base": (6, 4), "sysprompt": (6, 4), "translate_en": (6, -12), "steer r_en (F1)": (16, -14), "steer r_hi (F2)": (12, 4)}
 
 plt.rcParams.update({"font.size": 10, "axes.edgecolor": GRID, "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2,
                      "axes.spines.top": False, "axes.spines.right": False})
@@ -31,7 +31,8 @@ for name, g in GEN.items():
     x = OVERREF_HI[name]
     a.errorbar(100 * x, 100 * y, yerr=[[100 * (y - lo)], [100 * (hi - y)]], fmt="o", ms=8, color=COL[name], ecolor=COL[name],
                elinewidth=2, capsize=0, mec="white", mew=2, zorder=3)
-    a.annotate(name, (100 * x, 100 * y), xytext=OFF[name], textcoords="offset points", color=INK, fontsize=9)
+    a.annotate(name, (100 * x, 100 * y), xytext=OFF[name], textcoords="offset points", color=INK, fontsize=9,
+               ha="right" if OFF[name][0] < 0 else "left")                    # F1/F2 sit 0.2 pp apart: both labels right of the orange bar, F2 above, F1 below
 a.set_xlabel("Hindi over-refusal, human-corrected (%)")
 a.set_ylabel("Hindi harmful-request compliance (%)")
 a.set_title("A  Full runs (Hindi, 512 tokens): lower-left is better", loc="left", color=INK, fontsize=10)
@@ -59,11 +60,12 @@ b.set_ylabel("Hindi harmful-request compliance (%)")
 b.set_title("B  Dev screening (55 pairs, 256 tokens)", loc="left", color=INK, fontsize=10)
 b.set_ylim(0, 35); b.set_xlim(-0.01, 0.31)
 b.grid(color=GRID, linewidth=0.8); b.set_axisbelow(True)
-b.legend(frameon=False, fontsize=8, loc="upper right", labelcolor=INK2)
+b.legend(frameon=False, fontsize=8, loc="lower left", labelcolor=INK2)   # keep the kill-test markers (top right) visible
 
-fig.text(0.01, -0.04, "Tiny Aya Global. Steering = SafeTune RefusalDirectionModel 'steer', English refusal direction (cross-fitted), "
-         "slot 24, alpha/Delta 0.2. Compliance: j1 judge (Qwen2.5-72B). Over-refusal: j1 flags + human audit. Error bars: 95% pair bootstrap.",
-         fontsize=7.5, color=INK2)
+fig.text(0.01, -0.07, "Tiny Aya Global. Steering = SafeTune RefusalDirectionModel 'steer', English refusal direction (cross-fitted), "
+         "slot 24, alpha/Delta 0.2.\nCompliance: j1 judge (Qwen2.5-72B). Over-refusal: j1 flags + human audit. "
+         "Error bars: 95% pair bootstrap (compliance only; corrected over-refusal has no CI).",
+         fontsize=7.5, color=INK2)                                      # two lines: one long line widened the tight bbox
 out = FIGURES / "p4_tradeoff_v1.png"
 fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="#fcfcfb")
 print("saved", out)
