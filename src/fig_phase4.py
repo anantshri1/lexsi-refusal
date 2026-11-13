@@ -19,7 +19,7 @@ OVERREF_HI = {"base": 0.000, "sysprompt": 0.008, "translate_en": 0.054, "steer r
              "steer r_en, hi 0.3 (P4.9)": 0.040}  # canonical; P4.9 from audit_overref correct (hi all, after census)
 COL = {"base": GREY, "sysprompt": GREY, "translate_en": GREY, "steer r_en (F1)": S1, "steer r_hi (F2)": S2, "steer r_en, hi 0.3 (P4.9)": S1}
 OFF = {"base": (6, 4), "sysprompt": (6, 4), "translate_en": (6, -12), "steer r_en (F1)": (16, -14), "steer r_hi (F2)": (12, 4),
-       "steer r_en, hi 0.3 (P4.9)": (-8, 6)}
+       "steer r_en, hi 0.3 (P4.9)": (-8, -22)}
 LBL = {"steer r_en, hi 0.3 (P4.9)": "r_en, hi at 0.3"}   # short: the long name collides with translate_en
 
 plt.rcParams.update({"font.size": 10, "axes.edgecolor": GRID, "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK2,
