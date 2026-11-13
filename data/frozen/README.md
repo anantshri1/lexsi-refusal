@@ -61,7 +61,7 @@ Paired harmful / benign prompts in English, Italian, German, Hindi, Malayalam an
 A neutral *topic* contrast used to build a non-safety control direction for steering. Pairs of harmless prompts about food vs travel, drafted by an LLM (Claude), reviewed by a human, then translated with the same engines as the benchmark (it/de NLLB-200; hi/ml Google Translate). uid `ctrlNNN-{f|t}-{lang}-orig`. English reviewed; it/de checked by the author (A2/B1 German); hi checked by the author (a native speaker).
 
 ## Validation update (2026-11-14, card only)
-After freezing, all Hindi rows were read by a native Hindi speaker (the author). The file is frozen, so the `validation` field still reads `bt+llm_check` for these rows; **treat Hindi as natively validated**. `hi-Latn` is a mechanical transliteration of the validated Hindi.
+After freezing, all Hindi rows were read by a native Hindi speaker (the author); no row needed a correction. The file is frozen, so the `validation` field still reads `bt+llm_check` for these rows; **treat Hindi as natively validated**. `hi-Latn` is a mechanical transliteration of the validated Hindi.
 
 ## Known limitations
 - No native-speaker validation for de or ml (Hindi: see the update above). **Malayalam is validated by back-translation plus an LLM checker only.** Subtle errors may remain.

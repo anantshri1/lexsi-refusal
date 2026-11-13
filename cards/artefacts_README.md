@@ -2,7 +2,7 @@
 license: cc-by-nc-4.0
 language: [en, it, de, hi, ml]
 tags: [safety, refusal, multilingual, red-teaming, interpretability, steering]
-pretty_name: Lexsi Multilingual Refusal: generations, judgements and steering artefacts
+pretty_name: "Lexsi Multilingual Refusal: generations, judgements and steering artefacts"
 extra_gated_prompt: >-
   This repository contains model completions to harmful prompts (violence, self-harm, hate, sexual exploitation,
   illegal activity), some of which comply with the request. Access is for safety research only.
