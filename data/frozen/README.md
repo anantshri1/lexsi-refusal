@@ -22,7 +22,7 @@ Paired harmful / benign prompts in English, Italian, German, Hindi, Malayalam an
 - **File:** `benchmark_v1.jsonl`, sha256 `9d727751d3cbbad74ad8e179e4e2b505f83681623febe9e2d424959b21a3871d`
 - **Frozen:** 2026-11-03. Never edited; corrections ship as v2.
 - **Also here:** `control_neutral_v1.jsonl`, sha256 `441cd2d412ac1d1a88977c398cf2f3a4b4c89e7a8f91451fbafe6f510b83ba15` (food vs travel control set; see below).
-- **Generations, judgements, human audits, activations and steering vectors:** [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts) (gated). **Code:** [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal).
+- **Generations, judgements, human audits, activations and steering vectors:** [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts). **Code:** [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal).
 
 ## Schema
 | field | meaning |

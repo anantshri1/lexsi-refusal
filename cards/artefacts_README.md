@@ -3,16 +3,11 @@ license: cc-by-nc-4.0
 language: [en, it, de, hi, ml]
 tags: [safety, refusal, multilingual, red-teaming, interpretability, steering]
 pretty_name: "Lexsi Multilingual Refusal: generations, judgements and steering artefacts"
-extra_gated_prompt: >-
-  This repository contains model completions to harmful prompts (violence, self-harm, hate, sexual exploitation,
-  illegal activity), some of which comply with the request. Access is for safety research only.
-extra_gated_fields:
-  I will use this data only for safety research and will not redistribute harmful completions: checkbox
 ---
 
 # Lexsi Multilingual Refusal: artefacts
 
-> **Content warning.** Contains completions by a small open model (Tiny Aya Global) to harmful prompts, including compliant ones. Gated for that reason.
+> **Content warning.** Contains completions by a small open model (Tiny Aya Global) to harmful prompts, including compliant ones. Safety research only.
 
 Everything behind the results of *"Is refusal shared across languages?"* (Lexsi AI Safety Hackathon, Track 2):
 generations, LLM-judge labels, human audit sheets, activations, refusal and steering directions, and the steering-run outputs.

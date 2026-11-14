@@ -15,7 +15,8 @@ for repo, p in CARDS:
     if GO:
         api.upload_file(path_or_fileobj=str(p), path_in_repo="README.md", repo_id=repo, repo_type="dataset",
                         commit_message="Ship S4: dataset card")
-STEPS = [(ART, dict(gated="auto")), (ART, dict(private=False)), (BENCH, dict(private=False))]
+STEPS = [(ART, dict(gated=False)),   # D-W2 (14 Nov): un-gated per submission rules (was "auto")
+          (ART, dict(private=False)), (BENCH, dict(private=False))]
 for repo, kw in STEPS:
     print(f"{'SET' if GO else 'dry'}  {repo}: {kw}")
     if GO:

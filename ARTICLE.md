@@ -9,7 +9,7 @@
 - **The mechanism is shared; the signal is lost.** The English refusal direction separates harmful from harmless prompts in Italian, German and Hindi almost as well as in English. What fails is local: some prompts lose part of their harm signal in the middle layers and fall below the point where the model refuses.
 - **One internal push closes most of the gap.** Adding the English refusal direction at one layer cuts Hindi compliance **22.6% → 8.6%**, matching "translate to English first" (8.7%) in **one pass, answering in Hindi**, and beating a safety system prompt (15.1%). Matched control directions do nothing. The cost: 2–4% over-refusal on harmless requests, more pushback on harmless statements, and under 1 pp of reading comprehension.
 
-**Links:** code [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal) · benchmark [anantshri1/lexsi-refusal-bench](https://huggingface.co/datasets/anantshri1/lexsi-refusal-bench) · all generations, judgements, human audits, activations and directions [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts) (gated).
+**Links:** code [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal) · benchmark [anantshri1/lexsi-refusal-bench](https://huggingface.co/datasets/anantshri1/lexsi-refusal-bench) · all generations, judgements, human audits, activations and directions [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts).
 
 ## 1. Why this matters
 
@@ -142,7 +142,7 @@ One 3B-class model. One family of LLM judge for the headline labels, with a sing
 
 **Compute and cost.** All GPU work ran as Hugging Face Jobs (single-file scripts on a T4 or L4), costing cents per run; extracting every activation for the full benchmark cost USD 0.04. The whole project used about **USD 11 of Hugging Face credits**, most of it on the 72B judge through Inference Providers. At inference time, steering adds one vector addition at one layer; translate-to-English needs a second full generation.
 
-**Everything is public.** Code: [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal) (phase summaries, pre-registered predictions, and a single file of every reported number). Benchmark with dataset card: [anantshri1/lexsi-refusal-bench](https://huggingface.co/datasets/anantshri1/lexsi-refusal-bench). Generations, judge labels, human audit sheets, activations and directions: [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts) (gated because it contains harmful completions).
+**Everything is public.** Code: [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal) (phase summaries, pre-registered predictions, and a single file of every reported number). Benchmark with dataset card: [anantshri1/lexsi-refusal-bench](https://huggingface.co/datasets/anantshri1/lexsi-refusal-bench). Generations, judge labels, human audit sheets, activations and directions: [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts).
 
 ## Acknowledgements
 

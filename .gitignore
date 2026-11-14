@@ -11,3 +11,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 .env
+# built Space (src/build_space.py); source = ARTICLE.md + figures/
+space/
+steer_model/

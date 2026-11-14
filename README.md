@@ -2,7 +2,7 @@
 
 Lexsi AI Safety & Alignment Hackathon, Track 2 (Nov 2026). Model: [CohereLabs/tiny-aya-global](https://huggingface.co/CohereLabs/tiny-aya-global).
 
-**Article:** [CONFIRM: HF article link] · **Benchmark:** [anantshri1/lexsi-refusal-bench](https://huggingface.co/datasets/anantshri1/lexsi-refusal-bench) · **Artefacts** (generations, judgements, human audits, activations, directions; gated): [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts)
+**Article:** [CONFIRM: HF article link] · **Benchmark:** [anantshri1/lexsi-refusal-bench](https://huggingface.co/datasets/anantshri1/lexsi-refusal-bench) · **Artefacts** (generations, judgements, human audits, activations, directions): [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts)
 
 > **Content warning.** The benchmark and artefacts contain harmful prompts and model completions. Safety research only.
 
