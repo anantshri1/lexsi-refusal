@@ -38,7 +38,7 @@ colorTo: gray
 sdk: static
 pinned: false
 license: cc-by-nc-4.0
-short_description: Steering Tiny Aya's English safety into Hindi, Italian, German
+short_description: Steering Tiny Aya's refusal across languages
 ---
 {TITLE}. Write-up for the Lexsi AI Safety Hackathon (Track 2). Code: https://github.com/anantshri1/lexsi-refusal
 """
