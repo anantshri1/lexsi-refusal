@@ -20,6 +20,9 @@ Multilingual models refuse harmful prompts less outside English. Is that because
 **(C)** the representation is shared but the readout differs by language?
 Answer: **A in a local form, plus a C-like softer readout outside English; B disfavoured** (with a power caveat: r_en and r_hi are 0.90-aligned at slot 24).
 
+![Phase 3 geometry](figures/p3_geometry_v1.png)
+*Phase 3. (A) Along the English refusal direction, harmful and benign prompts separate almost as well in it/de/hi as in English; Malayalam and romanised Hindi, which the model largely does not understand, collapse. (B) The refusal direction transfers across languages exactly as much as a neutral topic direction (food vs travel): it is a shared concept, not a special one. (C) Prompts that fail in a language lose an extra ~15–20% of the English harm separation in the middle layers.*
+
 ## How it was done (one phase per summary)
 | phase | question | summary |
 |---|---|---|
@@ -40,6 +43,26 @@ Every prediction was written down before its run ([`PREDICTIONS.md`](PREDICTIONS
 - **SafeTune** ([Lexsi-Labs/SafeTune](https://github.com/Lexsi-Labs/SafeTune) @ 26f59e6): refusal-direction extraction (cross-checked against ours, cos 1.000), steering and all-layer ablation in every Phase 4 run.
 - **AuditKIT** ([Lexsi-Labs/AuditKIT](https://github.com/Lexsi-Labs/AuditKIT) @ 71316da): WildGuard guard judge; Belebele utility via its native log-likelihood engine with the SafeTune hook installed.
 - **CuratorKIT / CircuitKIT**: assessed (RECCE.md), not used in the results.
+
+## Pipeline
+```mermaid
+flowchart TD
+  MJ[MultiJail harmful prompts] --> B1[Phase 1: benchmark<br/>build_benchmark.py<br/>benign twins, MT, comprehension]
+  B1 --> HFB[(HF: lexsi-refusal-bench)]
+  B1 --> G[Phase 2: generate<br/>base / sysprompt / translate_en<br/>generate.py]
+  G --> J[Qwen2.5-72B judge<br/>judge.py]
+  J --> H[Human audits<br/>audit_*.py]
+  H --> R[Rates + paired CIs<br/>rates.py, baseline_rates.py]
+  B1 --> A[Phase 3: activations<br/>extract_activations.py, HF Job]
+  A --> D[Directions + geometry + kill-test<br/>geometry.py, killtest.py, twin_depth.py]
+  D --> SP[Phase 4: steering vectors + forecast<br/>steer_prep.py, forecast.py]
+  SP --> ST[SafeTune: extract + steer / ablate<br/>screen_job.py, HF Job]
+  ST --> J
+  ST --> AK[AuditKIT: WildGuard + Belebele<br/>wildguard_*.py, belebele_job.py]
+  R --> F[final_analysis.py, lang_conditional.py<br/>figures + canonical_numbers.txt]
+  AK --> F
+  G & J & H & A & ST & AK --> HFA[(HF: lexsi-refusal-artefacts)]
+```
 
 ## Repository map
 | path | what |
@@ -67,4 +90,4 @@ One 3B-class model; one primary judge family; a single human annotator (the auth
 Code: [Unlicense](LICENSE). Data: CC BY-NC 4.0 (see the dataset cards).
 
 ## Acknowledgements
-Built with Claude (Anthropic) as a pair-programming and analysis partner; all runs, labels and decisions by the author.
+Built with Claude (Anthropic) as a pair-programming and analysis partner: design discussions, code drafts and reviews. All runs, human labels and final decisions are the author's.
