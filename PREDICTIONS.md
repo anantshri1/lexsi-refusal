@@ -437,6 +437,7 @@ P4.5 OUTCOME, compliance part (2026-11-11 22:45; src/screen_analysis.py; figures
 dev hi compliance (base 23.6): K1 r_en s24 0.25 7.3 (paired -16.4 pp [-27.3,-7.3]) | K2 ctrl 27.3 (+3.6 [-5.5,12.7]) | K3 rand 21.8
 (-1.8 [-7.3,3.6]) -> KILL-TEST CLEAN on compliance (no flag); NON_ANSWER 0, unparsed 0 in all three. F3 dropped (option-2 rule).
 Grid hi (alpha/Delta 0.1/0.2/0.3): s18 14.5/7.3/3.6 | s21 20.0/5.5/5.5 | s24 15.1/11.1/7.3. Forecast (P4.1) s24 15.3/10.4/6.9.
+[Amended 2026-11-14] s24 0.1/0.2 were computed with 3 judge-unparsed rows (n 53/54); after retries (12 Nov) s24 = 16.4/10.9/7.3 (n 55). Forecast verdict unchanged.
 Ablation all layers: en 3.6 -> 40.0 | hi 23.6 -> 43.6 | de 16.4 -> 50.9. B1 r_hi = r_en on hi (7.3 vs 7.3); de 7.3 vs 5.5.
 NB granularity: 1 dev prompt = 1.8 pp; CIs ~+-10 pp -> grid points < ~10 pp apart are not distinguishable.
 Claude: K1 hi 6-13 ✔, de 4-10 ✔, en 0-4 ✔; K2/K3 within +-5 ✔; monotone at every slot ✗ (s21 flat 0.2->0.3); slots < 5 pp at

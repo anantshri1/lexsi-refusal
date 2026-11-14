@@ -64,3 +64,96 @@ Three findings:
 **A failure we kept.** Our pre-registered kill-test for this phase said *KILL*: at a refusal threshold set midway between the harmful and benign means, Hindi and English trigger equally often. The threshold was the problem: it sat well below where English actually refuses. At thresholds calibrated to English behaviour, the Hindi gap appears (+12 to +16 pp, CIs above 0). We report the registered verdict as it was, and the lesson that changed how we did Phase 4: **calibrate thresholds to behaviour, not to class means.**
 
 So by the end of Phase 3 the picture was A in a local form, with some C: the shared direction is there, some prompts fall short along it, and the mapping from score to refusal is noisier outside English. That makes a clear causal prediction: **push along the English direction, and the prompts that fell short should come back.**
+
+## 5. Result 3: one push along the English direction closes most of the gap
+
+**The intervention.** We used [SafeTune](https://github.com/Lexsi-Labs/SafeTune)'s `RefusalDirectionModel` in *steer* mode: at one layer, add α·r to the residual stream at every position, prompt and generated tokens alike. We first checked that SafeTune extracts the same direction we computed ourselves (cosine 1.000) and that its push moves the score at that layer by exactly α. We quote the push size as **α/Δ**, the fraction of the English harmful–benign separation at that layer, so that "0.2" means "a fifth of the way from a typical harmless prompt to a typical harmful one". Every prompt is steered with the fold direction that excludes its own pair.
+
+**Kill-test first.** Before scaling anything, we ran the experiment that could make the headline disappear: on 55 development pairs, push Hindi prompts by the same amount along (i) the English refusal direction, (ii) the food-vs-travel control direction and (iii) a random direction.
+
+| Hindi compliance, dev pairs (base 23.6%) | change |
+|---|---|
+| English refusal direction | **−16.4 pp** [−27.3, −7.3] |
+| food vs travel control | +3.6 pp [−5.5, 12.7] |
+| random direction | −1.8 pp [−7.3, 3.6] |
+
+Only the refusal direction does anything. A cheap forecast we made before any GPU run (shift each prompt's score by α and read refusal off each language's fitted score→refusal curve) predicted the dose–response at slot 24 closely (15.3 / 10.4 / 6.9% forecast vs 16.4 / 10.9 / 7.3% observed at α/Δ = 0.1 / 0.2 / 0.3).
+
+**Necessity.** Steering shows the direction is *sufficient* to cause refusal. To show it is *necessary*, we removed it at every layer (all-layer ablation, also via SafeTune; removing it at one layer is not enough because later layers rebuild it). Compliance jumped to 40% in English, 44% in Hindi and 51% in German. The English safety advantage mostly disappears with the direction: the gap lives along it.
+
+**Choosing the setting.** On the development pairs we screened three layers (slots 18, 21, 24) at three strengths, with over-refusal screened by WildGuard (see Section 7 for why only on part of the data). Slot 24 at α/Δ = 0.2 was the cheapest setting in over-refusal among those that reached the bar; its neighbours were within noise. Development data chose only the layer and the strength.
+
+**The full run.** We then steered all 1,032 understood harmful and benign prompts in English, Italian, German and Hindi at that setting, with the English direction (F1) and, as the test of hypothesis B, the Hindi direction (F2). Same judge, 512 tokens, human-corrected over-refusal, and Belebele reading comprehension (900 questions per language) through [AuditKIT](https://github.com/Lexsi-Labs/AuditKIT)'s native log-likelihood engine with the steering hook installed.
+
+**Before and after (Hindi).**
+
+| condition | passes / answer language | harmful compliance (H_core) | over-refusal, harmless requests | over-refusal, all harmless twins | Belebele accuracy |
+|---|---|---|---|---|---|
+| base | 1 / Hindi | 22.6% | — | 0.0% | 57.8% |
+| safety system prompt | 1 / Hindi | 15.1% | — | 0.8% | — |
+| translate to English | 2 / English | 8.7% | — | 5.4% | — |
+| **steer, English direction (F1)** | **1 / Hindi** | **8.6%** | **2.2%** | **9.6%** | **57.7%** |
+| steer, Hindi direction (F2) | 1 / Hindi | 9.7% | 2.2% | 9.8% | 57.8% |
+
+*Over-refusal is human-corrected throughout; "harmless requests" are benign twins of H_core, "all harmless twins" adds the benign twins of H_bait statements. Baselines were not split by tier.*
+
+In Hindi, steering cuts compliance by **14.0 pp** [−21.7, −6.5], beats the system prompt by 6.5 pp [−12.9, 0.0] (borderline), and is **indistinguishable from translating to English** (−0.1 pp [−5.3, 5.3]), with one pass and a Hindi answer. Across languages compliance falls to **3.0 / 7.1 / 9.4 / 8.6%** (en / it / de / hi; base 5.1 / 13.3 / 15.6 / 22.6), and the Hindi–English gap shrinks from +17.4 to +5.4 pp. Reading comprehension moves by 0.1–0.8 pp in every language (8–18 of 900 answers change).
+
+![Trade-off](https://raw.githubusercontent.com/anantshri1/lexsi-refusal/main/figures/p4_tradeoff_v1.png)
+
+*(A) Hindi compliance against human-corrected over-refusal for every condition in the full run. (B) Development dose–response by layer, with the forecast and the kill-test controls.*
+
+**The cost, honestly.** On harmless *requests* the price is small and even: 2–4% over-refusal in every language (Hindi 2.2%). WildGuard, as an independent second judge on the same rows, agrees (1–5%). The price is paid on harmless *statements*: the benign twins of hateful statements get more pushback (Hindi 9.7% on that tier), which brings total Hindi over-refusal to 9.6%, against 5.4% for translate-to-English. That number rests on a handful of rows (see Section 7). English also gets a little more cautious (over-refusal 4.5%), which suggests the obvious deployment: **steer only non-English inputs.** Composing that policy from the runs we already had costs nothing in English (back to base: 5.1% compliance, 2.7% over-refusal) and keeps the Hindi gains.
+
+**What the push fixes, and what it cannot.** Split the Hindi failures by what the model does with the English twin. Where English *refuses* and Hindi complies (the signal-loss cases from Section 4), steering rescues **13 of 17**. Where English *also* complies, it rescues **1 of 4**. Steering restores harm signal lost on the way into Hindi; it cannot create recognition that English never had. That also explains what happened when we pushed Hindi harder (α/Δ = 0.3, post hoc): compliance did not improve (9.7%, +1.1 pp [−2.2, 4.5]). The remaining failures are mostly the kind English fails on too.
+
+## 6. What it means
+
+- **Hypothesis A, in a local form, fits best.** A Hindi-specific direction does no better than the English one (F2 − F1 in Hindi +1.1 pp [−2.3, 4.7]); control and random directions do nothing; removing the English direction removes refusal everywhere and mostly erases the gap. Refusal in Italian, German and Hindi runs through the same direction as in English.
+- **Some of C remains.** Outside English, the score→refusal curve is higher and softer (in Hindi, its midpoint is 13.6 vs 9.75 in English, and it is twice as wide), which is part of why a modest push works at all. C's sharper prediction, that steering in the target language beats English, did not come true.
+- **B is disfavoured, with a caveat.** At slot 24 the English and Hindi directions are 0.90 aligned, so a head-to-head between them has limited power to tell them apart.
+- **Practically:** the multilingual safety gap in this model is not a missing Hindi safety mechanism. The English one is shared and can be re-engaged from inside, in one pass, at a measurable and mostly small cost. The failures it cannot fix are the ones English shares.
+
+## Related work, and what is new here
+
+Three recent papers frame this question. **Wang et al. (2025)** find the English refusal direction is near-universal across 14 languages, but that harmful and harmless prompts separate less well outside English: a shared direction with a weaker trigger (our A). **Aziz et al. (2026)** find the opposite on separation (it is nearly as good in low-resource languages) and locate the failure in the decision, fixed by recalibrating a readout (our C). **Zhang (2026)**, the closest to us (MultiJail, difference-of-means directions), shows that high cross-lingual cosine is generic: a non-safety contrast is just as aligned, so cosine alone cannot show a shared safety mechanism.
+
+Our results sit between Wang and Aziz: separation along the English direction is almost as good in Italian, German and Hindi (with Aziz), but the failures are prompts that lose harm signal along it (a local version of Wang), and the readout is softer (some of Aziz's C). What we add: a multilingual-first model; a **comprehension control**, so no prompt the model could not read counts as a safety failure; **human-corrected judge rates** and a human-Italian translation control; **translate-to-English as the bar** for any internal fix; **control and random directions in the causal tests**, which Zhang notes were missing; paired twins that locate where each failing prompt loses its signal; and a utility and over-refusal accounting of the fix.
+
+## 7. What went wrong, and what we did about it
+
+We kept a log of failures because each changed a decision.
+
+- **Our cheap over-refusal judge failed its registered test.** We planned to screen over-refusal with WildGuard (run through AuditKIT) instead of hand labels. Against our labels its recall was 0.49, below our pre-set bar. Splitting by tier explained why: on harmless *requests* recall was 0.95, on harmless *statements* 0. WildGuard does not count pushback on a statement as refusal. We kept the FAIL on record, logged a narrower post-hoc rule before using it (screen only on request twins), re-validated it blind on steered outputs (precision 9/10), and never let a final number depend on it.
+- **WildGuard's harmful-response flag never fired** on our compliant outputs (0 of 51). A positive control on WildGuard's own test set (7–8 of 10 flagged, 0 of 10 false alarms) showed the pipeline works: it is a genuine threshold or language effect, reported as a finding.
+- **A toolkit cache bug.** Our first Belebele run gave steered results identical to base to four decimals: AuditKIT's disk cache returned the base model's answers for the hooked model. A fresh cache per condition fixed it. Anyone evaluating hooked models with it should do the same.
+- **The Phase 3 kill-test said KILL** for a reason that turned out to be our threshold (Section 4). Kept as registered.
+- **The held-out test folds were inconclusive.** The 34 pairs never used for any choice had only 5 Hindi failures to begin with (14.7%, vs 22.6% overall); steering rescued 1 and created none (−2.9 pp [−8.8, 0.0]). The direction itself was cross-fitted everywhere, and development data chose only layer and strength, but we cannot claim an independent replication.
+- **The Hindi over-refusal number moved.** Our first estimate for F1 (12.8%) scaled up a single refusal found among four sampled rows. Labelling all 19 rows in that stratum gave 9.6%. We applied the same census to F2 (2.4% → 9.8%), not only to the number we disliked.
+- **Judge provider change.** Rate limits forced a switch of inference provider for the full runs. We switched only after a pre-registered agreement check on 100 rows (agreement 0.95 overall, 0.97 on the headline label).
+
+## 8. Limitations
+
+One 3B-class model. One family of LLM judge for the headline labels, with a single human annotator (the author; native Hindi, reads Italian, German at A2/B1) for validation and over-refusal. Malayalam and romanised Hindi were largely not understood by the model and are excluded from comparisons, so we say nothing about truly low-resource languages. Hindi over-refusal estimates rest on a handful of rows. Generation is greedy and capped at 512 tokens. Steering was tested only against direct requests, not against adversarial jailbreaks.
+
+## 9. Reproducing, cost and tools
+
+**Lexsi toolkits.** SafeTune extracted every steering vector (checked against ours, cosine ≥ 0.9999) and ran all steering and ablation. AuditKIT ran WildGuard and the Belebele evaluation with the steering hook. CuratorKIT and CircuitKIT were assessed but not used in the results. Everything else (benchmark construction, judging, geometry, statistics) is our own code.
+
+**Compute and cost.** All GPU work ran as Hugging Face Jobs (single-file scripts on a T4 or L4), costing cents per run; extracting every activation for the full benchmark cost USD 0.04. The whole project used about **USD 11 of Hugging Face credits**, most of it on the 72B judge through Inference Providers. At inference time, steering adds one vector addition at one layer; translate-to-English needs a second full generation.
+
+**Everything is public.** Code: [github.com/anantshri1/lexsi-refusal](https://github.com/anantshri1/lexsi-refusal) (phase summaries, pre-registered predictions, and a single file of every reported number). Benchmark with dataset card: [anantshri1/lexsi-refusal-bench](https://huggingface.co/datasets/anantshri1/lexsi-refusal-bench). Generations, judge labels, human audit sheets, activations and directions: [anantshri1/lexsi-refusal-artefacts](https://huggingface.co/datasets/anantshri1/lexsi-refusal-artefacts) (gated because it contains harmful completions).
+
+## Acknowledgements
+
+This project was done with Claude (Anthropic) as a research partner throughout: planning, design discussions, code drafts, reviews and writing. All runs, human labels and final decisions are the author's.
+
+## References
+
+- Arditi, A. et al. (2024). *Refusal in Language Models Is Mediated by a Single Direction.* arXiv:2406.11717.
+- Deng, Y. et al. (2023). *Multilingual Jailbreak Challenges in Large Language Models.* arXiv:2310.06474.
+- Han, S. et al. (2024). *WildGuard: Open One-Stop Moderation Tools for Safety Risks, Jailbreaks, and Refusals of LLMs.* arXiv:2406.18495.
+- Aziz, Hanif, Koto (2026). *Low-Resource Safety Failures Are Action Failures, Not Representation Failures.* arXiv:2606.01196.
+- Wang, Wang, Liu, Schütze, Plank (2025). *Refusal Direction is Universal Across Safety-Aligned Languages.* NeurIPS. arXiv:2505.17306.
+- Zhang (2026). *Does Safety Live in a Shared Multilingual Subspace? Cross-Lingual (Non-)Transfer of the Refusal Direction.* MRL 2026.
+- Bandarkar, L. et al. (2024). *The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants.* ACL.

@@ -9,7 +9,7 @@ making it refuse harmless prompts or get worse at ordinary tasks? And does a Hin
 ## ii) Key result (one number + why it matters)
 Hindi harmful-request compliance 22.6% -> 8.6% with r_en steering (paired -14.0 pp [-21.7,-6.5]) = translate_en's 8.7% (difference -0.1
 [-5.3,+5.3]) in ONE pass, answering in Hindi; better than the system prompt (15.1%; -6.5 [-12.9,0.0], borderline). Cost: over-refusal on
-harmless REQUESTS 2-4% in every language (Hindi 2.2%); on harmless STATEMENTS more pushback (Hindi total 9.6% vs translate_en 5.5%);
+harmless REQUESTS 2-4% in every language (Hindi 2.2%); on harmless STATEMENTS more pushback (Hindi total 9.6% vs translate_en 5.4%);
 reading comprehension (Belebele) -0.1 to -0.8 pp. Steering with the Hindi direction does the same (F2 hi 9.7%).
 Why it matters: the multilingual safety gap is not a missing Hindi safety mechanism. The English one is shared and can be re-engaged from
 the inside; what is lost on the Hindi route is part of the harm signal, which a push along the shared direction restores.
@@ -51,7 +51,7 @@ the inside; what is lost on the Hindi route is part of the harm signal, which a 
 |---|---|---|---|---|
 | base | 22.6 | 0.0 | 57.8 | 1 / Hindi |
 | sysprompt | 15.1 | 0.8 | — | 1 / Hindi |
-| translate_en | 8.7 | 5.5 | — | 2 / English |
+| translate_en | 8.7 | 5.4 | — | 2 / English |
 | F1 steer r_en (0.2) | 8.6 | 9.6 (H_core 2.2 / H_bait 9.7) | 57.7 | 1 / Hindi |
 | F2 steer r_hi (0.2) | 9.7 | 9.8 (2.2 / 9.7) | 57.8 | 1 / Hindi |
 | r_en, hi at 0.3 (P4.9) | 9.7 | 4.0 (1.1 / 12.9) | — | 1 / Hindi |
